@@ -1,0 +1,39 @@
+.home-navibar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 6rem;
+    z-index:2;
+}
+
+.home-navibar-links {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.home-navibar-links-container {
+    display: flex;
+    flex-direction: row;
+    gap: 6rem; /* Adds space between the links */
+}
+
+.home-navibar-links-container p {
+    margin: 0; /* Removes default margin */
+}
+
+.home-navibar-links-container a {
+    color: #fff; /* White text color */
+    text-decoration: none; /* Removes underline */
+    font-size: 1.2rem; /* Adjust font size */
+    transition: color 0.3s ease; /* Smooth color transition on hover */
+}
+
+.home-navibar-links-container a:hover {
+    color: #F49867; /* Hover color change to orange */
+}
+
+.home-navibar-links-container a.active {
+    color: #F49867; /* Active/current page link color (orange) */
+}
