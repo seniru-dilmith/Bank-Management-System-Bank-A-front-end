@@ -1,2 +1,2 @@
-export {default as NaviBar} from './NaviBar/NaviBar';
+export {default as NaviBar} from './NaviBar/HomeNaviBar';
 export {default as CTA} from './CTA/CTA';
