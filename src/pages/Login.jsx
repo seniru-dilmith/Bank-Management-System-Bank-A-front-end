@@ -1,12 +1,7 @@
-<<<<<<< HEAD
 import React, { useState } from "react";
 import HomeNaviBar from '../components/NaviBar/HomeNaviBar';
 import Layout from '../layouts/Layout';
-<<<<<<< Updated upstream
-import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';  // Import the Customer NaviBar
-=======
 import CustomerDashboard from './CustomerDashboard';  // Import the CustomerDashboard component
->>>>>>> Stashed changes
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -71,21 +66,10 @@ const Login = () => {
           </form>
         </div>
       </div>
-=======
-import React from 'react';
-import HomeNaviBar from '../components/NaviBar/HomeNaviBar';
-import Layout from '../layouts/Layout';
-
-const Login = () => {
-  return (
-    <Layout NavigationBar={<HomeNaviBar/>}>
-      <h1>Welcome to the Login Page</h1>
->>>>>>> origin/kasunya
     </Layout>
   );
 };
 
-<<<<<<< HEAD
 const styles = {
   loginPage: {
     display: "flex",
@@ -158,7 +142,3 @@ const styles = {
 };
 
 export default Login;
-
-=======
-export default Login;
->>>>>>> origin/kasunya
