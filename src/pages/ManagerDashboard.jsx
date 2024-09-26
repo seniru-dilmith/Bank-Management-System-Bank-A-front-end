@@ -1,12 +1,12 @@
 import React from 'react';
 import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
+import Layout from '../layouts/Layout';
 
 const ManagerDashboard = () => {
   return (
-    <div>
-      <ManagerNaviBar />
-      <h1>Welcome to the Manager Dashboard</h1>
-    </div>
+    <Layout NavigationBar={<ManagerNaviBar/>}>
+      <h1>Welcome to the Home Page</h1>
+    </Layout>
   );
 };
 

@@ -1,12 +1,12 @@
 import React from 'react';
 import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
+import Layout from '../layouts/Layout';
 
 const CustomerDashboard = () => {
   return (
-    <div>
-      <CustomerNaviBar />
-      <h1>Welcome to the Customer Dashboard</h1>
-    </div>
+    <Layout NavigationBar={<CustomerNaviBar/>}>
+      <h1>Welcome to the Home Page</h1>
+    </Layout>
   );
 };
 
