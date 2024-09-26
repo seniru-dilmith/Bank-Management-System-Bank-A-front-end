@@ -97,7 +97,7 @@ const CustomerDashboard = () => {
     <Layout NavigationBar={<CustomerNaviBar />}>
       <div style={styles.container}>
         <div style={styles.dashboardBox}>
-          <h2 style={styles.heading}>Customer Dashboard</h2>
+          <h2 style={styles.heading}>Account Summery</h2>
 
           <div style={styles.inputGroup}>
             <label style={styles.inputLabel}>Account Type</label>
