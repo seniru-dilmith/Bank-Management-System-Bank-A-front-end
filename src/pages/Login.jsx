@@ -89,6 +89,7 @@ const styles = {
     maxWidth: "400px",
     width: "100%",
     textAlign: "center",
+    marginLeft: "-700px"
   },
   heading: {
     color: "#000",
