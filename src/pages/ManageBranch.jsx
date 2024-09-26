@@ -1,12 +1,12 @@
 import React from 'react';
 import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
+import Layout from '../layouts/Layout';
 
 const ManageBranch = () => {
   return (
-    <div>
-      <ManagerNaviBar />
-      <h1>Manage the branch</h1>
-    </div>
+    <Layout NavigationBar={<ManagerNaviBar/>}>
+      <h1>Welcome to the Manage Branch Page</h1>
+    </Layout>
   );
 };
 

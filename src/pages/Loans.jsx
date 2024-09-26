@@ -1,12 +1,12 @@
 import React from 'react';
 import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
+import Layout from '../layouts/Layout';
 
 const Loans = () => {
   return (
-    <div>
-      <CustomerNaviBar />
-      <h1>Loans</h1>
-    </div>
+    <Layout NavigationBar={<CustomerNaviBar/>}>
+      <h1>Welcome to the Loans Page</h1>
+    </Layout>
   );
 };
 
