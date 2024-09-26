@@ -1,0 +1,94 @@
+html, body {
+  height: 100%; /* Ensure the body takes up the full height */
+  margin: 0; /* Remove default margin */
+  overflow-x: auto;
+}
+
+.layout {
+  position: relative; /* Ensure the layout is positioned relative */
+  min-height: 100vh; /* Full height of the viewport */
+  display:flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  position: relative; /* Ensure header is positioned correctly */
+  z-index: 1; /* Higher z-index to appear above background */
+}
+
+.logo {
+  height: 100px;
+  margin-right: 15px;
+  margin-bottom: 0px;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column; /* Stack logo and bank name */
+  align-items: center; /* Center align the items */
+}
+
+.bank-name {
+  margin: 0; /* Remove default margin */
+  font-size: 1.2em; /* Adjust font size as needed */
+  color: white; /* Change color to match your theme */
+}
+
+.nav-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+  z-index: -2; /* Lower z-index for background */
+}
+
+.background-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('ABC Banking Application Design.jpg');
+  background-size: cover;
+  background-position: center;
+  z-index: -2; /* Ensure lower z-index than content */
+}
+
+.gradient-box-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 75%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(0, 31, 63, 1) 20%, rgba(3, 16, 38, 0.8) 40%, rgba(3, 20, 38, 0.7) 65%, rgba(255, 255, 255, 0.05) 100%);
+  z-index: -1; /* Place gradient behind content */
+}
+
+.gradient-box-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(3, 22, 41, 0.95) 0%, rgba(245, 246, 249, 0) 35%);
+  z-index: -1; /* Place gradient behind content */
+}
+
+.content-container {
+  position: relative; /* Allow content to be above background */
+  z-index: 1; /* Set a higher z-index to render on top */
+  padding: 20px; /* Optional padding for content */
+  min-width: 100%;
+}
+
