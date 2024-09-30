@@ -11,7 +11,7 @@ const CustomerNaviBar=()=>{
                 <p><Link to="/customer/transactions">Transactions</Link></p>
                 <p><Link to="/customer/loans">Loans</Link></p>
                 <p><Link to="/customer/chelp">Help</Link></p>
-                <p><Link to="/customer/logout">Logout</Link></p>
+                <p><Link to="/">Logout</Link></p>
             </div>
             </div>
         </div>
