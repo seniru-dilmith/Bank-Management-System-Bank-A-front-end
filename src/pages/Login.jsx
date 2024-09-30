@@ -2,27 +2,33 @@ import React, { useState } from "react";
 import HomeNaviBar from '../components/NaviBar/HomeNaviBar';
 import Layout from '../layouts/Layout';
 import CustomerDashboard from './CustomerDashboard';  // Import the CustomerDashboard component
+import EmployeeDashboard from './EmployeeDashboard';  // Import the EmployeeDashboard component
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);  // Track login status
+  const [loggedInAs, setLoggedInAs] = useState(null);  // Track login status and type of user
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Username:", username, "Password:", password);
 
-    // Validate login with username "1" (you can expand this for real authentication)
-    if (username === "1") {
-      setLoggedIn(true);  // Mark user as logged in
+    // Validate login: "c" for customer, "e" for employee
+    if (username === "c") {
+      setLoggedInAs("customer");  // Mark as logged in as customer
+    } else if (username === "e") {
+      setLoggedInAs("employee");  // Mark as logged in as employee
     } else {
       alert("Invalid username or password");
     }
   };
 
-  // If the user is logged in, show the CustomerDashboard instead of the login form
-  if (loggedIn) {
+  // Redirect based on login type
+  if (loggedInAs === "customer") {
     return <CustomerDashboard />;  // Redirect to CustomerDashboard after login
+  }
+  if (loggedInAs === "employee") {
+    return <EmployeeDashboard />;  // Redirect to EmployeeDashboard after login
   }
 
   return (
@@ -89,7 +95,7 @@ const styles = {
     maxWidth: "400px",
     width: "100%",
     textAlign: "center",
-    marginLeft: "-700px"
+    marginLeft: "-700px",
   },
   heading: {
     color: "#000",
