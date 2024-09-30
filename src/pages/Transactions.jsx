@@ -4,7 +4,7 @@ import Layout from '../layouts/Layout';
 
 const Transactions = () => {
   return (
-    <Layout Navigationbar={<CustomerNaviBar />}>
+    <Layout NavigationBar={<CustomerNaviBar />}>
       <div style={styles.transactionsContainer}>
         <h2>Customer Dashboard</h2>
         <div style={styles.transactionsBox}>
