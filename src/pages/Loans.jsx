@@ -1,10 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
 
 const LoanDetails = () => {
+  // State to manage form inputs
+  const [formData, setFormData] = useState({
+    applicationId: '',
+    loanType: '',
+    status: '',
+    applicationDate: '',
+  });
+
+  // Handle input change
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
   return (
-    <Layout Navigationbar={<CustomerNaviBar />}>
+    <Layout NavigationBar={<CustomerNaviBar />}>
       <div style={styles.container}>
         <h2 style={styles.dashboardHeader}>Customer Dashboard</h2>
         <div style={styles.loanDetailsBox}>
@@ -12,19 +29,43 @@ const LoanDetails = () => {
           <form>
             <div style={styles.formGroup}>
               <label>Application ID:</label>
-              <input type="text" name="applicationId" style={styles.inputField} readOnly />
+              <input
+                type="text"
+                name="applicationId"
+                value={formData.applicationId}
+                onChange={handleInputChange}
+                style={styles.inputField}
+              />
             </div>
             <div style={styles.formGroup}>
               <label>Loan Type:</label>
-              <input type="text" name="loanType" style={styles.inputField} readOnly />
+              <input
+                type="text"
+                name="loanType"
+                value={formData.loanType}
+                onChange={handleInputChange}
+                style={styles.inputField}
+              />
             </div>
             <div style={styles.formGroup}>
               <label>Status:</label>
-              <input type="text" name="status" style={styles.inputField} readOnly />
+              <input
+                type="text"
+                name="status"
+                value={formData.status}
+                onChange={handleInputChange}
+                style={styles.inputField}
+              />
             </div>
             <div style={styles.formGroup}>
               <label>Application Date:</label>
-              <input type="text" name="applicationDate" style={styles.inputField} readOnly />
+              <input
+                type="text"
+                name="applicationDate"
+                value={formData.applicationDate}
+                onChange={handleInputChange}
+                style={styles.inputField}
+              />
             </div>
           </form>
         </div>
@@ -39,7 +80,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundImage: `url('/path-to-your-background-image')`, // Set background image path
+    backgroundImage: `url('/path-to-your-background-image')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     height: '100vh',
