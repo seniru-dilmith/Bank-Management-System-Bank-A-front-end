@@ -1,11 +1,16 @@
+/* About Us Container */
 .about-us-container {
-  padding: 0; /* Remove padding to avoid extra space */
+  padding: 0;
   overflow-y: auto; /* Allow scrolling */
 }
 
-/* Vision Section */
-.vision-section {
-  height: 100vh; /* Take up the full window height */
+/* Common Section Styles */
+.about-section,
+.vision-section, 
+.mission-section, 
+.history-section, 
+.awards-section {
+  min-height: 60vh; /* Reduce the height from 100vh to 60vh */
   width: 100vw; /* Full window width */
   background: linear-gradient(90deg, rgba(0, 31, 63, 1) 20%, rgba(3, 16, 38, 0.8) 40%, rgba(3, 20, 38, 0.7) 65%, rgba(255, 255, 255, 0.05) 100%);
   display: flex;
@@ -15,44 +20,46 @@
   padding: 40px;
   box-sizing: border-box;
   border-radius: 8px;
-  margin-top: 200px; /* Large top margin to push it down */
-}
-
-/* Mission and History Section */
-.mission-section, 
-.history-section {
-  padding: 40px;
-  width: 100vw; /* Full window width */
-  box-sizing: border-box;
-  border-radius: 8px;
+  color: white; /* White text color */
   margin-bottom: 20px;
 }
 
-.mission-section {
-  background-color: #ffeb3b; /* Yellow background */
+/* Specific Adjustments for Vision Section */
+.vision-section {
+  margin-top: 50px; /* Adjusted top margin to move the section up */
+  justify-content: flex-start; /* Align headline closer to the top */
+  padding-top: 40px; /* Optional: add padding at the top for spacing */
 }
 
-.history-section {
-  background-color: #c8e6c9; /* Light green background */
+/* Typography for Section Headlines */
+.about-section h2, 
+.vision-section h2, 
+.mission-section h2, 
+.history-section h2, 
+.awards-section h2 {
+  margin-bottom: 15px;
+  font-size: 2em;
+  color: white; /* Headline text color */
 }
 
+/* Typography for Section Content */
+.about-section p, 
+.vision-section p, 
+.mission-section p, 
+.history-section p, 
+.awards-section p {
+  font-size: 1.2em;
+  color: white; /* Content text color */
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* Adjust padding for consistency */
 .about-us-container section {
-  min-height: 300px; /* Adjust height of each section */
+  min-height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-/* Typography */
-.about-us-container h2 {
-  margin-bottom: 15px;
-  font-size: 2em;
-  color: #333;
-}
 
-.about-us-container p {
-  font-size: 1.2em;
-  color: #555;
-  line-height: 1.5;
-  text-align: center;
-}
