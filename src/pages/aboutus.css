@@ -1,45 +1,58 @@
 .about-us-container {
-    padding: 20px;
-    overflow-y: auto; /* Allow scrolling */
-  }
-  
-  .vision-section {
-    padding: 40px;
-    background-color: #e0f7fa; /* Light blue background */
-    margin-bottom: 20px;
-    border-radius: 8px;
-  }
-  
-  .mission-section {
-    padding: 40px;
-    background-color: #ffeb3b; /* Yellow background */
-    margin-bottom: 20px;
-    border-radius: 8px;
-  }
-  
-  .history-section {
-    padding: 40px;
-    background-color: #c8e6c9; /* Light green background */
-    margin-bottom: 20px;
-    border-radius: 8px;
-  }
-  
-  .about-us-container section {
-    min-height: 300px; /* Adjust height of each section */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  
-  .about-us-container h2 {
-    margin-bottom: 15px;
-    font-size: 2em;
-    color: #333;
-  }
-  
-  .about-us-container p {
-    font-size: 1.2em;
-    color: #555;
-    line-height: 1.5;
-  }
-  
+  padding: 0; /* Remove padding to avoid extra space */
+  overflow-y: auto; /* Allow scrolling */
+}
+
+/* Vision Section */
+.vision-section {
+  height: 100vh; /* Take up the full window height */
+  width: 100vw; /* Full window width */
+  background: linear-gradient(90deg, rgba(0, 31, 63, 1) 20%, rgba(3, 16, 38, 0.8) 40%, rgba(3, 20, 38, 0.7) 65%, rgba(255, 255, 255, 0.05) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  margin-top: 200px; /* Large top margin to push it down */
+}
+
+/* Mission and History Section */
+.mission-section, 
+.history-section {
+  padding: 40px;
+  width: 100vw; /* Full window width */
+  box-sizing: border-box;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.mission-section {
+  background-color: #ffeb3b; /* Yellow background */
+}
+
+.history-section {
+  background-color: #c8e6c9; /* Light green background */
+}
+
+.about-us-container section {
+  min-height: 300px; /* Adjust height of each section */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Typography */
+.about-us-container h2 {
+  margin-bottom: 15px;
+  font-size: 2em;
+  color: #333;
+}
+
+.about-us-container p {
+  font-size: 1.2em;
+  color: #555;
+  line-height: 1.5;
+  text-align: center;
+}

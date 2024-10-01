@@ -36,6 +36,7 @@
 }
 
 .navibar-links-container a:hover {
+    cursor:pointer;
     color: #F49867; /* Hover color change to orange */
 }
 
