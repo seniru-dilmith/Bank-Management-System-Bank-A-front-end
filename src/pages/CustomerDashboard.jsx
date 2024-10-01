@@ -3,19 +3,19 @@ import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
 
 const CustomerDashboard = () => {
-  const [accountType, setAccountType] = useState("Checking");
-  const [accountNumber, setAccountNumber] = useState("123456789");
-  const [currentBalance, setCurrentBalance] = useState("$5,000");
+  const [accountType] = useState("Checking");  // Removed setAccountType
+  const [accountNumber] = useState("123456789");  // Removed setAccountNumber
+  const [currentBalance] = useState("$5,000");  // Removed setCurrentBalance
 
   const styles = {
     container: {
       display: "flex",
-      flexDirection: "column",  // Stack sections vertically
+      flexDirection: "column",  
       alignItems: "center",
       justifyContent: "center",
       padding: "2rem",
-      minHeight: "100vh",  // Ensure full height coverage
-      width: "100%",  // Full width to allow responsiveness
+      minHeight: "100vh",  
+      width: "100%",  
       boxSizing: "border-box",
       backgroundSize: "cover",
       backgroundPosition: "center",
@@ -26,10 +26,10 @@ const CustomerDashboard = () => {
       padding: "2rem",
       borderRadius: "8px",
       boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",  
-      width: "90%",  // Percentage-based width for responsiveness
-      maxWidth: "500px",  // Maximum width to prevent overflow on large screens
+      width: "90%",  
+      maxWidth: "500px",  
       textAlign: "center",
-      marginBottom: "2rem",  // Space between sections
+      marginBottom: "2rem",  
       marginLeft: "-700px"
     },
     heading: {
@@ -37,22 +37,23 @@ const CustomerDashboard = () => {
       fontSize: "2rem",
       marginBottom: "1rem",
     },
-    inputGroup: {
+    infoGroup: {
       marginBottom: "1.5rem",
     },
-    inputLabel: {
+    infoLabel: {
       display: "block",
       color: "#333",
       marginBottom: "0.5rem",
       textAlign: "left",
       fontWeight: "bold",
     },
-    inputField: {
+    infoText: {
       width: "100%",
       padding: "0.75rem",
       border: "1px solid #ddd",
       borderRadius: "4px",
       backgroundColor: "#f4f4f4",
+      textAlign: "left",
     },
     transactionsContainer: {
       backgroundColor: "rgba(255, 255, 255, 0.9)",  
@@ -60,8 +61,8 @@ const CustomerDashboard = () => {
       boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",  
       padding: "2rem",
       textAlign: "left",
-      width: "90%",  // Percentage-based width for responsiveness
-      maxWidth: "600px",  // Maximum width to prevent overflow
+      width: "90%",  
+      maxWidth: "600px",  
       marginLeft: "-700px"
     },
     transactionsHeading: {
@@ -97,36 +98,21 @@ const CustomerDashboard = () => {
     <Layout NavigationBar={<CustomerNaviBar />}>
       <div style={styles.container}>
         <div style={styles.dashboardBox}>
-          <h2 style={styles.heading}>Account Summery</h2>
+          <h2 style={styles.heading}>Account Summary</h2>
 
-          <div style={styles.inputGroup}>
-            <label style={styles.inputLabel}>Account Type</label>
-            <input
-              type="text"
-              value={accountType}
-              onChange={(e) => setAccountType(e.target.value)}
-              style={styles.inputField}
-            />
+          <div style={styles.infoGroup}>
+            <label style={styles.infoLabel}>Account Type</label>
+            <div style={styles.infoText}>{accountType}</div>
           </div>
 
-          <div style={styles.inputGroup}>
-            <label style={styles.inputLabel}>Account Number</label>
-            <input
-              type="text"
-              value={accountNumber}
-              onChange={(e) => setAccountNumber(e.target.value)}
-              style={styles.inputField}
-            />
+          <div style={styles.infoGroup}>
+            <label style={styles.infoLabel}>Account Number</label>
+            <div style={styles.infoText}>{accountNumber}</div>
           </div>
 
-          <div style={styles.inputGroup}>
-            <label style={styles.inputLabel}>Current Balance</label>
-            <input
-              type="text"
-              value={currentBalance}
-              onChange={(e) => setCurrentBalance(e.target.value)}
-              style={styles.inputField}
-            />
+          <div style={styles.infoGroup}>
+            <label style={styles.infoLabel}>Current Balance</label>
+            <div style={styles.infoText}>{currentBalance}</div>
           </div>
         </div>
 
