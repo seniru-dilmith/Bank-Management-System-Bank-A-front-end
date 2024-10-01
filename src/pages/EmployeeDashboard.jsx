@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
+import EmployeeNaviBar from '../components/NaviBar/EmployeeNaviBar';
 import Layout from '../layouts/Layout';
 
 const EmployeeDashboard = () => {
@@ -78,7 +78,7 @@ const EmployeeDashboard = () => {
   };
 
   return (
-    <Layout NavigationBar={<CustomerNaviBar />}>
+    <Layout NavigationBar={<EmployeeNaviBar />}>
       <div style={styles.container}>
         {/* Customer Account Summaries Section */}
         <div style={styles.dashboardBox}>

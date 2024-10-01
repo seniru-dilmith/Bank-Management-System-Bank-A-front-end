@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom"; 
 import './naviBar.css';
 
 const EmployeeNaviBar=()=>{
@@ -6,11 +7,11 @@ const EmployeeNaviBar=()=>{
         <div className="navibar">
             <div className="navibar-links">
             <div className="navibar-links-container">
-                <p><a href="#home">Home</a></p>
-                <p><a href="#OpenNewAccount">Open New Account</a></p>
-                <p><a href="#OpenLoanRequest">Open Loan Request</a></p>
-                <p><a href="#Help">Help</a></p>
-                <p><a href="#Logout">Logout</a></p>
+                <p><Link to="/employee">Home</Link></p>
+                <p><Link to="/employee/OpenNewAccount">Open New Account</Link></p>
+                <p><Link to="/employee/OpenLoanRequest">Open Loan Request</Link></p>
+                <p><Link to="employee/EHelp">Help</Link></p>
+                <p><Link to="/">Logout</Link></p>
             </div>
             </div>
         </div>
