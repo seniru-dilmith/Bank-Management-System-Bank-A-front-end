@@ -78,63 +78,9 @@ const EmployeeDashboard = () => {
   };
 
   return (
-<<<<<<< HEAD
     <Layout NavigationBar={<EmployeeNaviBar/>}>
     <h1>Welcome to the Employee Dashboard</h1>
   </Layout>
-=======
-    <Layout NavigationBar={<EmployeeNaviBar />}>
-      <div style={styles.container}>
-        {/* Customer Account Summaries Section */}
-        <div style={styles.dashboardBox}>
-          <h2 style={styles.heading}>Customer Account Summaries</h2>
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.tableHeader}>Account Holder's Name</th>
-                <th style={styles.tableHeader}>Account Number</th>
-                <th style={styles.tableHeader}>Account Type</th>
-                <th style={styles.tableHeader}>Balance</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style={styles.tableRow}>
-                <td style={styles.tableCell}>{accountHolderName}</td>
-                <td style={styles.tableCell}>{accountNumber}</td>
-                <td style={styles.tableCell}>{accountType}</td>
-                <td style={styles.tableCell}>{balance}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* Recent Transactions Section */}
-        <div style={styles.transactionsContainer}>
-          <h3 style={styles.transactionsHeading}>Recent Transactions</h3>
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.tableHeader}>Date</th>
-                <th style={styles.tableHeader}>Account Holder's Name</th>
-                <th style={styles.tableHeader}>Transaction Type</th>
-                <th style={styles.tableHeader}>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions.map((transaction, index) => (
-                <tr key={index} style={styles.tableRow}>
-                  <td style={styles.tableCell}>{transaction.date}</td>
-                  <td style={styles.tableCell}>{transaction.name}</td>
-                  <td style={styles.tableCell}>{transaction.type}</td>
-                  <td style={styles.tableCell}>{transaction.amount}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </Layout>
->>>>>>> sasmitha
   );
 };
 

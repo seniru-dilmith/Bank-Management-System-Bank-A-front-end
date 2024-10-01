@@ -1,5 +1,4 @@
 .about-us-container {
-<<<<<<< HEAD
   padding: 0; /* Remove padding to avoid extra space */
   overflow-y: auto; /* Allow scrolling */
 }
@@ -57,49 +56,3 @@
   line-height: 1.5;
   text-align: center;
 }
-=======
-    padding: 20px;
-    overflow-y: auto; /* Allow scrolling */
-  }
-  
-  .vision-section {
-    padding: 40px;
-    background-color: #e0f7fa; /* Light blue background */
-    margin-bottom: 20px;
-    border-radius: 8px;
-  }
-  
-  .mission-section {
-    padding: 40px;
-    background-color: #ffeb3b; /* Yellow background */
-    margin-bottom: 20px;
-    border-radius: 8px;
-  }
-  
-  .history-section {
-    padding: 40px;
-    background-color: #c8e6c9; /* Light green background */
-    margin-bottom: 20px;
-    border-radius: 8px;
-  }
-  
-  .about-us-container section {
-    min-height: 300px; /* Adjust height of each section */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  
-  .about-us-container h2 {
-    margin-bottom: 15px;
-    font-size: 2em;
-    color: #333;
-  }
-  
-  .about-us-container p {
-    font-size: 1.2em;
-    color: #555;
-    line-height: 1.5;
-  }
-  
->>>>>>> sasmitha

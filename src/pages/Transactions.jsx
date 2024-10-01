@@ -66,8 +66,4 @@ const styles = {
   },
 };
 
-<<<<<<< HEAD
 export default Transactions;
-=======
-export default Transactions;
->>>>>>> sasmitha

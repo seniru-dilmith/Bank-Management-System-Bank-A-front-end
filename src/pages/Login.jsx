@@ -148,8 +148,4 @@ const styles = {
   },
 };
 
-<<<<<<< HEAD
 export default Login;
-=======
-export default Login;
->>>>>>> sasmitha
