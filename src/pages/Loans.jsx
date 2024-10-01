@@ -3,8 +3,52 @@ import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
 
 const LoanDetails = () => {
+<<<<<<< HEAD
+=======
+  // State to manage form inputs
+  const [formData, setFormData] = useState({
+    applicationId: '',
+    loanType: '',
+    status: '',
+    applicationDate: '',
+  });
+
+  // State for Active Loan table inputs
+  const [activeLoan, setActiveLoan] = useState({
+    loanType: '',
+    amountBorrowed: '',
+    outstandingBalance: '',
+    nextPaymentDate: '',
+  });
+
+  // Handle input change for the form
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  // Handle input change for the Active Loans table
+  const handleLoanInputChange = (e) => {
+    const { name, value } = e.target;
+    setActiveLoan({
+      ...activeLoan,
+      [name]: value,
+    });
+  };
+
+  // Handle form submit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert('Loan Application Submitted!');
+    // Add logic to handle form submission
+  };
+
+>>>>>>> sasmitha
   return (
-    <Layout Navigationbar={<CustomerNaviBar />}>
+    <Layout NavigationBar={<CustomerNaviBar />}>
       <div style={styles.container}>
         <h2 style={styles.dashboardHeader}>Loan Details</h2>
         <div style={styles.loanDetailsBox}>
@@ -12,19 +56,43 @@ const LoanDetails = () => {
           <form onSubmit={handleSubmit}>
             <div style={styles.formGroup}>
               <label>Application ID:</label>
-              <input type="text" name="applicationId" style={styles.inputField} readOnly />
+              <input
+                type="text"
+                name="applicationId"
+                value={formData.applicationId}
+                onChange={handleInputChange}
+                style={styles.inputField}
+              />
             </div>
             <div style={styles.formGroup}>
               <label>Loan Type:</label>
-              <input type="text" name="loanType" style={styles.inputField} readOnly />
+              <input
+                type="text"
+                name="loanType"
+                value={formData.loanType}
+                onChange={handleInputChange}
+                style={styles.inputField}
+              />
             </div>
             <div style={styles.formGroup}>
               <label>Status:</label>
-              <input type="text" name="status" style={styles.inputField} readOnly />
+              <input
+                type="text"
+                name="status"
+                value={formData.status}
+                onChange={handleInputChange}
+                style={styles.inputField}
+              />
             </div>
             <div style={styles.formGroup}>
               <label>Application Date:</label>
-              <input type="text" name="applicationDate" style={styles.inputField} readOnly />
+              <input
+                type="text"
+                name="applicationDate"
+                value={formData.applicationDate}
+                onChange={handleInputChange}
+                style={styles.inputField}
+              />
             </div>
 
             {/* Submit Button */}
@@ -100,7 +168,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundImage: `url('/path-to-your-background-image')`, // Set background image path
+    backgroundImage: `url('/path-to-your-background-image')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     height: 'auto',
