@@ -3,50 +3,6 @@ import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
 
 const LoanDetails = () => {
-<<<<<<< HEAD
-=======
-  // State to manage form inputs
-  const [formData, setFormData] = useState({
-    applicationId: '',
-    loanType: '',
-    status: '',
-    applicationDate: '',
-  });
-
-  // State for Active Loan table inputs
-  const [activeLoan, setActiveLoan] = useState({
-    loanType: '',
-    amountBorrowed: '',
-    outstandingBalance: '',
-    nextPaymentDate: '',
-  });
-
-  // Handle input change for the form
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  // Handle input change for the Active Loans table
-  const handleLoanInputChange = (e) => {
-    const { name, value } = e.target;
-    setActiveLoan({
-      ...activeLoan,
-      [name]: value,
-    });
-  };
-
-  // Handle form submit
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert('Loan Application Submitted!');
-    // Add logic to handle form submission
-  };
-
->>>>>>> sasmitha
   return (
     <Layout Navigationbar={<CustomerNaviBar />}>
       <div style={styles.container}>
