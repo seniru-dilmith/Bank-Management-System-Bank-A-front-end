@@ -2,12 +2,13 @@ import React from 'react';
 import EmployeeNaviBar from '../components/NaviBar/EmployeeNaviBar';
 import Layout from '../layouts/Layout';
 
-const EmployeeDashboard = () => {
+const OpenLoanRequest = () => {
   return (
     <Layout NavigationBar={<EmployeeNaviBar/>}>
-    <h1>Welcome to the Employee Dashboard</h1>
-  </Layout>
+      <h1>Open Loan Requests</h1>
+    </Layout>
   );
 };
 
-export default EmployeeDashboard;
+
+export default OpenLoanRequest;

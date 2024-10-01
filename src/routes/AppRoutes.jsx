@@ -11,6 +11,9 @@ import Loans from '../pages/Loans';
 import CHelp from '../pages/CHelp';
 import ManagerDashboard from '../pages/ManagerDashboard';
 import EmployeeDashboard from '../pages/EmployeeDashboard';
+import OpenNewAccount from "../pages/OpenNewAccount";
+import OpenLoanRequest from "../pages/OpenLoanRequest";
+import EHelp from "../pages/EHelp";
 
 const AppRoutes = () => {
   return (
@@ -26,6 +29,9 @@ const AppRoutes = () => {
       <Route path="/customer/chelp" element={<CHelp />} />
       <Route path="/manager" element={<ManagerDashboard />} />
       <Route path="/employee" element={<EmployeeDashboard />} />
+      <Route path="/employee/OpenNewAccount" element={<OpenNewAccount/>} />
+      <Route path="/employee/OpenLoanRequest" element={<OpenLoanRequest/>} />
+      <Route path="/employee/Ehelp" element={<EHelp />} />
     </Routes>
   );
 };
