@@ -34,12 +34,10 @@ const AboutUs = () => {
 
         {/* Awards Section */}
         <section className="awards-section">
-          <h2>Awards and Certifications</h2>
-          <p>Best Retail Bank Award: Recognized for excellence in retail banking services by the Global Banking Association.
-
-Customer Service Excellence Award: Awarded for outstanding customer service and support by the National Banking Forum.
-
-ISO 9001:2015 Certification: Certified for quality management systems, demonstrating a commitment to consistent quality and continual improvement.</p>
+          <h2>Awards & Recognition</h2>
+          <p>Best Retail Bank Award: Recognized for excellence in retail banking services by the Global Banking Association.</p>
+          <p>Customer Service Excellence Award: Awarded for outstanding customer service and support by the National Banking Forum.</p>
+          <p>ISO 9001:2015 Certification: Certified for quality management systems, demonstrating a commitment to consistent quality and continual improvement.</p>
         </section>
       </div>
     </Layout>
@@ -47,3 +45,4 @@ ISO 9001:2015 Certification: Certified for quality management systems, demonstra
 };
 
 export default AboutUs;
+
