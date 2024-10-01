@@ -3,8 +3,6 @@ import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
 
 const LoanDetails = () => {
-<<<<<<< HEAD
-=======
   // State to manage form inputs
   const [formData, setFormData] = useState({
     applicationId: '',
@@ -46,7 +44,6 @@ const LoanDetails = () => {
     // Add logic to handle form submission
   };
 
->>>>>>> sasmitha
   return (
     <Layout NavigationBar={<CustomerNaviBar />}>
       <div style={styles.container}>
