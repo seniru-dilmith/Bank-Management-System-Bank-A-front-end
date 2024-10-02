@@ -1,13 +1,13 @@
 import React from 'react';
-import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
+import TechnicianNaviBar from '../components/NaviBar/TechnicianNaviBar';
 import Layout from '../layouts/Layout';
 
-const CustomerDashboard = () => {
+const TechnicianDashboard = () => {
     return (
-        <Layout NavigationBar={<CustomerNaviBar />}>
+        <Layout NavigationBar={<TechnicianNaviBar />}>
             <h1>Technician Dashboard</h1>
         </Layout>
     );
 };
 
-export default CustomerDashboard;
+export default TechnicianDashboard;
