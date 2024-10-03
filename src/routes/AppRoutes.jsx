@@ -17,6 +17,12 @@ import TechnicianDashboard from '../pages/TechnicianDashboard';
 import ManageBranches from "../pages/ManageBranches"
 import ManageEmployees from "../pages/ManageEmployees";
 import THelp from "../pages/THelp";
+import ManagerDashboard from "../pages/ManagerDashboard";
+import ApproveLoans from "../pages/ApproveLoans";
+import MManageEmployees from "../pages/MManageEmployees";
+import ManageBranch from "../pages/ManageBranch";
+import MHelp from "../pages/MHelp";
+
 
 const AppRoutes = () => {
   return (
@@ -25,6 +31,7 @@ const AppRoutes = () => {
       <Route path="/aboutus" element={<AboutUs />} />
       <Route path="/login" element={<Login />} />
       <Route path="/settings" element={<Settings />} />
+      <Route path="/settings/:settingType" element={<Settings />} />
       <Route path="/customersupport" element={<CustomerSupport />} />
       <Route path="/customer" element={<CustomerDashboard />} />
       <Route path="/customer/transactions" element={<Transactions />} />
@@ -38,6 +45,11 @@ const AppRoutes = () => {
       <Route path="/technician/ManageBranches" element={<ManageBranches/>} />
       <Route path="/technician/ManageEmployees" element={<ManageEmployees/>} />
       <Route path="/technician/Thelp" element={<THelp />} />
+      <Route path="manager" element={<ManagerDashboard/>}/>
+      <Route path="/manager/ApproveLoans" element={<ApproveLoans/>}/>
+      <Route path="/manager/ManageBranch" element={<ManageBranch/>}/>
+      <Route path="/manager/MManageEmployees" element={<MManageEmployees/>}/>
+      <Route path="/manager/MHelp" element={<MHelp/>}/>
 
     </Routes>
   );

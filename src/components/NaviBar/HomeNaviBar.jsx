@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { NavLink } from "react-router-dom"; // Import NavLink from react-router-dom
 import './naviBar.css';
 
 const HomeNaviBar = () => {
@@ -7,11 +7,31 @@ const HomeNaviBar = () => {
         <div className="navibar">
             <div className="navibar-links">
                 <div className="navibar-links-container">
-                    <p><Link to="/">Home</Link></p>
-                    <p><Link to="/aboutus">About Us</Link></p>
-                    <p><Link to="/login">Login</Link></p>
-                    <p><Link to="/settings">Settings</Link></p>
-                    <p><Link to="/customersupport">Customer Support</Link></p>
+                    <p>
+                        <NavLink exact to="/" activeClassName="active">
+                            Home
+                        </NavLink>
+                    </p>
+                    <p>
+                        <NavLink to="/aboutus" activeClassName="active">
+                            About Us
+                        </NavLink>
+                    </p>
+                    <p>
+                        <NavLink to="/login" activeClassName="active">
+                            Login
+                        </NavLink>
+                    </p>
+                    <p>
+                        <NavLink to="/settings" activeClassName="active">
+                            Settings
+                        </NavLink>
+                    </p>
+                    <p>
+                        <NavLink to="/customersupport" activeClassName="active">
+                            Customer Support
+                        </NavLink>
+                    </p>
                 </div>
             </div>
         </div>

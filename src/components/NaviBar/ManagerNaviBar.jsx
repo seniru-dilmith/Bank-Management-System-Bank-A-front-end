@@ -1,21 +1,22 @@
 import React from "react";
+import { NavLink } from "react-router-dom"; // Import NavLink from react-router-dom
 import './naviBar.css';
 
-const ManagerNaviBar=()=>{
-    return(
+const ManagerNaviBar = () => {
+    return (
         <div className="navibar">
             <div className="navibar-links">
-            <div className="navibar-links-container">
-                <p><a href="#home">Home</a></p>
-                <p><a href="#ApproveLoans">Approve Loans</a></p>
-                <p><a href="#Manage Employees">Manage Employees</a></p>
-                <p><a href="#Manage Branch">Manage Branch</a></p>
-                <p><a href="#Help">Help</a></p>
-                <p><a href="#Logout">Logout</a></p>
-            </div>
+                <div className="navibar-links-container">
+                    <p><NavLink exact to="/manager" end activeClassName="active">Home</NavLink></p>
+                    <p><NavLink to="/manager/ApproveLoans" activeClassName="active">Approve Loans</NavLink></p>
+                    <p><NavLink to="/manager/MManageEmployees" activeClassName="active">Manage Employees</NavLink></p>
+                    <p><NavLink to="/manager/ManageBranch" activeClassName="active">Manage Branch</NavLink></p>
+                    <p><NavLink to="/manager/MHelp" activeClassName="active">Help</NavLink></p>
+                    <p><NavLink to="/" activeClassName="active">Logout</NavLink></p>
+                </div>
             </div>
         </div>
-        
-    )
+    );
 }
-export default ManagerNaviBar
+
+export default ManagerNaviBar;
