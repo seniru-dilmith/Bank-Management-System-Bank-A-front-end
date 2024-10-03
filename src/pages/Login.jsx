@@ -3,6 +3,8 @@ import HomeNaviBar from '../components/NaviBar/HomeNaviBar';
 import Layout from '../layouts/Layout';
 import CustomerDashboard from './CustomerDashboard';  // Import the CustomerDashboard component
 import EmployeeDashboard from './EmployeeDashboard';  // Import the EmployeeDashboard component
+import TechnicianDashboard from './TechnicianDashboard';
+import ManagerDashboard from './ManagerDashboard';
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -18,7 +20,11 @@ const Login = () => {
       setLoggedInAs("customer");  // Mark as logged in as customer
     } else if (username === "e") {
       setLoggedInAs("employee");  // Mark as logged in as employee
-    } else {
+    }else if (username === "t") {
+      setLoggedInAs("technician");  // Mark as logged in as employee
+    }else if (username === "m") {
+      setLoggedInAs("manager");  // Mark as logged in as employee
+    }else {
       alert("Invalid username or password");
     }
   };
@@ -29,6 +35,12 @@ const Login = () => {
   }
   if (loggedInAs === "employee") {
     return <EmployeeDashboard />;  // Redirect to EmployeeDashboard after login
+  }
+  if (loggedInAs === "technician") {
+    return <TechnicianDashboard />;  // Redirect to EmployeeDashboard after login
+  }
+  if (loggedInAs === "manager") {
+    return <ManagerDashboard />;  // Redirect to EmployeeDashboard after login
   }
 
   return (
