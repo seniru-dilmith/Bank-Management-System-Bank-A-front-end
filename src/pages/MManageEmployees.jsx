@@ -52,12 +52,49 @@ const styles = {
     float: 'right',
     marginBottom: '20px',
   },
+  modalOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: '20px',
+    borderRadius: '10px',
+    textAlign: 'center',
+    width: '300px',
+  },
+  modalButton: {
+    padding: '8px 15px',
+    margin: '10px',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    borderRadius: '8px',
+    border: 'none',
+    cursor: 'pointer',
+  },
+  confirmButton: {
+    backgroundColor: '#28a745',
+    color: 'white',
+  },
+  cancelButton: {
+    backgroundColor: '#dc3545',
+    color: 'white',
+  },
 };
 
 const ManageEmployees = () => {
   const [employees, setEmployees] = useState([]);
   const [editingId, setEditingId] = useState(null); // Track editing row
   const [newEmployee, setNewEmployee] = useState(null); // Track new employee row
+  const [showModal, setShowModal] = useState(false); // Control modal visibility
+  const [employeeToRemove, setEmployeeToRemove] = useState(null); // Track employee to remove
 
   useEffect(() => {
     // Simulated fetch from API or database
@@ -96,16 +133,21 @@ const ManageEmployees = () => {
     setNewEmployee(null);
   };
 
-  const handleRemoveEmployee = (id) => {
-    if (window.confirm('Are you sure you want to remove this employee?')) {
-      setEmployees(employees.filter((employee) => employee.id !== id));
-    }
+  const confirmRemoveEmployee = (id) => {
+    setShowModal(true);
+    setEmployeeToRemove(id); // Set the employee to remove when the modal is shown
+  };
+
+  const handleRemoveEmployee = () => {
+    setEmployees(employees.filter((employee) => employee.id !== employeeToRemove));
+    setShowModal(false);
+    setEmployeeToRemove(null);
   };
 
   return (
     <Layout NavigationBar={<ManagerNaviBar />}>
       <div style={styles.container}>
-        <h1>Manage Employees</h1>
+        
         <button style={styles.addButton} onClick={handleAddEmployee}>
           Add New Employee
         </button>
@@ -212,7 +254,7 @@ const ManageEmployees = () => {
                       <button style={styles.button} onClick={() => setEditingId(employee.id)}>
                         Update Employee
                       </button>
-                      <button style={styles.button} onClick={() => handleRemoveEmployee(employee.id)}>
+                      <button style={styles.button} onClick={() => confirmRemoveEmployee(employee.id)}>
                         Remove Employee
                       </button>
                     </td>
@@ -295,6 +337,27 @@ const ManageEmployees = () => {
             )}
           </tbody>
         </table>
+
+        {/* Custom Confirmation Modal */}
+        {showModal && (
+          <div style={styles.modalOverlay}>
+            <div style={styles.modalContent}>
+              <h3>Are you sure you want to remove this employee?</h3>
+              <button
+                style={{ ...styles.modalButton, ...styles.confirmButton }}
+                onClick={handleRemoveEmployee}
+              >
+                Yes, Remove
+              </button>
+              <button
+                style={{ ...styles.modalButton, ...styles.cancelButton }}
+                onClick={() => setShowModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   );
