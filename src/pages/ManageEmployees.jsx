@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TechnicianNaviBar from '../components/NaviBar/TechnicianNaviBar';
 import Layout from '../layouts/Layout';
+import axios from 'axios';
 
 const styles = {
   container: {
@@ -96,13 +97,34 @@ const ManageEmployees = () => {
   const [showModal, setShowModal] = useState(false); // Control modal visibility
   const [employeeToRemove, setEmployeeToRemove] = useState(null); // Track employee to remove
 
+  
+  // Fetch employees from the database
+  /*useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get('/api/employees'); // Replace with your API endpoint
+        setEmployees(response.data); // Assuming the data is in response.data
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);*/
+
   useEffect(() => {
-    // Simulated fetch from API or database
+    // Dummy data for now
     const fetchedEmployees = [
       { id: 1, firstName: 'John', lastName: 'Doe', phone: '123456789', nic: '123456789V', email: 'john@example.com', position: 'Technician', branch: 'NYC', username: 'johndoe' },
       { id: 2, firstName: 'Jane', lastName: 'Smith', phone: '987654321', nic: '987654321V', email: 'jane@example.com', position: 'Manager', branch: 'LA', username: 'janesmith' },
     ];
     setEmployees(fetchedEmployees);
+
+    // When using an actual API, you would replace this with an axios call:
+    // axios.get('/api/employees')
+    //   .then(response => setEmployees(response.data))
+    //   .catch(error => console.error('Error fetching data', error));
+
   }, []);
 
   const handleInputChange = (e, id, field) => {
