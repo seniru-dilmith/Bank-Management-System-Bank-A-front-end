@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TechnicianNaviBar from '../components/NaviBar/TechnicianNaviBar';
 import Layout from '../layouts/Layout';
+import axios from 'axios';
 
 const styles = {
   container: {
@@ -96,6 +97,21 @@ const ManageBranches = () => {
   const [showModal, setShowModal] = useState(false); // Control modal visibility
   const [branchToRemove, setBranchToRemove] = useState(null); // Track branch to remove
 
+  // Fetch branches from the database
+  /*useEffect(() => {
+    const fetchBranches = async () => {
+      try {
+        const response = await axios.get('/api/branches'); // Replace with your API endpoint
+        setBranches(response.data); // Assuming the data is in response.data
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    };
+
+    fetchBranches();
+  }, []);*/
+  
+  
   useEffect(() => {
     // Simulated fetch from API or database
     const fetchedBranches = [
