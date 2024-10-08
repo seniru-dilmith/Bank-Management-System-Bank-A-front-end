@@ -22,11 +22,7 @@ const HomeNaviBar = () => {
                             Login
                         </NavLink>
                     </p>
-                    <p>
-                        <NavLink to="/settings" activeClassName="active">
-                            Settings
-                        </NavLink>
-                    </p>
+                  
                     <p>
                         <NavLink to="/customersupport" activeClassName="active">
                             Customer Support
