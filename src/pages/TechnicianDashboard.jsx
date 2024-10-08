@@ -17,13 +17,13 @@ const TechnicianDashboard = () => {
         <div style={styles.buttonContainer}>
           <button
             style={styles.button}
-            onClick={() => navigate('ManageEmployees')} // Navigate to Manage Employees page
+            onClick={() => navigate('/technician/ManageEmployees')} // Navigate to Manage Employees page
           >
             Manage Employees
           </button>
           <button
             style={styles.button}
-            onClick={() => navigate('ManageBranches')} // Navigate to Manage Branches page
+            onClick={() => navigate('/technician/ManageBranches')} // Navigate to Manage Branches page
           >
             Manage Branch
           </button>

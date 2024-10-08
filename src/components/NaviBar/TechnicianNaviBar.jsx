@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"; 
+import { NavLink } from "react-router-dom";
 import './naviBar.css';
 
 const TechnicianNaviBar=()=>{
@@ -7,15 +7,15 @@ const TechnicianNaviBar=()=>{
         <div className="navibar">
             <div className="navibar-links">
             <div className="navibar-links-container">
-                <p><Link to="/technician">Home</Link></p>
-                <p><Link to="/technician/ManageEmployees">Manage Employees</Link></p>
-                <p><Link to="/technician/ManageBranches">Manage Branches</Link></p>
-                <p><Link to="/technician/THelp">Help</Link></p>
-                <p><Link to="/">Logout</Link></p>
+                <p><NavLink exact to="/technician" end activeClassName="active">Home</NavLink></p>
+                <p><NavLink to="/technician/ManageEmployees" activeClassName="active">Manage Employees</NavLink></p>
+                <p><NavLink to="/technician/ManageBranches" activeClassName="active">Manage Branches</NavLink></p>
+                <p><NavLink to="/technician/THelp" activeClassName="active">Help</NavLink></p>
+                <p><NavLink to="/" activeClassName="active">Logout</NavLink></p>
             </div>
             </div>
         </div>
         
     )
 }
-export default TechnicianNaviBar
+export default TechnicianNaviBar;
