@@ -74,7 +74,6 @@ const ApproveLoans = () => {
   return (
     <Layout NavigationBar={<ManagerNaviBar />}>
       <div style={styles.container}>
-        <h1>Approve/Reject loan applications</h1>
         <table style={styles.table}>
           <thead>
             <tr>
