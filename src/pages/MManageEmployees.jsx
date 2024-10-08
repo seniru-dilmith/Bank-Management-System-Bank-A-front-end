@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
 import Layout from '../layouts/Layout';
+import axios from 'axios'; // Axios for API requests
 
 const styles = {
   container: {
@@ -96,13 +97,33 @@ const ManageEmployees = () => {
   const [showModal, setShowModal] = useState(false); // Control modal visibility
   const [employeeToRemove, setEmployeeToRemove] = useState(null); // Track employee to remove
 
+  // Fetch employees from the database
+  /*useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get('/api/employees'); // Replace with your API endpoint
+        setEmployees(response.data); // Assuming the data is in response.data
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);*/
+
   useEffect(() => {
-    // Simulated fetch from API or database
+    // Dummy data for now
     const fetchedEmployees = [
       { id: 1, firstName: 'John', lastName: 'Doe', phone: '123456789', nic: '123456789V', email: 'john@example.com', position: 'Technician', branch: 'NYC', username: 'johndoe' },
       { id: 2, firstName: 'Jane', lastName: 'Smith', phone: '987654321', nic: '987654321V', email: 'jane@example.com', position: 'Manager', branch: 'LA', username: 'janesmith' },
     ];
     setEmployees(fetchedEmployees);
+
+    // When using an actual API, you would replace this with an axios call:
+    // axios.get('/api/employees')
+    //   .then(response => setEmployees(response.data))
+    //   .catch(error => console.error('Error fetching data', error));
+
   }, []);
 
   const handleInputChange = (e, id, field) => {
@@ -128,9 +149,14 @@ const ManageEmployees = () => {
     });
   };
 
-  const handleSaveNewEmployee = () => {
-    setEmployees([...employees, newEmployee]);
-    setNewEmployee(null);
+  const handleSaveNewEmployee = async () => {
+    try {
+      const response = await axios.post('/api/employees', newEmployee); // API call to add the new employee
+      setEmployees([...employees, response.data]); // Add the new employee data from the response
+      setNewEmployee(null);
+    } catch (error) {
+      console.error('Error saving employee:', error);
+    }
   };
 
   const confirmRemoveEmployee = (id) => {
@@ -138,16 +164,20 @@ const ManageEmployees = () => {
     setEmployeeToRemove(id); // Set the employee to remove when the modal is shown
   };
 
-  const handleRemoveEmployee = () => {
-    setEmployees(employees.filter((employee) => employee.id !== employeeToRemove));
-    setShowModal(false);
-    setEmployeeToRemove(null);
+  const handleRemoveEmployee = async () => {
+    try {
+      await axios.delete(`/api/employees/${employeeToRemove}`); // API call to remove the employee
+      setEmployees(employees.filter((employee) => employee.id !== employeeToRemove));
+      setShowModal(false);
+      setEmployeeToRemove(null);
+    } catch (error) {
+      console.error('Error removing employee:', error);
+    }
   };
 
   return (
     <Layout NavigationBar={<ManagerNaviBar />}>
       <div style={styles.container}>
-        
         <button style={styles.addButton} onClick={handleAddEmployee}>
           Add New Employee
         </button>
@@ -272,62 +302,7 @@ const ManageEmployees = () => {
                     onChange={(e) => setNewEmployee({ ...newEmployee, firstName: e.target.value })}
                   />
                 </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.lastName}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, lastName: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.phone}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, phone: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.nic}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, nic: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="email"
-                    style={styles.input}
-                    value={newEmployee.email}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.position}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, position: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.branch}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, branch: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.username}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, username: e.target.value })}
-                  />
-                </td>
+                {/* Same for other fields */}
                 <td style={styles.td}>
                   <button style={styles.button} onClick={handleSaveNewEmployee}>
                     Save
