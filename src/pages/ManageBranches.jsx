@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TechnicianNaviBar from '../components/NaviBar/TechnicianNaviBar';
 import Layout from '../layouts/Layout';
+import axios from 'axios';
 
 const styles = {
   container: {
