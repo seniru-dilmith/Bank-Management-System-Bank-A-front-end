@@ -1,18 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from 'axios'; // Include axios to handle API requests
 import EmployeeNaviBar from '../components/NaviBar/EmployeeNaviBar';
 import Layout from '../layouts/Layout';
 
 const EmployeeDashboard = () => {
-  const [accountHolderName] = useState("John Doe");  // Removed setAccountHolderName
-  const [accountNumber] = useState("123456789");    // Removed setAccountNumber
-  const [accountType] = useState("Checking");       // Removed setAccountType
-  const [balance] = useState("$5,000");             // Removed setBalance
+  const [accountHolderName, setAccountHolderName] = useState("John Doe");
+  const [accountNumber, setAccountNumber] = useState("123456789");
+  const [accountType, setAccountType] = useState("Checking");
+  const [balance, setBalance] = useState("$5,000");
 
   // Transaction data
-  const transactions = [
+  const [transactions, setTransactions] = useState([
     { date: "09/25/2024", name: "John Doe", type: "Deposit", amount: "$2,500" },
     { date: "09/20/2024", name: "John Doe", type: "Withdrawal", amount: "$300" },
-  ];
+  ]);
+
+  // Uncomment below code for fetching account details dynamically
+  /*
+  useEffect(() => {
+    const fetchAccountDetails = async () => {
+      try {
+        const response = await axios.get('/api/account-details'); // Replace with your API endpoint
+        setAccountHolderName(response.data.accountHolderName);
+        setAccountNumber(response.data.accountNumber);
+        setAccountType(response.data.accountType);
+        setBalance(response.data.balance);
+      } catch (error) {
+        console.error('Error fetching account details:', error);
+      }
+    };
+    fetchAccountDetails();
+  }, []);
+  */
+
+  // Uncomment below code for fetching transaction details dynamically
+  /*
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const response = await axios.get('/api/transactions'); // Replace with your API endpoint
+        setTransactions(response.data);
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
+    };
+    fetchTransactions();
+  }, []);
+  */
 
   const styles = {
     container: {
