@@ -1,11 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
+import axios from 'axios';
 
 const CustomerDashboard = () => {
-  const [accountType] = useState("Checking");  // Removed setAccountType
-  const [accountNumber] = useState("123456789");  // Removed setAccountNumber
-  const [currentBalance] = useState("$5,000");  // Removed setCurrentBalance
+  const [accountType, setAccountType] = useState("Checking");  // Removed setAccountType
+  const [accountNumber, setAccountNumber] = useState("123456789");  // Removed setAccountNumber
+  const [currentBalance, setCurrentBalance] = useState("$5,000");  // Removed setCurrentBalance
+  const [transactions, setTransactions] = useState([]);
+
+  // Uncomment this when ready to fetch data from an API
+  /*
+  useEffect(() => {
+    const fetchAccountDetails = async () => {
+      try {
+        const accountResponse = await axios.get('/api/account');  // Replace with actual API endpoint
+        setAccountType(accountResponse.data.accountType);
+        setAccountNumber(accountResponse.data.accountNumber);
+        setCurrentBalance(accountResponse.data.currentBalance);
+      } catch (error) {
+        console.error('Error fetching account details:', error);
+      }
+    };
+
+    const fetchTransactions = async () => {
+      try {
+        const transactionsResponse = await axios.get('/api/transactions');  // Replace with actual API endpoint
+        setTransactions(transactionsResponse.data);  // Assuming transactions data is in response.data
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
+    };
+
+    fetchAccountDetails();
+    fetchTransactions();
+  }, []);
+  */
 
   const styles = {
     container: {
@@ -129,19 +159,31 @@ const CustomerDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              <tr style={styles.tableRow}>
-                <td style={styles.tableCell}>09/25/2024</td>
-                <td style={styles.tableCell}>Deposit</td>
-                <td style={styles.tableCell}>Monthly Salary</td>
-                <td style={styles.tableCell}>$2,500</td>
-              </tr>
-              <tr style={styles.tableRow}>
-                <td style={styles.tableCell}>09/20/2024</td>
-                <td style={styles.tableCell}>Withdrawal</td>
-                <td style={styles.tableCell}>ATM Withdrawal</td>
-                <td style={styles.tableCell}>$300</td>
-              </tr>
-              {/* Add more rows as needed */}
+              {transactions.length > 0 ? (
+                transactions.map((transaction, index) => (
+                  <tr key={index} style={styles.tableRow}>
+                    <td style={styles.tableCell}>{transaction.date}</td>
+                    <td style={styles.tableCell}>{transaction.type}</td>
+                    <td style={styles.tableCell}>{transaction.description}</td>
+                    <td style={styles.tableCell}>{transaction.amount}</td>
+                  </tr>
+                ))
+              ) : (
+                <>
+                  <tr style={styles.tableRow}>
+                    <td style={styles.tableCell}>09/25/2024</td>
+                    <td style={styles.tableCell}>Deposit</td>
+                    <td style={styles.tableCell}>Monthly Salary</td>
+                    <td style={styles.tableCell}>$2,500</td>
+                  </tr>
+                  <tr style={styles.tableRow}>
+                    <td style={styles.tableCell}>09/20/2024</td>
+                    <td style={styles.tableCell}>Withdrawal</td>
+                    <td style={styles.tableCell}>ATM Withdrawal</td>
+                    <td style={styles.tableCell}>$300</td>
+                  </tr>
+                </>
+              )}
             </tbody>
           </table>
           <div style={styles.viewAllLink}>
