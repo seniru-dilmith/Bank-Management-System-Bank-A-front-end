@@ -26,7 +26,7 @@ const OpenLoanRequest = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert('New account created with loan details!');
+    alert('New loan request submitted!');
     // Add logic to submit the form data
   };
 
@@ -34,7 +34,7 @@ const OpenLoanRequest = () => {
     <Layout NavigationBar={<EmployeeNaviBar />}>
       <div style={styles.pageContainer}>
         <div style={styles.container}>
-          <h1 style={styles.header}>Open Loan Requests</h1>
+          <h2 style={styles.header}>Open Loan Request</h2>
           <form onSubmit={handleSubmit}>
             <div style={styles.formGroup}>
               <label>Customer ID</label>
@@ -67,7 +67,7 @@ const OpenLoanRequest = () => {
               />
             </div>
             <div style={styles.formGroup}>
-              <label>Loan Term</label>
+              <label>Loan Term (in years)</label>
               <input
                 type="text"
                 name="loanTerm"
@@ -117,13 +117,13 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     padding: '20px',
-    borderRadius: '15px', // Rounded corners for the container
+    borderRadius: '10px', // Consistent border radius
     backgroundColor: '#fff',
-    width: '350px', // Increased width
-    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
+    width: '400px', // Matching width to maintain consistency
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
   },
   header: {
-    fontSize: '22px',
+    fontSize: '20px',
     fontWeight: 'bold',
     marginBottom: '20px',
     color: '#000',
@@ -134,19 +134,19 @@ const styles = {
   },
   inputField: {
     width: '100%',
-    padding: '12px',
-    borderRadius: '30px', // Rounded input fields
+    padding: '10px',
+    borderRadius: '5px', // Consistent border radius for inputs
     border: '1px solid #ccc',
     backgroundColor: '#f5f5f5',
     fontSize: '14px',
   },
   button: {
     width: '100%',
-    padding: '12px',
+    padding: '10px',
     backgroundColor: '#ff7f00', // Orange confirm button
     color: 'white',
     border: 'none',
-    borderRadius: '30px', // Rounded button
+    borderRadius: '5px', // Consistent rounded button
     cursor: 'pointer',
     fontSize: '16px',
   },
