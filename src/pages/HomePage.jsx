@@ -18,12 +18,14 @@ const HomePage = () => {
   const headingStyle = {
     fontSize: '2.5em',
     marginBottom: '20px',
+    color: 'rgba(255, 255, 255, 0.85)', // Adjusted for contrast
   };
 
   const paragraphStyle = {
     fontSize: '1.2em',
     lineHeight: '1.5',
     maxWidth: '800px',
+    color: 'rgba(255, 255, 255, 0.85)', // Adjusted for contrast
   };
 
   return (
