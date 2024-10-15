@@ -8,7 +8,7 @@ const Layout = ({ children, NavigationBar }) => {
       <div className="header">
         <div className="logo-container">
           <img src={logo} alt="Bank Logo" className="logo" />
-          <h2 className="bank-name">ABC Online Banking</h2> {/* Add bank name here */}
+          <h2 className="bank-name">ABC Online Banking</h2> 
         </div>
         <div className="nav-container">
           {NavigationBar}
@@ -18,10 +18,9 @@ const Layout = ({ children, NavigationBar }) => {
         <div className="gradient-box-left"></div>
         <div className="gradient-box-right"></div>
       </div>
-      <div className="conntent-container">{children}</div> {/* Ensure children are rendered */}
+      <div className="content-container">{children}</div> {/* Ensure children are rendered */}
     </div>
   );
 };
 
 export default Layout;
-

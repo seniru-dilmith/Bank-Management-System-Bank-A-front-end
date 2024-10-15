@@ -1,18 +1,17 @@
-import React from 'react';
+import React from 'react'; 
 import HomeNaviBar from '../components/NaviBar/HomeNaviBar';
 import Layout from '../layouts/Layout';
 
 const HomePage = () => {
-  // Define inline styles for the home page content with white text color and moved higher/left
   const homePageStyle = {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'flex-start',  // Move content towards the top
-    alignItems: 'flex-start',  // Move content towards the left
-    height: '100vh',  // Full viewport height
-    color: 'white',  // White text color
-    textAlign: 'left',  // Align text to the left
-    padding: '40px 20px 20px 60px',  // Adjust padding to move content to the left
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    height: '100vh',
+    color: 'white',
+    textAlign: 'left',
+    padding: '40px 20px 20px 60px',
     boxSizing: 'border-box',
   };
 
@@ -40,5 +39,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-
