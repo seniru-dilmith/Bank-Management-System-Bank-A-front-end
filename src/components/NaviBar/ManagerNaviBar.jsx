@@ -11,7 +11,6 @@ const ManagerNaviBar = () => {
                     <p><NavLink to="/manager/ApproveLoans" activeClassName="active">Approve Loans</NavLink></p>
                     <p><NavLink to="/manager/MManageEmployees" activeClassName="active">Manage Employees</NavLink></p>
                     <p><NavLink to="/manager/ManageBranch" activeClassName="active">Manage Branch</NavLink></p>
-                    <p><NavLink to="/manager/MHelp" activeClassName="active">Help</NavLink></p>
                     <p><NavLink to="/" activeClassName="active">Logout</NavLink></p>
                 </div>
             </div>

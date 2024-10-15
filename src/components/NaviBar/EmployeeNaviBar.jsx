@@ -10,7 +10,6 @@ const EmployeeNaviBar = () => {
                     <p><NavLink exact to="/employee" end activeClassName="active">Home</NavLink></p>
                     <p><NavLink to="/employee/OpenNewAccount" activeClassName="active">Open New Account</NavLink></p>
                     <p><NavLink to="/employee/OpenLoanRequest" activeClassName="active">Open Loan Request</NavLink></p>
-                    <p><NavLink to="/employee/EHelp" activeClassName="active">Help</NavLink></p>
                     <p><NavLink to="/" activeClassName="active">Logout</NavLink></p>
                 </div>
             </div>

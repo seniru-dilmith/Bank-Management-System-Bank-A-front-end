@@ -1,65 +1,138 @@
-/* About Us Container */
+/* General Container */
 .about-us-container {
-  padding: 0;
-  overflow-y: auto; /* Allow scrolling */
+  padding: 20px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  font-family: 'Poppins', sans-serif;
 }
 
 /* Common Section Styles */
 .about-section,
-.vision-section, 
-.mission-section, 
-.history-section, 
+.vision-section,
+.mission-section,
+.history-section,
 .awards-section {
-  min-height: 60vh; /* Reduce the height from 100vh to 60vh */
-  width: 100vw; /* Full window width */
-  background: linear-gradient(90deg, rgba(0, 31, 63, 1) 20%, rgba(3, 16, 38, 0.8) 40%, rgba(3, 20, 38, 0.7) 65%, rgba(255, 255, 255, 0.05) 100%);
+  min-height: 60vh; /* You can adjust this value for height */
+  width: 80vw; /* Adjusted width for wider boxes */
+  max-width: 1200px; /* Optional: limit max width for larger screens */
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 40px;
-  box-sizing: border-box;
-  border-radius: 8px;
-  color: white; /* White text color */
-  margin-bottom: 20px;
+  color: white;
+  margin: 20px auto; /* Center boxes with margin */
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out; /* Smooth transition on hover */
+  border-radius: 10px; /* Optional: add rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Optional: add shadow */
 }
 
-/* Specific Adjustments for Vision Section */
+/* Background Images with Transparency */
+.about-section {
+  background: url('../assets/images/about-bg.jpg') no-repeat center;
+  background-size: cover;
+  position: relative; /* Position for overlay */
+}
+
 .vision-section {
-  margin-top: 50px; /* Adjusted top margin to move the section up */
-  justify-content: flex-start; /* Align headline closer to the top */
-  padding-top: 40px; /* Optional: add padding at the top for spacing */
+  background: url('../assets/images/vision-icon.jpg') no-repeat center;
+  background-size: cover;
 }
 
-/* Typography for Section Headlines */
-.about-section h2, 
-.vision-section h2, 
-.mission-section h2, 
-.history-section h2, 
-.awards-section h2 {
-  margin-bottom: 15px;
-  font-size: 2em;
-  color: white; /* Headline text color */
+.mission-section {
+  background: url('../assets/images/mission-icon.jpg') no-repeat center;
+  background-size: cover;
 }
 
-/* Typography for Section Content */
-.about-section p, 
-.vision-section p, 
-.mission-section p, 
-.history-section p, 
-.awards-section p {
+.history-section {
+  background: url('../assets/images/history-bg.jpg') no-repeat center;
+  background-size: cover;
+}
+
+.awards-section {
+  background: url('../assets/images/awards-icon.jpg') no-repeat center;
+  background-size: cover;
+}
+
+/* Overlay for Transparency */
+.about-section::after,
+.vision-section::after,
+.mission-section::after,
+.history-section::after,
+.awards-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Black overlay with 50% transparency */
+  border-radius: 10px; /* Match box border-radius */
+  transition: background 0.3s ease-in-out; /* Smooth transition for hover effect */
+}
+
+/* Text Styles */
+h2 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.95); /* Increased opacity for better contrast */
+}
+
+p {
   font-size: 1.2em;
-  color: white; /* Content text color */
-  line-height: 1.5;
   text-align: center;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.95); /* Increased opacity for better contrast */
+  max-width: 800px;
 }
 
-/* Adjust padding for consistency */
-.about-us-container section {
-  min-height: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+/* Icon Styles */
+.icon {
+  margin-top: 20px;
+  width: 100px;
+  transition: transform 0.3s ease;
 }
 
+.icon:hover {
+  transform: scale(1.1);
+}
 
+/* Parallax Effect */
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.1;
+  z-index: -1;
+  transform: translateY(0px);
+  transition: transform 0.5s ease;
+}
+
+.history-section:hover .background-image {
+  transform: translateY(-20px);
+}
+
+/* Section Animation */
+section {
+  transition: transform 0.3s ease; /* Smooth transition */
+}
+
+section:hover {
+  transform: translateY(-10px); /* Raise the section on hover */
+}
+
+section h2 {
+  transition: color 0.3s ease;
+}
+
+section:hover h2 {
+  color: #ffcc00; /* Adds a golden glow to headings on hover */
+}

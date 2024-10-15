@@ -10,7 +10,6 @@ const CustomerNaviBar = () => {
                     <p><NavLink to="/customer" end activeClassName="active">Home</NavLink></p>
                     <p><NavLink to="/customer/transactions" activeClassName="active">Transactions</NavLink></p>
                     <p><NavLink to="/customer/loans" activeClassName="active">Loans</NavLink></p>
-                    <p><NavLink to="/customer/chelp" activeClassName="active">Help</NavLink></p>
                     <p><NavLink to="/" activeClassName="active">Logout</NavLink></p>
                 </div>
             </div>
