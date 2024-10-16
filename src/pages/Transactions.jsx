@@ -6,21 +6,37 @@ const Transactions = () => {
   return (
     <Layout NavigationBar={<CustomerNaviBar />}>
       <div style={styles.transactionsContainer}>
-        <h2>Customer Dashboard</h2>
+        <div style={styles.CustomerDashboardBox}>
+          <h2 style={styles.CustomerDashboardTitle}>Customer Dashboard</h2>
+        </div>
+
+        {/* Centered Transactions Box */}
         <div style={styles.transactionsBox}>
           <h3>Transactions</h3>
           <form>
             <div style={styles.formGroup}>
-              <label>Select account:</label>
-              <input type="text" name="account" style={styles.inputField} />
+              <label>From account:</label>
+              <input type="text" name="fromAccount" style={styles.inputField} />
             </div>
             <div style={styles.formGroup}>
-              <label>Recipient:</label>
-              <input type="text" name="recipient" style={styles.inputField} />
+              <label>Beneficiary account no:</label>
+              <input type="text" name="beneficiaryAccountNo" style={styles.inputField} />
+            </div>
+            <div style={styles.formGroup}>
+              <label>Beneficiary name:</label>
+              <input type="text" name="beneficiaryName" style={styles.inputField} />
             </div>
             <div style={styles.formGroup}>
               <label>Amount:</label>
               <input type="number" name="amount" style={styles.inputField} />
+            </div>
+            <div style={styles.formGroup}>
+              <label>Receiver Reference:</label>
+              <input type="text" name="receiverReference" style={styles.inputField} />
+            </div>
+            <div style={styles.formGroup}>
+              <label>My Reference:</label>
+              <input type="text" name="myReference" style={styles.inputField} />
             </div>
             <button type="submit" style={styles.transferBtn}>Transfer</button>
           </form>
@@ -33,14 +49,16 @@ const Transactions = () => {
 const styles = {
   transactionsContainer: {
     padding: '20px',
-    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'column', // Use column direction for stacking
+    alignItems: 'flex-start', // Align items to the left
   },
   transactionsBox: {
     backgroundColor: 'white',
     borderRadius: '10px',
     padding: '20px',
     width: '300px',
-    margin: '0 auto',
+    margin: '20px auto', // Center the box with margin auto
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
   formGroup: {
@@ -61,8 +79,17 @@ const styles = {
     fontSize: '16px',
     cursor: 'pointer',
   },
-  transferBtnHover: {
-    backgroundColor: '#e66000',
+  CustomerDashboardBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+  },
+  CustomerDashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
   },
 };
 

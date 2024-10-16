@@ -1,17 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import HomeNaviBar from '../components/NaviBar/HomeNaviBar';
+import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
 
 const Settings = () => {
-  const { settingType } = useParams();  // Get the type of setting to display
+  const { settingType } = useParams(); // Get the type of setting to display
   const [currentValue, setCurrentValue] = useState('');
   const [newValue, setNewValue] = useState('');
 
-  const handleSubmit = (e) => {
+  // Fetch the current value based on the setting type
+  useEffect(() => {
+    const fetchCurrentValue = async () => {
+      try {
+        const response = await fetch(`/api/settings/${settingType}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setCurrentValue(data.value); // Assuming the API returns the current value in { value: '...' } format
+      } catch (error) {
+        console.error('Error fetching current value:', error);
+      }
+    };
+
+    fetchCurrentValue();
+  }, [settingType]);
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle the form submission logic
-    console.log(`${settingType} changed from:`, currentValue, "to:", newValue);
+    try {
+      const response = await fetch(`/api/settings/${settingType}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newValue }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      console.log(`${settingType} changed from:`, currentValue, "to:", newValue);
+      setCurrentValue(newValue); // Update the current value in state
+    } catch (error) {
+      console.error('Error updating value:', error);
+    }
   };
 
   // Function to render form based on selected setting
@@ -32,14 +67,6 @@ const Settings = () => {
         currentLabel = 'Current Address';
         newLabel = 'New Address';
         break;
-      case 'accessibility':
-        currentLabel = 'Current Accessibility Settings';
-        newLabel = 'New Accessibility Settings';
-        break;
-      case 'language':
-        currentLabel = 'Current Language';
-        newLabel = 'New Language';
-        break;
       default:
         return (
           <div style={styles.buttonContainer}>
@@ -51,12 +78,6 @@ const Settings = () => {
             </Link>
             <Link to="/settings/change-address">
               <button style={styles.button}>Change Address</button>
-            </Link>
-            <Link to="/settings/accessibility">
-              <button style={styles.button}>Accessibility</button>
-            </Link>
-            <Link to="/settings/language">
-              <button style={styles.button}>Language</button>
             </Link>
           </div>
         );
@@ -85,7 +106,7 @@ const Settings = () => {
   };
 
   return (
-    <Layout NavigationBar={<HomeNaviBar />}>
+    <Layout NavigationBar={<CustomerNaviBar />}>
       <div style={styles.loginPage}>
         {renderForm()}
       </div>
@@ -103,8 +124,8 @@ const styles = {
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    padding: "20px",  // Added padding to avoid cropping
-    boxSizing: "border-box",  // Include padding in element's total width and height
+    padding: "20px",
+    boxSizing: "border-box",
   },
   loginBox: {
     backgroundColor: "rgba(255, 255, 255, 0.9)",
@@ -114,7 +135,7 @@ const styles = {
     maxWidth: "400px",
     width: "100%",
     textAlign: "center",
-    margin: "0 auto",  // Center the form without using negative margins
+    margin: "0 auto",
   },
   heading: {
     color: "#000",
@@ -135,7 +156,7 @@ const styles = {
     border: "1px solid #ddd",
     borderRadius: "4px",
     backgroundColor: "#f4f4f4",
-    color: "#000",  // Displaying the current value in black
+    color: "#000",
     textAlign: "left",
   },
   input: {
@@ -148,9 +169,9 @@ const styles = {
   loginBtn: {
     width: "100%",
     padding: "0.75rem",
-    backgroundColor: "#FF8C42",  // Brighter orange color
+    backgroundColor: "#FF8C42",
     border: "none",
-    borderRadius: "10px",  // Rounder corners
+    borderRadius: "10px",
     color: "white",
     fontSize: "1.2rem",
     cursor: "pointer",
@@ -158,23 +179,23 @@ const styles = {
   buttonContainer: {
     display: "flex",
     flexDirection: "column",
-    gap: "15px",  // Increased gap between buttons
-    width: "100%",  // Full-width container
+    gap: "15px",
+    width: "100%",
     padding: "20px",
-    alignItems: "flex-start",  // Align buttons to the left
-    marginLeft: "20px",  // Move buttons slightly to the right
+    alignItems: "flex-start",
+    marginLeft: "20px",
   },
   button: {
-    padding: "18px",  // Increased button height
-    fontSize: "1.3rem",  // Larger text
-    backgroundColor: "#FF8C42",  // Brighter orange color
+    padding: "18px",
+    fontSize: "1.3rem",
+    backgroundColor: "#FF8C42",
     border: "none",
-    borderRadius: "10px",  // Rounder corners
+    borderRadius: "10px",
     cursor: "pointer",
     color: "white",
-    width: "100%",  // Full-width buttons
-    textAlign: "left",  // Left-align button text
-    minWidth: "350px",  // Set a minimum width for consistency
+    width: "100%",
+    textAlign: "left",
+    minWidth: "350px",
   },
 };
 

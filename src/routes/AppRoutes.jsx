@@ -36,6 +36,7 @@ const AppRoutes = () => {
       <Route path="/customer" element={<CustomerDashboard />} />
       <Route path="/customer/transactions" element={<Transactions />} />
       <Route path="/customer/loans" element={<Loans />} />
+      <Route path="/customer/Settings" element={<Settings />} />
       <Route path="/customer/chelp" element={<CHelp />} />
       <Route path="/employee" element={<EmployeeDashboard />} />
       <Route path="/employee/OpenNewAccount" element={<OpenNewAccount/>} />

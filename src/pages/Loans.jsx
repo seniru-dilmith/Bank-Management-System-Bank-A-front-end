@@ -47,7 +47,12 @@ const LoanDetails = () => {
   return (
     <Layout NavigationBar={<CustomerNaviBar />}>
       <div style={styles.container}>
-        <h2 style={styles.dashboardHeader}>Loan Details</h2>
+        {/* Customer Dashboard Box */}
+        <div style={styles.CustomerDashboardBox}>
+          <h2 style={styles.CustomerDashboardTitle}>Customer Manager Dashboard</h2>
+        </div>
+
+        {/* Loan Details Box */}
         <div style={styles.loanDetailsBox}>
           <h3>Loan Application Details</h3>
           <form onSubmit={handleSubmit}>
@@ -172,11 +177,19 @@ const styles = {
     minHeight: '100vh',
     boxSizing: 'border-box',
   },
-  dashboardHeader: {
-    fontSize: '28px',
-    fontWeight: 'bold',
-    color: 'white',
+  CustomerDashboardBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
     marginBottom: '20px',
+    width: '100%', // Change this to occupy full width
+    maxWidth: '600px', // Set a max width for the dashboard box
+    textAlign: 'left', // Left-align the text
+  },
+  CustomerDashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
   },
   loanDetailsBox: {
     backgroundColor: 'white',
@@ -186,6 +199,7 @@ const styles = {
     maxWidth: '600px',
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
     marginBottom: '40px',
+    textAlign: 'center', // Center align content in Loan Details Box
   },
   formGroup: {
     marginBottom: '15px',
