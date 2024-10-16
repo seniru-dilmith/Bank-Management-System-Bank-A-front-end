@@ -1,47 +1,49 @@
 import React, { useState } from "react";
+import axios from 'axios'; // Import axios for API calls
 import HomeNaviBar from '../components/NaviBar/HomeNaviBar';
 import Layout from '../layouts/Layout';
-import CustomerDashboard from './CustomerDashboard';  // Import the CustomerDashboard component
-import EmployeeDashboard from './EmployeeDashboard';  // Import the EmployeeDashboard component
+import CustomerDashboard from './CustomerDashboard';
+import EmployeeDashboard from './EmployeeDashboard';
 import TechnicianDashboard from './TechnicianDashboard';
 import ManagerDashboard from './ManagerDashboard';
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loggedInAs, setLoggedInAs] = useState(null);  // Track login status and type of user
+  const [loggedInAs, setLoggedInAs] = useState(null);
+  const [error, setError] = useState(""); // Track errors
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Username:", username, "Password:", password);
+    try {
+      const response = await axios.post('http://localhost:5000/auth/login', {
+        username,
+        password,
+      });
 
-    // Validate login: "c" for customer, "e" for employee
-    if (username === "c") {
-      setLoggedInAs("customer");  // Mark as logged in as customer
-    } else if (username === "e") {
-      setLoggedInAs("employee");  // Mark as logged in as employee
-    }else if (username === "t") {
-      setLoggedInAs("technician");  // Mark as logged in as employee
-    }else if (username === "m") {
-      setLoggedInAs("manager");  // Mark as logged in as employee
-    }else {
-      alert("Invalid username or password");
+      console.log(response.data); // Log the response for debugging
+
+      const { token, userType } = response.data; // Extract token and user type
+
+      // Store the token in localStorage or state for future API requests
+      localStorage.setItem('token', token);
+
+      // Redirect based on the user type
+      if (userType === "customer") setLoggedInAs("customer");
+      else if (userType === "employee") setLoggedInAs("employee");
+      else if (userType === "technician") setLoggedInAs("technician");
+      else if (userType === "manager") setLoggedInAs("manager");
+    } catch (error) {
+      console.error(error);
+      setError("Invalid username or password");
     }
   };
 
-  // Redirect based on login type
-  if (loggedInAs === "customer") {
-    return <CustomerDashboard />;  // Redirect to CustomerDashboard after login
-  }
-  if (loggedInAs === "employee") {
-    return <EmployeeDashboard />;  // Redirect to EmployeeDashboard after login
-  }
-  if (loggedInAs === "technician") {
-    return <TechnicianDashboard />;  // Redirect to EmployeeDashboard after login
-  }
-  if (loggedInAs === "manager") {
-    return <ManagerDashboard />;  // Redirect to EmployeeDashboard after login
-  }
+  // Redirect based on the logged-in user type
+  if (loggedInAs === "customer") return <CustomerDashboard />;
+  if (loggedInAs === "employee") return <EmployeeDashboard />;
+  if (loggedInAs === "technician") return <TechnicianDashboard />;
+  if (loggedInAs === "manager") return <ManagerDashboard />;
 
   return (
     <Layout NavigationBar={<HomeNaviBar />}>
@@ -71,6 +73,8 @@ const Login = () => {
                 style={styles.input}
               />
             </div>
+
+            {error && <p style={styles.error}>{error}</p>} {/* Show error message */}
 
             <div style={styles.forgotPassword}>
               <a href="#forgot" style={styles.forgotLink}>
@@ -142,8 +146,9 @@ const styles = {
     color: "#F49867",
     textDecoration: "none",
   },
-  forgotLinkHover: {
-    textDecoration: "underline",
+  error: {
+    color: "red",
+    marginBottom: "1rem",
   },
   loginBtn: {
     width: "100%",
