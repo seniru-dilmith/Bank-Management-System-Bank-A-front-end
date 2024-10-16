@@ -99,32 +99,26 @@ const ManageEmployees = () => {
 
   
   // Fetch employees from the database
-  /*useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const response = await axios.get('/api/employees'); // Replace with your API endpoint
-        setEmployees(response.data); // Assuming the data is in response.data
-      } catch (error) {
-        console.error('Error fetching employees:', error);
-      }
-    };
 
-    fetchEmployees();
-  }, []);*/
+  const fetchEmployees = async () => {
+    try {
+      const token = localStorage.getItem('token'); // Get the token from local storage
+
+      const response = await axios.get('http://localhost:5000/employee-management/employees', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }); 
+
+      setEmployees(response.data);
+      
+    } catch (error) {
+      console.error('Error fetching employees:', error);
+    }
+  };
 
   useEffect(() => {
-    // Dummy data for now
-    const fetchedEmployees = [
-      { id: 1, firstName: 'John', lastName: 'Doe', phone: '123456789', nic: '123456789V', email: 'john@example.com', position: 'Technician', branch: 'NYC', username: 'johndoe' },
-      { id: 2, firstName: 'Jane', lastName: 'Smith', phone: '987654321', nic: '987654321V', email: 'jane@example.com', position: 'Manager', branch: 'LA', username: 'janesmith' },
-    ];
-    setEmployees(fetchedEmployees);
-
-    // When using an actual API, you would replace this with an axios call:
-    // axios.get('/api/employees')
-    //   .then(response => setEmployees(response.data))
-    //   .catch(error => console.error('Error fetching data', error));
-
+    fetchEmployees();
   }, []);
 
   const handleInputChange = (e, id, field) => {
@@ -136,23 +130,56 @@ const ManageEmployees = () => {
   };
 
   const handleAddEmployee = () => {
-    const newId = employees.length > 0 ? employees[employees.length - 1].id + 1 : 1;
     setNewEmployee({
-      id: newId,
-      firstName: '',
-      lastName: '',
+      first_name: '',
+      last_name: '',
       phone: '',
       nic: '',
       email: '',
       position: '',
-      branch: '',
+      address: '',
       username: '',
     });
   };
 
-  const handleSaveNewEmployee = () => {
-    setEmployees([...employees, newEmployee]);
-    setNewEmployee(null);
+  const handleSaveNewEmployee = async () => {
+    try {
+      const token = localStorage.getItem('token'); // Get the token from local storage
+      const response = await axios.post('http://localhost:5000/employee-management/add-employee', newEmployee, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setEmployees([...employees, response.data]);
+      setNewEmployee(null);
+      fetchEmployees();
+    } catch (error) {
+      console.error('Error adding employee:', error);
+    }
+  };
+
+  // handler to update the employee
+  const handleUpdateEmployee = async (id) => {
+    console.log('updating employee');
+    try {
+      const token = localStorage.getItem('token'); // Get the token from local storage
+      const employeeToUpdate = employees.find((employee) => employee.id === id);
+      console.log('updating employee:', employeeToUpdate);
+      
+      const response = await axios.put(`http://localhost:5000/employee-management/update-employee`, employeeToUpdate, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log('Employee updated: ', response.data);
+      setEditingId(null);
+      
+      fetchEmployees();
+
+    } catch (error) {
+      console.error('Error updating employee:', error);
+    }
   };
 
   const confirmRemoveEmployee = (id) => {
@@ -161,10 +188,26 @@ const ManageEmployees = () => {
   };
 
   const handleRemoveEmployee = () => {
-    setEmployees(employees.filter((employee) => employee.id !== employeeToRemove));
-    setShowModal(false);
-    setEmployeeToRemove(null);
-  };
+    // Remove the employee from the database
+    const removeEmployee = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        await axios.delete(`http://localhost:5000/employee-management/remove-employee/${employeeToRemove}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        setEmployees(employees.filter((employee) => employee.id !== employeeToRemove));
+        setShowModal(false);
+        setEmployeeToRemove(null);
+      } catch (error) {
+        console.error('Error removing employee:', error);
+      }
+    };
+    
+    removeEmployee();
+  }; 
 
   return (
     <Layout NavigationBar={<TechnicianNaviBar />}>
@@ -182,7 +225,7 @@ const ManageEmployees = () => {
               <th style={styles.th}>NIC</th>
               <th style={styles.th}>Email</th>
               <th style={styles.th}>Position</th>
-              <th style={styles.th}>Branch</th>
+              <th style={styles.th}>Address</th>
               <th style={styles.th}>Username</th>
               <th style={styles.th}>Action</th>
             </tr>
@@ -195,22 +238,25 @@ const ManageEmployees = () => {
                     <td style={styles.td}>
                       <input
                         type="text"
+                        id={`first_name-${employee.id}`}
                         style={styles.input}
-                        value={employee.firstName}
-                        onChange={(e) => handleInputChange(e, employee.id, 'firstName')}
+                        value={employee.first_name}
+                        onChange={(e) => handleInputChange(e, employee.id, 'first_name')}
                       />
                     </td>
                     <td style={styles.td}>
                       <input
                         type="text"
+                        id={`last_name-${employee.id}`}
                         style={styles.input}
-                        value={employee.lastName}
-                        onChange={(e) => handleInputChange(e, employee.id, 'lastName')}
+                        value={employee.last_name}
+                        onChange={(e) => handleInputChange(e, employee.id, 'last_name')}
                       />
                     </td>
                     <td style={styles.td}>
                       <input
                         type="text"
+                        id={`phone-${employee.id}`}
                         style={styles.input}
                         value={employee.phone}
                         onChange={(e) => handleInputChange(e, employee.id, 'phone')}
@@ -219,6 +265,7 @@ const ManageEmployees = () => {
                     <td style={styles.td}>
                       <input
                         type="text"
+                        id={`nic-${employee.id}`}
                         style={styles.input}
                         value={employee.nic}
                         onChange={(e) => handleInputChange(e, employee.id, 'nic')}
@@ -227,6 +274,7 @@ const ManageEmployees = () => {
                     <td style={styles.td}>
                       <input
                         type="email"
+                        id={`email-${employee.id}`}
                         style={styles.input}
                         value={employee.email}
                         onChange={(e) => handleInputChange(e, employee.id, 'email')}
@@ -235,6 +283,7 @@ const ManageEmployees = () => {
                     <td style={styles.td}>
                       <input
                         type="text"
+                        id={`position-${employee.id}`}
                         style={styles.input}
                         value={employee.position}
                         onChange={(e) => handleInputChange(e, employee.id, 'position')}
@@ -243,34 +292,36 @@ const ManageEmployees = () => {
                     <td style={styles.td}>
                       <input
                         type="text"
+                        id={`address-${employee.id}`}
                         style={styles.input}
-                        value={employee.branch}
-                        onChange={(e) => handleInputChange(e, employee.id, 'branch')}
+                        value={employee.address}
+                        onChange={(e) => handleInputChange(e, employee.id, 'address')}
                       />
                     </td>
                     <td style={styles.td}>
                       <input
                         type="text"
+                        id={`username-${employee.id}`}
                         style={styles.input}
                         value={employee.username}
                         onChange={(e) => handleInputChange(e, employee.id, 'username')}
                       />
                     </td>
                     <td style={styles.td}>
-                      <button style={styles.button} onClick={() => setEditingId(null)}>
+                      <button style={styles.button} onClick={() => handleUpdateEmployee(employee.id)}>
                         Save
                       </button>
                     </td>
                   </>
                 ) : (
                   <>
-                    <td style={styles.td}>{employee.firstName}</td>
-                    <td style={styles.td}>{employee.lastName}</td>
+                    <td style={styles.td}>{employee.first_name}</td>
+                    <td style={styles.td}>{employee.last_name}</td>
                     <td style={styles.td}>{employee.phone}</td>
                     <td style={styles.td}>{employee.nic}</td>
                     <td style={styles.td}>{employee.email}</td>
                     <td style={styles.td}>{employee.position}</td>
-                    <td style={styles.td}>{employee.branch}</td>
+                    <td style={styles.td}>{employee.address}</td>
                     <td style={styles.td}>{employee.username}</td>
                     <td style={styles.td}>
                       <button style={styles.button} onClick={() => setEditingId(employee.id)}>
@@ -290,16 +341,16 @@ const ManageEmployees = () => {
                   <input
                     type="text"
                     style={styles.input}
-                    value={newEmployee.firstName}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, firstName: e.target.value })}
+                    value={newEmployee.first_name}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, first_name: e.target.value })}
                   />
                 </td>
                 <td style={styles.td}>
                   <input
                     type="text"
                     style={styles.input}
-                    value={newEmployee.lastName}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, lastName: e.target.value })}
+                    value={newEmployee.last_name}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, last_name: e.target.value })}
                   />
                 </td>
                 <td style={styles.td}>
@@ -338,8 +389,8 @@ const ManageEmployees = () => {
                   <input
                     type="text"
                     style={styles.input}
-                    value={newEmployee.branch}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, branch: e.target.value })}
+                    value={newEmployee.address}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, address: e.target.value })}
                   />
                 </td>
                 <td style={styles.td}>
@@ -351,7 +402,7 @@ const ManageEmployees = () => {
                   />
                 </td>
                 <td style={styles.td}>
-                  <button style={styles.button} onClick={handleSaveNewEmployee}>
+                  <button style={styles.button} onClick={() => handleSaveNewEmployee }>
                     Save
                   </button>
                 </td>
