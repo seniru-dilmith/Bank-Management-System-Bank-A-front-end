@@ -1,13 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
 import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
 import Layout from '../layouts/Layout';
 
 const styles = {
   container: {
-    width: '80%',
-    margin: '0 auto',
-    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    height: '100vh',
+    padding: '40px',
+    boxSizing: 'border-box',
+    color: '#fff',
+  },
+  dashboardBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+  },
+  dashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
   },
   table: {
     width: '70%',
@@ -16,21 +33,19 @@ const styles = {
     backgroundColor: 'white',
   },
   th: {
-    padding: '10px', // Reduced padding to make columns narrower
+    padding: '10px',
     border: '1px solid #ddd',
     backgroundColor: '#1a2c63',
     color: 'white',
     fontWeight: 'bold',
-    width: '2%', // Adjusted width percentage
   },
   td: {
-    padding: '10px', // Reduced padding
+    padding: '10px',
     border: '1px solid #ddd',
     textAlign: 'center',
-    width: '2%', // Adjusted width percentage
   },
   button: {
-    padding: '8px 15px', // Adjusted button size
+    padding: '8px 15px',
     fontSize: '14px',
     fontWeight: 'bold',
     border: 'none',
@@ -42,18 +57,9 @@ const styles = {
     backgroundColor: '#28a745',
     color: 'white',
   },
-  approveBtnHover: {
-    backgroundColor: '#218838',
-  },
   rejectBtn: {
     backgroundColor: '#dc3545',
     color: 'white',
-  },
-  rejectBtnHover: {
-    backgroundColor: '#c82333',
-  },
-  rejectBtnFocus: {
-    border: '2px solid #ff00ff',
   },
 };
 
@@ -74,6 +80,11 @@ const ApproveLoans = () => {
   return (
     <Layout NavigationBar={<ManagerNaviBar />}>
       <div style={styles.container}>
+        {/* Reused Gradient box for the Branch Manager Dashboard title */}
+        <div style={styles.dashboardBox}>
+          <h2 style={styles.dashboardTitle}>Branch Manager Dashboard</h2>
+        </div>
+
         <table style={styles.table}>
           <thead>
             <tr>

@@ -4,9 +4,9 @@ import Layout from '../layouts/Layout';
 import axios from 'axios';
 
 const CustomerDashboard = () => {
-  const [accountType, setAccountType] = useState("Checking");  // Removed setAccountType
-  const [accountNumber, setAccountNumber] = useState("123456789");  // Removed setAccountNumber
-  const [currentBalance, setCurrentBalance] = useState("$5,000");  // Removed setCurrentBalance
+  const [accountType, setAccountType] = useState("Checking");  
+  const [accountNumber, setAccountNumber] = useState("123456789");  
+  const [currentBalance, setCurrentBalance] = useState("$5,000");  
   const [transactions, setTransactions] = useState([]);
 
   // Uncomment this when ready to fetch data from an API
@@ -41,8 +41,7 @@ const CustomerDashboard = () => {
     container: {
       display: "flex",
       flexDirection: "column",  
-      alignItems: "center",
-      justifyContent: "center",
+      alignItems: "flex-start",  // Aligned to the left
       padding: "2rem",
       minHeight: "100vh",  
       width: "100%",  
@@ -60,7 +59,6 @@ const CustomerDashboard = () => {
       maxWidth: "500px",  
       textAlign: "center",
       marginBottom: "2rem",  
-      marginLeft: "-700px"
     },
     heading: {
       color: "#000",
@@ -93,7 +91,6 @@ const CustomerDashboard = () => {
       textAlign: "left",
       width: "90%",  
       maxWidth: "600px",  
-      marginLeft: "-700px"
     },
     transactionsHeading: {
       fontSize: "1.8rem",
@@ -122,11 +119,29 @@ const CustomerDashboard = () => {
       fontSize: "0.9rem",
       marginTop: "1rem",
     },
+    DashboardBox: {
+      background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+      padding: '10px 20px',
+      borderRadius: '20px',
+      marginBottom: '20px',
+      display: 'inline-block',
+    },
+    DashboardTitle: {
+      fontSize: '1.8rem',
+      color: '#fff',
+      margin: '0',
+    },
   };
 
   return (
     <Layout NavigationBar={<CustomerNaviBar />}>
       <div style={styles.container}>
+        
+        {/* Customer Dashboard */}
+        <div style={styles.DashboardBox}>
+          <h2 style={styles.DashboardTitle}>Customer Manager Dashboard</h2>
+        </div>
+
         <div style={styles.dashboardBox}>
           <h2 style={styles.heading}>Account Summary</h2>
 
