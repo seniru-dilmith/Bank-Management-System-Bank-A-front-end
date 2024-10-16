@@ -1,0 +1,123 @@
+/* Ensure full height and no scrollbars */
+html, body {
+  height: 100%; 
+  margin: 0;
+  overflow-x: auto;
+  font-family: 'Arial', sans-serif;
+}
+
+.layout {
+  position: relative;
+  min-height: 150vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header / Navbar with 20% height reduction */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px; /* Reduced padding for smaller height */
+  background-color: #09223e; /* Dark blue header color */
+  color: white;
+  position: relative;
+  z-index: 1;
+  height: 80px; /* Fixed height to reduce overall size */
+}
+
+.logo {
+  height: 80px; /* Adjust logo size to match reduced header */
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bank-name {
+  margin: 0;
+  font-size: 1.2em; /* Slightly smaller font size */
+  font-weight: bold;
+}
+
+.nav-container {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-container a {
+  color: white;
+  text-decoration: none;
+  font-size: 1em; /* Adjust font size to fit smaller header */
+  position: relative;
+}
+
+.nav-container a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0%;
+  height: 2px;
+  background-color: #FFCB05; /* Yellow underline effect */
+  transition: width 0.3s;
+}
+
+.nav-container a:hover::after {
+  width: 100%;
+}
+
+/* Background Styling */
+.background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+  z-index: -2;
+}
+
+.background-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('ABC Banking Application Design.jpg');
+  background-size: cover;
+  background-position: center;
+  z-index: -2;
+}
+
+/* Left Gradient Box */
+.gradient-box-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 75%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(0, 31, 63, 1) 20%, rgba(3, 16, 38, 0.8) 40%, rgba(3, 20, 38, 0.7) 65%, rgba(255, 255, 255, 0.05) 100%);
+  z-index: -1;
+}
+
+/* Right Gradient Box */
+.gradient-box-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(3, 22, 41, 0.95) 0%, rgba(245, 246, 249, 0) 35%);
+  z-index: -1;
+}
+
+/* Content Section */
+.content-container {
+  position: relative;
+  z-index: 1;
+  padding: 20px;
+  min-width: 100%;
+}
