@@ -96,63 +96,98 @@ const ManageBranches = () => {
   const [newBranch, setNewBranch] = useState(null); // Track new branch row
   const [showModal, setShowModal] = useState(false); // Control modal visibility
   const [branchToRemove, setBranchToRemove] = useState(null); // Track branch to remove
+  const [originalBranchName, setOriginalBranchName] = useState(null); // Store original name
+
+const handleEditBranch = (id, name) => {
+  setEditingId(id);
+  setOriginalBranchName(name); // Store the original name
+};
 
   // Fetch branches from the database
-  /*useEffect(() => {
-    const fetchBranches = async () => {
-      try {
-        const response = await axios.get('/api/branches'); // Replace with your API endpoint
-        setBranches(response.data); // Assuming the data is in response.data
-      } catch (error) {
-        console.error('Error fetching employees:', error);
-      }
-    };
+  const fetchBranches = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/branch-management/branches', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      setBranches(response.data);
+    } catch (error) {
+      console.error('Error fetching branches:', error);
+    }
+  };
 
-    fetchBranches();
-  }, []);*/
-  
-  
+
   useEffect(() => {
-    // Simulated fetch from API or database
-    const fetchedBranches = [
-      { id: 1, name: 'NYC Branch', address: '123 Street, NYC', manager: 'John Doe' },
-      { id: 2, name: 'LA Branch', address: '456 Avenue, LA', manager: 'Jane Smith' },
-    ];
-    setBranches(fetchedBranches);
+    fetchBranches();
   }, []);
 
   const handleInputChange = (e, id, field) => {
-    setBranches((prevBranches) =>
-      prevBranches.map((branch) =>
+    setBranches((prev) =>
+      prev.map((branch) =>
         branch.id === id ? { ...branch, [field]: e.target.value } : branch
       )
     );
-  };
+  };  
 
   const handleAddBranch = () => {
-    const newId = branches.length > 0 ? branches[branches.length - 1].id + 1 : 1;
-    setNewBranch({
-      id: newId,
-      name: '',
-      address: '',
-      manager: '',
-    });
+    setNewBranch({ name: '', branch_address: '', contact_number: '' });
   };
 
-  const handleSaveNewBranch = () => {
-    setBranches([...branches, newBranch]);
-    setNewBranch(null);
+  const handleSaveNewBranch = async () => {
+    try {
+      await axios.post('http://localhost:5000/branch-management/add-branch', newBranch, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      setNewBranch(null);
+      fetchBranches();
+    } catch (error) {
+      console.error('Error adding branch:', error);
+    }
   };
 
+  const handleUpdateBranch = async (id) => {
+    const branchToUpdate = branches.find((branch) => branch.id === id);
+  
+    if (!branchToUpdate || !originalBranchName) {
+      console.error('Original branch name not found.');
+      return;
+    }
+  
+    try {
+      await axios.put('http://localhost:5000/branch-management/update-branch', {
+        currentName: originalBranchName, // Original name before editing
+        newName: branchToUpdate.name, // Updated name
+        branch_address: branchToUpdate.branch_address,
+        contact_number: branchToUpdate.contact_number,
+      }, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+  
+      setEditingId(null); // Clear editing state
+      setOriginalBranchName(null); // Clear original name after update
+      fetchBranches(); // Refresh the branch list
+    } catch (error) {
+      console.error('Error updating branch:', error);
+    }
+  };
+  
   const confirmRemoveBranch = (id) => {
     setShowModal(true);
     setBranchToRemove(id); // Set the branch to remove when the modal is shown
   };
 
-  const handleRemoveBranch = () => {
-    setBranches(branches.filter((branch) => branch.id !== branchToRemove));
-    setShowModal(false);
-    setBranchToRemove(null);
+  const handleRemoveBranch = async () => {
+    try {
+      await axios.delete(`http://localhost:5000/branch-management/remove-branch/${branchToRemove}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      setBranches(branches.filter((branch) => branch.id !== branchToRemove));
+      setShowModal(false);
+      setBranchToRemove(null);
+    } catch (error) {
+      console.error('Error removing branch:', error);
+    }
   };
 
   return (
@@ -166,7 +201,7 @@ const ManageBranches = () => {
             <tr>
               <th style={styles.th}>Branch Name</th>
               <th style={styles.th}>Address</th>
-              <th style={styles.th}>Manager</th>
+              <th style={styles.th}>Contact Number</th>
               <th style={styles.th}>Action</th>
             </tr>
           </thead>
@@ -187,20 +222,20 @@ const ManageBranches = () => {
                       <input
                         type="text"
                         style={styles.input}
-                        value={branch.address}
-                        onChange={(e) => handleInputChange(e, branch.id, 'address')}
+                        value={branch.branch_address}
+                        onChange={(e) => handleInputChange(e, branch.id, 'branch_address')}
                       />
                     </td>
-                    <td style={styles.td}>
+                    <td>
                       <input
-                        type="text"
+                        type='text'
                         style={styles.input}
-                        value={branch.manager}
-                        onChange={(e) => handleInputChange(e, branch.id, 'manager')}
+                        value={branch.contact_number}
+                        onChange={(e) => handleInputChange(e, branch.id, 'contact_number')}
                       />
                     </td>
                     <td style={styles.td}>
-                      <button style={styles.button} onClick={() => setEditingId(null)}>
+                      <button style={styles.button} onClick={() => handleUpdateBranch(branch.id)}>
                         Save
                       </button>
                     </td>
@@ -208,13 +243,13 @@ const ManageBranches = () => {
                 ) : (
                   <>
                     <td style={styles.td}>{branch.name}</td>
-                    <td style={styles.td}>{branch.address}</td>
-                    <td style={styles.td}>{branch.manager}</td>
+                    <td style={styles.td}>{branch.branch_address}</td>
+                    <td style={styles.td}>{branch.contact_number}</td>
                     <td style={styles.td}>
-                      <button style={styles.button} onClick={() => setEditingId(branch.id)}>
+                      <button style={styles.button} onClick={ () => handleEditBranch(branch.id, branch.name) }>
                         Update Branch
                       </button>
-                      <button style={styles.button} onClick={() => confirmRemoveBranch(branch.id)}>
+                      <button style={styles.button} onClick={ () => confirmRemoveBranch(branch.id) }>
                         Remove Branch
                       </button>
                     </td>
@@ -236,16 +271,16 @@ const ManageBranches = () => {
                   <input
                     type="text"
                     style={styles.input}
-                    value={newBranch.address}
-                    onChange={(e) => setNewBranch({ ...newBranch, address: e.target.value })}
+                    value={newBranch.branch_address}
+                    onChange={(e) => setNewBranch({ ...newBranch, branch_address: e.target.value })}
                   />
                 </td>
                 <td style={styles.td}>
                   <input
                     type="text"
                     style={styles.input}
-                    value={newBranch.manager}
-                    onChange={(e) => setNewBranch({ ...newBranch, manager: e.target.value })}
+                    value={newBranch.contact_number}
+                    onChange={(e) => setNewBranch({ ...newBranch, contact_number: e.target.value })}
                   />
                 </td>
                 <td style={styles.td}>
