@@ -90,7 +90,7 @@ const styles = {
   },
 };
 
-const ManageEmployees = () => {
+const MManageEmployees = () => {
   const [employees, setEmployees] = useState([]);
   const [editingId, setEditingId] = useState(null); // Track editing row
   const [newEmployee, setNewEmployee] = useState(null); // Track new employee row
@@ -173,6 +173,10 @@ const ManageEmployees = () => {
     } catch (error) {
       console.error('Error removing employee:', error);
     }
+  };
+
+  const handleCancel = () => {
+    setEditingId(null); // Reset editingId to null to cancel editing
   };
 
   return (
@@ -268,6 +272,9 @@ const ManageEmployees = () => {
                       <button style={styles.button} onClick={() => setEditingId(null)}>
                         Save
                       </button>
+                      <button style={styles.button} onClick={handleCancel}>
+                        Cancel
+                      </button>
                     </td>
                   </>
                 ) : (
@@ -302,10 +309,68 @@ const ManageEmployees = () => {
                     onChange={(e) => setNewEmployee({ ...newEmployee, firstName: e.target.value })}
                   />
                 </td>
-                {/* Same for other fields */}
+                <td style={styles.td}>
+                  <input
+                    type="text"
+                    style={styles.input}
+                    value={newEmployee.lastName}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, lastName: e.target.value })}
+                  />
+                </td>
+                <td style={styles.td}>
+                  <input
+                    type="text"
+                    style={styles.input}
+                    value={newEmployee.phone}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, phone: e.target.value })}
+                  />
+                </td>
+                <td style={styles.td}>
+                  <input
+                    type="text"
+                    style={styles.input}
+                    value={newEmployee.nic}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, nic: e.target.value })}
+                  />
+                </td>
+                <td style={styles.td}>
+                  <input
+                    type="email"
+                    style={styles.input}
+                    value={newEmployee.email}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })}
+                  />
+                </td>
+                <td style={styles.td}>
+                  <input
+                    type="text"
+                    style={styles.input}
+                    value={newEmployee.position}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, position: e.target.value })}
+                  />
+                </td>
+                <td style={styles.td}>
+                  <input
+                    type="text"
+                    style={styles.input}
+                    value={newEmployee.branch}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, branch: e.target.value })}
+                  />
+                </td>
+                <td style={styles.td}>
+                  <input
+                    type="text"
+                    style={styles.input}
+                    value={newEmployee.username}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, username: e.target.value })}
+                  />
+                </td>
                 <td style={styles.td}>
                   <button style={styles.button} onClick={handleSaveNewEmployee}>
-                    Save
+                    Save New Employee
+                  </button>
+                  <button style={styles.button} onClick={() => setNewEmployee(null)}>
+                    Cancel
                   </button>
                 </td>
               </tr>
@@ -313,22 +378,15 @@ const ManageEmployees = () => {
           </tbody>
         </table>
 
-        {/* Custom Confirmation Modal */}
         {showModal && (
           <div style={styles.modalOverlay}>
             <div style={styles.modalContent}>
               <h3>Are you sure you want to remove this employee?</h3>
-              <button
-                style={{ ...styles.modalButton, ...styles.confirmButton }}
-                onClick={handleRemoveEmployee}
-              >
-                Yes, Remove
+              <button style={{ ...styles.modalButton, ...styles.confirmButton }} onClick={handleRemoveEmployee}>
+                Yes
               </button>
-              <button
-                style={{ ...styles.modalButton, ...styles.cancelButton }}
-                onClick={() => setShowModal(false)}
-              >
-                Cancel
+              <button style={{ ...styles.modalButton, ...styles.cancelButton }} onClick={() => setShowModal(false)}>
+                No
               </button>
             </div>
           </div>
@@ -338,4 +396,4 @@ const ManageEmployees = () => {
   );
 };
 
-export default ManageEmployees;
+export default MManageEmployees;

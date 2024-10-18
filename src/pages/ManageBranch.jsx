@@ -113,6 +113,8 @@ const styles = {
   detailItem: {
     fontSize: '1.2rem', // Increased font size for the branch details
     marginBottom: '1.2rem', // Add more spacing between the details
+    color:"black",
+    textAlign: 'left',
     lineHeight: '1.6rem', // Increase line spacing for better readability
   },
   inputGroup: {
