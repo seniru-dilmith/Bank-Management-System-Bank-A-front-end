@@ -377,23 +377,48 @@ const MManageEmployees = () => {
             )}
           </tbody>
         </table>
-
         {showModal && (
-          <div style={styles.modalOverlay}>
-            <div style={styles.modalContent}>
-              <h3>Are you sure you want to remove this employee?</h3>
-              <button style={{ ...styles.modalButton, ...styles.confirmButton }} onClick={handleRemoveEmployee}>
-                Yes
-              </button>
-              <button style={{ ...styles.modalButton, ...styles.cancelButton }} onClick={() => setShowModal(false)}>
-                No
-              </button>
-            </div>
-          </div>
-        )}
+  <div style={styles.modalOverlay}>
+    <div style={styles.modalContent}>
+      <h3>Are you sure you want to remove this employee?</h3>
+      <div style={styles.modalButtonContainer}>
+        <button 
+          style={{ 
+            backgroundColor: 'green', 
+            color: 'white', 
+            border: 'none', 
+            padding: '10px 20px', 
+            marginRight: '10px', 
+            borderRadius: '5px', 
+            cursor: 'pointer' 
+          }} 
+          onClick={handleRemoveEmployee}
+        >
+          Yes
+        </button>
+        <button 
+          style={{ 
+            backgroundColor: 'red', 
+            color: 'white', 
+            border: 'none', 
+            padding: '10px 20px', 
+            borderRadius: '5px', 
+            cursor: 'pointer' 
+          }} 
+          onClick={() => setShowModal(false)}
+        >
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
       </div>
     </Layout>
   );
 };
 
 export default MManageEmployees;
+
+
