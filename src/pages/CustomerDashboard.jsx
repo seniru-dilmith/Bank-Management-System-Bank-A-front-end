@@ -4,10 +4,35 @@ import Layout from '../layouts/Layout';
 import axios from 'axios';
 
 const CustomerDashboard = () => {
-  const [accountType, setAccountType] = useState("Checking");  
-  const [accountNumber, setAccountNumber] = useState("123456789");  
-  const [currentBalance, setCurrentBalance] = useState("$5,000");  
+  const [accountType, setAccountType] = useState("");  
+  const [accountNumber, setAccountNumber] = useState("");  
+  const [currentBalance, setCurrentBalance] = useState("");  
   const [transactions, setTransactions] = useState([]);
+
+  // Fetch account details from the backend API
+  useEffect(() => {
+    const fetchAccountDetails = async () => {
+      try {
+        const token = localStorage.getItem('token'); // Assuming you store the token in localStorage
+    
+        const accountResponse = await axios.get('http://localhost:5000/accounts/account-summary', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+       // Call to your backend route
+        const accountData = accountResponse.data.accounts[0];  // only for one account in the list
+
+        setAccountType(accountData.account_type);
+        setAccountNumber(accountData.account_number);
+        setCurrentBalance(accountData.acc_balance);
+      } catch (error) {
+        console.error('Error fetching account details:', error);
+      }
+    };
+
+    fetchAccountDetails();
+  }, []);
 
   // Uncomment this when ready to fetch data from an API
   /*
