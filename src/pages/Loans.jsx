@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Import axios for API requests
 import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
 
 const LoanDetails = () => {
   // State to manage form inputs
   const [formData, setFormData] = useState({
-    applicationId: '',
     loanType: '',
-    status: '',
-    applicationDate: '',
+    amount: '',
+    duration: '',
   });
 
   // State for Active Loan table inputs
@@ -18,6 +18,9 @@ const LoanDetails = () => {
     outstandingBalance: '',
     nextPaymentDate: '',
   });
+
+  // State for messages (success or error)
+  const [message, setMessage] = useState(null);
 
   // Handle input change for the form
   const handleInputChange = (e) => {
@@ -37,12 +40,66 @@ const LoanDetails = () => {
     });
   };
 
-  // Handle form submit
-  const handleSubmit = (e) => {
+  // Handle form submit for loan request
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Loan Application Submitted!');
-    // Add logic to handle form submission
+    try {
+      const token = localStorage.getItem('token'); // Get JWT token from localStorage
+
+      // Make the POST request to the backend
+      const response = await axios.post('http://localhost:5000/loans/request-loan', formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`, // Include JWT in Authorization header
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Handle success response
+      setMessage('Loan application submitted successfully!');
+      console.log('Loan application response:', response.data);
+
+      // Clear the form
+      setFormData({
+        loanType: '',
+        amount: '',
+        duration: '',
+      });
+    } catch (error) {
+      // Handle errors
+      setMessage('Loan application failed. Please try again.');
+      console.error('Error submitting loan application:', error);
+    }
   };
+
+  // Fetch active loan details when the component mounts or loanId changes
+  useEffect(() => {
+    const fetchLoanDetails = async (loanId) => {
+      try {
+        const token = localStorage.getItem('token'); // Get JWT token from localStorage
+
+        // Make the GET request to the backend
+        const response = await axios.get(`http://localhost:5000/loans/loan-details/${loanId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`, // Include JWT in Authorization header
+          },
+        });
+
+        // Update the active loan state with the fetched data
+        setActiveLoan({
+          loanType: response.data.loanType,
+          amountBorrowed: response.data.amountBorrowed,
+          outstandingBalance: response.data.outstandingBalance,
+          nextPaymentDate: response.data.nextPaymentDate,
+        });
+      } catch (error) {
+        console.error('Error fetching loan details:', error);
+      }
+    };
+
+    // Assuming we have a loan ID to fetch the loan details, replace `loanId` with the actual ID
+    const loanId = 1; // Replace with the actual loan ID
+    fetchLoanDetails(loanId);
+  }, []); // This will run once when the component mounts
 
   return (
     <Layout NavigationBar={<CustomerNaviBar />}>
@@ -52,20 +109,10 @@ const LoanDetails = () => {
           <h2 style={styles.CustomerDashboardTitle}>Customer Manager Dashboard</h2>
         </div>
 
-        {/* Loan Details Box */}
+        {/* Loan Application Form */}
         <div style={styles.loanDetailsBox}>
-          <h3>Loan Application Details</h3>
+          <h3>Loan Application</h3>
           <form onSubmit={handleSubmit}>
-            <div style={styles.formGroup}>
-              <label>Application ID:</label>
-              <input
-                type="text"
-                name="applicationId"
-                value={formData.applicationId}
-                onChange={handleInputChange}
-                style={styles.inputField}
-              />
-            </div>
             <div style={styles.formGroup}>
               <label>Loan Type:</label>
               <input
@@ -74,33 +121,39 @@ const LoanDetails = () => {
                 value={formData.loanType}
                 onChange={handleInputChange}
                 style={styles.inputField}
+                required
               />
             </div>
             <div style={styles.formGroup}>
-              <label>Status:</label>
+              <label>Amount:</label>
               <input
-                type="text"
-                name="status"
-                value={formData.status}
+                type="number"
+                name="amount"
+                value={formData.amount}
                 onChange={handleInputChange}
                 style={styles.inputField}
+                required
               />
             </div>
             <div style={styles.formGroup}>
-              <label>Application Date:</label>
+              <label>Duration (months):</label>
               <input
-                type="text"
-                name="applicationDate"
-                value={formData.applicationDate}
+                type="number"
+                name="duration"
+                value={formData.duration}
                 onChange={handleInputChange}
                 style={styles.inputField}
+                required
               />
             </div>
 
             {/* Submit Button */}
             <button type="submit" style={styles.button}>
-              Submit
+              Submit Loan Application
             </button>
+
+            {/* Success or error message */}
+            {message && <p>{message}</p>}
           </form>
 
           {/* Active Loans Table */}
@@ -124,6 +177,7 @@ const LoanDetails = () => {
                     onChange={handleLoanInputChange}
                     placeholder="Loan Type"
                     style={styles.tableInputField}
+                    readOnly
                   />
                 </td>
                 <td>
@@ -134,6 +188,7 @@ const LoanDetails = () => {
                     onChange={handleLoanInputChange}
                     placeholder="Amount Borrowed"
                     style={styles.tableInputField}
+                    readOnly
                   />
                 </td>
                 <td>
@@ -144,6 +199,7 @@ const LoanDetails = () => {
                     onChange={handleLoanInputChange}
                     placeholder="Outstanding Balance"
                     style={styles.tableInputField}
+                    readOnly
                   />
                 </td>
                 <td>
@@ -153,6 +209,7 @@ const LoanDetails = () => {
                     value={activeLoan.nextPaymentDate}
                     onChange={handleLoanInputChange}
                     style={styles.tableInputField}
+                    readOnly
                   />
                 </td>
               </tr>
@@ -170,7 +227,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundImage: `url('/path-to-your-background-image')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     height: 'auto',
@@ -182,9 +238,9 @@ const styles = {
     padding: '10px 20px',
     borderRadius: '20px',
     marginBottom: '20px',
-    width: '100%', // Change this to occupy full width
-    maxWidth: '600px', // Set a max width for the dashboard box
-    textAlign: 'left', // Left-align the text
+    width: '100%',
+    maxWidth: '600px',
+    textAlign: 'left',
   },
   CustomerDashboardTitle: {
     fontSize: '1.8rem',
@@ -199,7 +255,7 @@ const styles = {
     maxWidth: '600px',
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
     marginBottom: '40px',
-    textAlign: 'center', // Center align content in Loan Details Box
+    textAlign: 'center',
   },
   formGroup: {
     marginBottom: '15px',

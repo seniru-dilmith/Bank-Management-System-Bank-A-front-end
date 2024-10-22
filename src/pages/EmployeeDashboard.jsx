@@ -10,10 +10,28 @@ const EmployeeDashboard = () => {
   const [balance, setBalance] = useState("$5,000");
 
   // Transaction data
-  const [transactions, setTransactions] = useState([
-    { date: "09/25/2024", name: "John Doe", type: "Deposit", amount: "$2,500" },
-    { date: "09/20/2024", name: "John Doe", type: "Withdrawal", amount: "$300" },
-  ]);
+  const [transactions, setTransactions] = useState([]);
+
+  // Fetching recent transactions dynamically
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const token = localStorage.getItem('token'); // Get the JWT from localStorage
+        const response = await axios.get('http://localhost:5000/transactions/recent-transactions', {
+          headers: {
+            'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        });
+
+        // Update transactions based on backend response
+        setTransactions(response.data);
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
+    };
+
+    fetchTransactions();
+  }, []);
 
   // Uncomment below code for fetching account details dynamically
   /*
@@ -152,9 +170,9 @@ const EmployeeDashboard = () => {
             <tbody>
               {transactions.map((transaction, index) => (
                 <tr key={index} style={styles.tableRow}>
-                  <td style={styles.tableCell}>{transaction.date}</td>
+                  <td style={styles.tableCell}>{transaction.timestamp}</td>
                   <td style={styles.tableCell}>{transaction.name}</td>
-                  <td style={styles.tableCell}>{transaction.type}</td>
+                  <td style={styles.tableCell}>{transaction.description}</td>
                   <td style={styles.tableCell}>{transaction.amount}</td>
                 </tr>
               ))}
