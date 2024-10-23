@@ -139,7 +139,6 @@ const MManageEmployees = () => {
   };
 
   const handleSaveNewEmployee = async () => {
-    // Create the new employee object in the desired format
     const employeeData = {
       first_name: newEmployee.first_name,
       last_name: newEmployee.last_name,
@@ -167,9 +166,11 @@ const MManageEmployees = () => {
   const handleRemoveEmployee = async () => {
     try {
       await axios.delete(`/api/employees/${employeeToRemove}`); // API call to remove the employee
-      setEmployees(employees.filter((employee) => employee.id !== employeeToRemove));
-      setShowModal(false);
-      setEmployeeToRemove(null);
+      setEmployees((prevEmployees) => 
+        prevEmployees.filter((employee) => employee.id !== employeeToRemove)
+      );
+      setShowModal(false); // Close the modal
+      setEmployeeToRemove(null); // Reset employee to remove
     } catch (error) {
       console.error('Error removing employee:', error);
     }
@@ -260,7 +261,7 @@ const MManageEmployees = () => {
                         value={employee.position_id}
                         onChange={(e) => handleInputChange(e, employee.id, 'position_id')}
                       >
-                        <option value="" disabled>Select Position</option>
+                        <option value="">Select Position</option>
                         {positions.map((position) => (
                           <option key={position.id} value={position.id}>
                             {position.title}
@@ -277,8 +278,12 @@ const MManageEmployees = () => {
                       />
                     </td>
                     <td style={styles.td}>
-                      <button style={styles.button} onClick={() => setEditingId(null)}>Save</button>
-                      <button style={styles.button} onClick={handleCancelEdit}>Cancel</button>
+                      <button style={styles.button} onClick={() => setEditingId(null)}>
+                        Save
+                      </button>
+                      <button style={styles.button} onClick={handleCancelEdit}>
+                        Cancel
+                      </button>
                     </td>
                   </>
                 ) : (
@@ -288,16 +293,100 @@ const MManageEmployees = () => {
                     <td style={styles.td}>{employee.phone}</td>
                     <td style={styles.td}>{employee.nic}</td>
                     <td style={styles.td}>{employee.email}</td>
-                    <td style={styles.td}>{positions.find(pos => pos.id === employee.position_id)?.title || 'N/A'}</td>
+                    <td style={styles.td}>{positions.find(pos => pos.id === employee.position_id)?.title}</td>
                     <td style={styles.td}>{employee.username}</td>
                     <td style={styles.td}>
-                      <button style={styles.button} onClick={() => handleEditEmployee(employee)}>Edit</button>
-                      <button style={styles.button} onClick={() => confirmRemoveEmployee(employee.id)}>Remove</button>
+                      <button style={styles.button} onClick={() => handleEditEmployee(employee)}>
+                        Edit
+                      </button>
+                      <button
+                        style={styles.button}
+                        onClick={() => confirmRemoveEmployee(employee.id)}
+                      >
+                        Remove
+                      </button>
                     </td>
                   </>
                 )}
               </tr>
             ))}
+            {newEmployee && (
+              <tr>
+                <td style={styles.td}>
+                  <input
+                    type="text"
+                    style={styles.input}
+                    value={newEmployee.first_name}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, first_name: e.target.value })}
+                  />
+                </td>
+                <td style={styles.td}>
+                  <input
+                    type="text"
+                    style={styles.input}
+                    value={newEmployee.last_name}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, last_name: e.target.value })}
+                  />
+                </td>
+                <td style={styles.td}>
+                  <input
+                    type="text"
+                    style={styles.input}
+                    value={newEmployee.phone}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, phone: e.target.value })}
+                  />
+                </td>
+                <td style={styles.td}>
+                  <input
+                    type="text"
+                    style={styles.input}
+                    value={newEmployee.nic}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, nic: e.target.value })}
+                  />
+                </td>
+                <td style={styles.td}>
+                  <input
+                    type="email"
+                    style={styles.input}
+                    value={newEmployee.email}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })}
+                  />
+                </td>
+                <td style={styles.td}>
+                  <select
+                    style={styles.input}
+                    value={newEmployee.position_id}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, position_id: e.target.value })}
+                  >
+                    <option value="">Select Position</option>
+                    {positions.map((position) => (
+                      <option key={position.id} value={position.id}>
+                        {position.title}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td style={styles.td}>
+                  <input
+                    type="text"
+                    style={styles.input}
+                    value={newEmployee.username}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, username: e.target.value })}
+                  />
+                </td>
+                <td style={styles.td}>
+                  <button style={styles.button} onClick={handleSaveNewEmployee}>
+                    Save
+                  </button>
+                  <button
+                    style={styles.button}
+                    onClick={() => setNewEmployee(null)}
+                  >
+                    Cancel
+                  </button>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
         {showModal && (
@@ -305,69 +394,18 @@ const MManageEmployees = () => {
             <div style={styles.modalContent}>
               <h3>Confirm Removal</h3>
               <p>Are you sure you want to remove this employee?</p>
-              <button style={{ ...styles.modalButton, ...styles.confirmButton }} onClick={handleRemoveEmployee}>Confirm</button>
-              <button style={{ ...styles.modalButton, ...styles.cancelButton }} onClick={() => setShowModal(false)}>Cancel</button>
-            </div>
-          </div>
-        )}
-        {newEmployee && (
-          <div style={styles.modalOverlay}>
-            <div style={styles.modalContent}>
-              <h3>Add New Employee</h3>
-              <input
-                type="text"
-                placeholder="First Name"
-                value={newEmployee.first_name}
-                onChange={(e) => setNewEmployee({ ...newEmployee, first_name: e.target.value })}
-                style={styles.input}
-              />
-              <input
-                type="text"
-                placeholder="Last Name"
-                value={newEmployee.last_name}
-                onChange={(e) => setNewEmployee({ ...newEmployee, last_name: e.target.value })}
-                style={styles.input}
-              />
-              <input
-                type="text"
-                placeholder="Phone"
-                value={newEmployee.phone}
-                onChange={(e) => setNewEmployee({ ...newEmployee, phone: e.target.value })}
-                style={styles.input}
-              />
-              <input
-                type="text"
-                placeholder="NIC"
-                value={newEmployee.nic}
-                onChange={(e) => setNewEmployee({ ...newEmployee, nic: e.target.value })}
-                style={styles.input}
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                value={newEmployee.email}
-                onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })}
-                style={styles.input}
-              />
-              <select
-                style={styles.input}
-                value={newEmployee.position_id}
-                onChange={(e) => setNewEmployee({ ...newEmployee, position_id: e.target.value })}
+              <button
+                style={{ ...styles.modalButton, ...styles.confirmButton }}
+                onClick={handleRemoveEmployee} // Call the function on click
               >
-                <option value="" disabled>Select Position</option>
-                {positions.map((position) => (
-                  <option key={position.id} value={position.id}>{position.title}</option>
-                ))}
-              </select>
-              <input
-                type="text"
-                placeholder="Username"
-                value={newEmployee.username}
-                onChange={(e) => setNewEmployee({ ...newEmployee, username: e.target.value })}
-                style={styles.input}
-              />
-              <button style={{ ...styles.modalButton, ...styles.confirmButton }} onClick={handleSaveNewEmployee}>Save</button>
-              <button style={{ ...styles.modalButton, ...styles.cancelButton }} onClick={() => setNewEmployee(null)}>Cancel</button>
+                Confirm
+              </button>
+              <button
+                style={{ ...styles.modalButton, ...styles.cancelButton }}
+                onClick={() => setShowModal(false)} // Close modal without action
+              >
+                Cancel
+              </button>
             </div>
           </div>
         )}
