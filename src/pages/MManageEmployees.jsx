@@ -90,40 +90,30 @@ const styles = {
   },
 };
 
+const positions = [
+  { id: 1, title: 'Branch Manager' },
+  { id: 2, title: 'Teller' },
+  { id: 3, title: 'Loan Officer' },
+  { id: 4, title: 'Security Officer' },
+  { id: 5, title: 'Operations Manager' },
+  { id: 6, title: 'Technician' },
+];
+
 const MManageEmployees = () => {
   const [employees, setEmployees] = useState([]);
   const [editingId, setEditingId] = useState(null); // Track editing row
   const [newEmployee, setNewEmployee] = useState(null); // Track new employee row
   const [showModal, setShowModal] = useState(false); // Control modal visibility
   const [employeeToRemove, setEmployeeToRemove] = useState(null); // Track employee to remove
+  const [originalEmployeeData, setOriginalEmployeeData] = useState(null); // Track original employee data
 
-  // Fetch employees from the database
-  /*useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const response = await axios.get('/api/employees'); // Replace with your API endpoint
-        setEmployees(response.data); // Assuming the data is in response.data
-      } catch (error) {
-        console.error('Error fetching employees:', error);
-      }
-    };
-
-    fetchEmployees();
-  }, []);*/
-
+  // Dummy data for now
   useEffect(() => {
-    // Dummy data for now
     const fetchedEmployees = [
-      { id: 1, firstName: 'John', lastName: 'Doe', phone: '123456789', nic: '123456789V', email: 'john@example.com', position: 'Technician', branch: 'NYC', username: 'johndoe' },
-      { id: 2, firstName: 'Jane', lastName: 'Smith', phone: '987654321', nic: '987654321V', email: 'jane@example.com', position: 'Manager', branch: 'LA', username: 'janesmith' },
+      { id: 1, first_name: 'John', last_name: 'Doe', phone: '123456789', nic: '123456789V', email: 'john@example.com', position_id: 6, username: 'johndoe' },
+      { id: 2, first_name: 'Jane', last_name: 'Smith', phone: '987654321', nic: '987654321V', email: 'jane@example.com', position_id: 1, username: 'janesmith' },
     ];
     setEmployees(fetchedEmployees);
-
-    // When using an actual API, you would replace this with an axios call:
-    // axios.get('/api/employees')
-    //   .then(response => setEmployees(response.data))
-    //   .catch(error => console.error('Error fetching data', error));
-
   }, []);
 
   const handleInputChange = (e, id, field) => {
@@ -138,22 +128,32 @@ const MManageEmployees = () => {
     const newId = employees.length > 0 ? employees[employees.length - 1].id + 1 : 1;
     setNewEmployee({
       id: newId,
-      firstName: '',
-      lastName: '',
+      first_name: '',
+      last_name: '',
       phone: '',
       nic: '',
       email: '',
-      position: '',
-      branch: '',
+      position_id: '', // Track position ID
       username: '',
     });
   };
 
   const handleSaveNewEmployee = async () => {
+    // Create the new employee object in the desired format
+    const employeeData = {
+      first_name: newEmployee.first_name,
+      last_name: newEmployee.last_name,
+      phone: newEmployee.phone,
+      nic: newEmployee.nic,
+      email: newEmployee.email,
+      username: newEmployee.username,
+      position_id: newEmployee.position_id, // Send position ID
+    };
+
     try {
-      const response = await axios.post('/api/employees', newEmployee); // API call to add the new employee
+      const response = await axios.post('/api/employees', employeeData); // API call to add the new employee
       setEmployees([...employees, response.data]); // Add the new employee data from the response
-      setNewEmployee(null);
+      setNewEmployee(null); // Reset new employee state
     } catch (error) {
       console.error('Error saving employee:', error);
     }
@@ -175,8 +175,19 @@ const MManageEmployees = () => {
     }
   };
 
-  const handleCancel = () => {
+  const handleEditEmployee = (employee) => {
+    setEditingId(employee.id);
+    setOriginalEmployeeData({ ...employee }); // Store original data before editing
+  };
+
+  const handleCancelEdit = () => {
     setEditingId(null); // Reset editingId to null to cancel editing
+    // Restore original employee data
+    setEmployees((prevEmployees) =>
+      prevEmployees.map((employee) =>
+        employee.id === originalEmployeeData.id ? originalEmployeeData : employee
+      )
+    );
   };
 
   return (
@@ -194,7 +205,6 @@ const MManageEmployees = () => {
               <th style={styles.th}>NIC</th>
               <th style={styles.th}>Email</th>
               <th style={styles.th}>Position</th>
-              <th style={styles.th}>Branch</th>
               <th style={styles.th}>Username</th>
               <th style={styles.th}>Action</th>
             </tr>
@@ -208,16 +218,16 @@ const MManageEmployees = () => {
                       <input
                         type="text"
                         style={styles.input}
-                        value={employee.firstName}
-                        onChange={(e) => handleInputChange(e, employee.id, 'firstName')}
+                        value={employee.first_name}
+                        onChange={(e) => handleInputChange(e, employee.id, 'first_name')}
                       />
                     </td>
                     <td style={styles.td}>
                       <input
                         type="text"
                         style={styles.input}
-                        value={employee.lastName}
-                        onChange={(e) => handleInputChange(e, employee.id, 'lastName')}
+                        value={employee.last_name}
+                        onChange={(e) => handleInputChange(e, employee.id, 'last_name')}
                       />
                     </td>
                     <td style={styles.td}>
@@ -245,20 +255,18 @@ const MManageEmployees = () => {
                       />
                     </td>
                     <td style={styles.td}>
-                      <input
-                        type="text"
+                      <select
                         style={styles.input}
-                        value={employee.position}
-                        onChange={(e) => handleInputChange(e, employee.id, 'position')}
-                      />
-                    </td>
-                    <td style={styles.td}>
-                      <input
-                        type="text"
-                        style={styles.input}
-                        value={employee.branch}
-                        onChange={(e) => handleInputChange(e, employee.id, 'branch')}
-                      />
+                        value={employee.position_id}
+                        onChange={(e) => handleInputChange(e, employee.id, 'position_id')}
+                      >
+                        <option value="" disabled>Select Position</option>
+                        {positions.map((position) => (
+                          <option key={position.id} value={position.id}>
+                            {position.title}
+                          </option>
+                        ))}
+                      </select>
                     </td>
                     <td style={styles.td}>
                       <input
@@ -269,156 +277,103 @@ const MManageEmployees = () => {
                       />
                     </td>
                     <td style={styles.td}>
-                      <button style={styles.button} onClick={() => setEditingId(null)}>
-                        Save
-                      </button>
-                      <button style={styles.button} onClick={handleCancel}>
-                        Cancel
-                      </button>
+                      <button style={styles.button} onClick={() => setEditingId(null)}>Save</button>
+                      <button style={styles.button} onClick={handleCancelEdit}>Cancel</button>
                     </td>
                   </>
                 ) : (
                   <>
-                    <td style={styles.td}>{employee.firstName}</td>
-                    <td style={styles.td}>{employee.lastName}</td>
+                    <td style={styles.td}>{employee.first_name}</td>
+                    <td style={styles.td}>{employee.last_name}</td>
                     <td style={styles.td}>{employee.phone}</td>
                     <td style={styles.td}>{employee.nic}</td>
                     <td style={styles.td}>{employee.email}</td>
-                    <td style={styles.td}>{employee.position}</td>
-                    <td style={styles.td}>{employee.branch}</td>
+                    <td style={styles.td}>{positions.find(pos => pos.id === employee.position_id)?.title || 'N/A'}</td>
                     <td style={styles.td}>{employee.username}</td>
                     <td style={styles.td}>
-                      <button style={styles.button} onClick={() => setEditingId(employee.id)}>
-                        Update Employee
-                      </button>
-                      <button style={styles.button} onClick={() => confirmRemoveEmployee(employee.id)}>
-                        Remove Employee
-                      </button>
+                      <button style={styles.button} onClick={() => handleEditEmployee(employee)}>Edit</button>
+                      <button style={styles.button} onClick={() => confirmRemoveEmployee(employee.id)}>Remove</button>
                     </td>
                   </>
                 )}
               </tr>
             ))}
-            {newEmployee && (
-              <tr>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.firstName}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, firstName: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.lastName}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, lastName: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.phone}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, phone: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.nic}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, nic: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="email"
-                    style={styles.input}
-                    value={newEmployee.email}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.position}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, position: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.branch}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, branch: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.username}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, username: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <button style={styles.button} onClick={handleSaveNewEmployee}>
-                    Save New Employee
-                  </button>
-                  <button style={styles.button} onClick={() => setNewEmployee(null)}>
-                    Cancel
-                  </button>
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
         {showModal && (
-  <div style={styles.modalOverlay}>
-    <div style={styles.modalContent}>
-      <h3>Are you sure you want to remove this employee?</h3>
-      <div style={styles.modalButtonContainer}>
-        <button 
-          style={{ 
-            backgroundColor: 'green', 
-            color: 'white', 
-            border: 'none', 
-            padding: '10px 20px', 
-            marginRight: '10px', 
-            borderRadius: '5px', 
-            cursor: 'pointer' 
-          }} 
-          onClick={handleRemoveEmployee}
-        >
-          Yes
-        </button>
-        <button 
-          style={{ 
-            backgroundColor: 'red', 
-            color: 'white', 
-            border: 'none', 
-            padding: '10px 20px', 
-            borderRadius: '5px', 
-            cursor: 'pointer' 
-          }} 
-          onClick={() => setShowModal(false)}
-        >
-          No
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
+          <div style={styles.modalOverlay}>
+            <div style={styles.modalContent}>
+              <h3>Confirm Removal</h3>
+              <p>Are you sure you want to remove this employee?</p>
+              <button style={{ ...styles.modalButton, ...styles.confirmButton }} onClick={handleRemoveEmployee}>Confirm</button>
+              <button style={{ ...styles.modalButton, ...styles.cancelButton }} onClick={() => setShowModal(false)}>Cancel</button>
+            </div>
+          </div>
+        )}
+        {newEmployee && (
+          <div style={styles.modalOverlay}>
+            <div style={styles.modalContent}>
+              <h3>Add New Employee</h3>
+              <input
+                type="text"
+                placeholder="First Name"
+                value={newEmployee.first_name}
+                onChange={(e) => setNewEmployee({ ...newEmployee, first_name: e.target.value })}
+                style={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="Last Name"
+                value={newEmployee.last_name}
+                onChange={(e) => setNewEmployee({ ...newEmployee, last_name: e.target.value })}
+                style={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="Phone"
+                value={newEmployee.phone}
+                onChange={(e) => setNewEmployee({ ...newEmployee, phone: e.target.value })}
+                style={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="NIC"
+                value={newEmployee.nic}
+                onChange={(e) => setNewEmployee({ ...newEmployee, nic: e.target.value })}
+                style={styles.input}
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                value={newEmployee.email}
+                onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })}
+                style={styles.input}
+              />
+              <select
+                style={styles.input}
+                value={newEmployee.position_id}
+                onChange={(e) => setNewEmployee({ ...newEmployee, position_id: e.target.value })}
+              >
+                <option value="" disabled>Select Position</option>
+                {positions.map((position) => (
+                  <option key={position.id} value={position.id}>{position.title}</option>
+                ))}
+              </select>
+              <input
+                type="text"
+                placeholder="Username"
+                value={newEmployee.username}
+                onChange={(e) => setNewEmployee({ ...newEmployee, username: e.target.value })}
+                style={styles.input}
+              />
+              <button style={{ ...styles.modalButton, ...styles.confirmButton }} onClick={handleSaveNewEmployee}>Save</button>
+              <button style={{ ...styles.modalButton, ...styles.cancelButton }} onClick={() => setNewEmployee(null)}>Cancel</button>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   );
 };
 
 export default MManageEmployees;
-
-
