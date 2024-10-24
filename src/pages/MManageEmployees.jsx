@@ -101,20 +101,80 @@ const positions = [
 
 const MManageEmployees = () => {
   const [employees, setEmployees] = useState([]);
-  const [editingId, setEditingId] = useState(null); // Track editing row
-  const [newEmployee, setNewEmployee] = useState(null); // Track new employee row
-  const [showModal, setShowModal] = useState(false); // Control modal visibility
-  const [employeeToRemove, setEmployeeToRemove] = useState(null); // Track employee to remove
-  const [originalEmployeeData, setOriginalEmployeeData] = useState(null); // Track original employee data
+  const [editingId, setEditingId] = useState(null);
+  const [newEmployee, setNewEmployee] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [employeeToRemove, setEmployeeToRemove] = useState(null);
+  const [originalEmployeeData, setOriginalEmployeeData] = useState(null);
+  const [branchId, setBranchId] = useState(null);
+  const [positions, setPositions] = useState([]);
 
-  // Dummy data for now
+  const token = localStorage.getItem('token'); // Get JWT token from localStorage
+
+  // Fetch Branch ID from the backend
+  const fetchBranchId = async () => {
+    try {
+      const branchResponse = await axios.get(
+        'http://localhost:5000/branch-manager/get-branch-id',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add JWT token to request headers
+          },
+        }
+      );
+      setBranchId(branchResponse.data.branch_id); // Ensure the correct data is used
+    } catch (error) {
+      console.error('Error fetching branch ID:', error);
+    }
+  };
+
+  // fetch positions from backend
+  const fetchPositions = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/branch-manager/get-positions', {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add JWT token to request headers
+        },
+      });
+      setPositions(response.data);
+    } catch (error) {
+      console.error('Error fetching positions:', error);
+    }
+  };
+
+
+  // Fetch employees for a specific branch
+  const fetchEmployees = async (branchId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/employee/general/branch/${branchId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add JWT token to request headers
+          },
+        }
+      );
+      setEmployees(response.data);
+    } catch (error) {
+      console.error('Error fetching employees:', error);
+    }
+  };
+
+  // Fetch branch ID and then employees
   useEffect(() => {
-    const fetchedEmployees = [
-      { id: 1, first_name: 'John', last_name: 'Doe', phone: '123456789', nic: '123456789V', email: 'john@example.com', position_id: 6, username: 'johndoe' },
-      { id: 2, first_name: 'Jane', last_name: 'Smith', phone: '987654321', nic: '987654321V', email: 'jane@example.com', position_id: 1, username: 'janesmith' },
-    ];
-    setEmployees(fetchedEmployees);
+    const fetchData = async () => {
+      await fetchBranchId(); // Fetch the branch ID first
+      await fetchPositions(); // Fetch the positions
+    };
+    fetchData();
   }, []);
+
+  // Fetch employees whenever branchId changes
+  useEffect(() => {
+    if (branchId) {
+      fetchEmployees(branchId); // Fetch employees only after branchId is set
+    }
+  }, [branchId]);
 
   const handleInputChange = (e, id, field) => {
     setEmployees((prevEmployees) =>
@@ -125,65 +185,86 @@ const MManageEmployees = () => {
   };
 
   const handleAddEmployee = () => {
-    const newId = employees.length > 0 ? employees[employees.length - 1].id + 1 : 1;
     setNewEmployee({
-      id: newId,
       first_name: '',
       last_name: '',
       phone: '',
       nic: '',
       email: '',
-      position_id: '', // Track position ID
+      position_id: '',
       username: '',
     });
   };
 
   const handleSaveNewEmployee = async () => {
-    const employeeData = {
-      first_name: newEmployee.first_name,
-      last_name: newEmployee.last_name,
-      phone: newEmployee.phone,
-      nic: newEmployee.nic,
-      email: newEmployee.email,
-      username: newEmployee.username,
-      position_id: newEmployee.position_id, // Send position ID
-    };
-
     try {
-      const response = await axios.post('/api/employees', employeeData); // API call to add the new employee
-      setEmployees([...employees, response.data]); // Add the new employee data from the response
-      setNewEmployee(null); // Reset new employee state
+      const response = await axios.post(
+        'http://localhost:5000/employee/add',
+        newEmployee,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include token in the request
+          },
+        }
+      );
+      setEmployees([...employees, response.data]);
+      setNewEmployee(null);
     } catch (error) {
       console.error('Error saving employee:', error);
     }
   };
 
+  const handleEditEmployee = (employee) => {
+    setEditingId(employee.id);
+    setOriginalEmployeeData({ ...employee });
+  };
+
+  const handleUpdateEmployee = async (id) => {
+    const employeeToUpdate = employees.find((employee) => employee.id === id);
+    try {
+      await axios.put(
+        `http://localhost:5000/employee/update/${id}`,
+        employeeToUpdate,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include token in the request
+          },
+        }
+      );
+      setEditingId(null);
+      fetchEmployees(branchId); // Refresh the list
+    } catch (error) {
+      console.error('Error updating employee:', error);
+    }
+  };
+
   const confirmRemoveEmployee = (id) => {
     setShowModal(true);
-    setEmployeeToRemove(id); // Set the employee to remove when the modal is shown
+    setEmployeeToRemove(id);
   };
 
   const handleRemoveEmployee = async () => {
     try {
-      await axios.delete(`/api/employees/${employeeToRemove}`); // API call to remove the employee
-      setEmployees((prevEmployees) => 
+      await axios.delete(
+        `http://localhost:5000/employee/delete/${employeeToRemove}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include token in the request
+          },
+        }
+      );
+      setEmployees((prevEmployees) =>
         prevEmployees.filter((employee) => employee.id !== employeeToRemove)
       );
-      setShowModal(false); // Close the modal
-      setEmployeeToRemove(null); // Reset employee to remove
+      setShowModal(false);
+      setEmployeeToRemove(null);
     } catch (error) {
       console.error('Error removing employee:', error);
     }
   };
 
-  const handleEditEmployee = (employee) => {
-    setEditingId(employee.id);
-    setOriginalEmployeeData({ ...employee }); // Store original data before editing
-  };
-
   const handleCancelEdit = () => {
-    setEditingId(null); // Reset editingId to null to cancel editing
-    // Restore original employee data
+    setEditingId(null);
     setEmployees((prevEmployees) =>
       prevEmployees.map((employee) =>
         employee.id === originalEmployeeData.id ? originalEmployeeData : employee
@@ -250,14 +331,12 @@ const MManageEmployees = () => {
                     <td style={styles.td}>
                       <input
                         type="email"
-                        style={styles.input}
                         value={employee.email}
                         onChange={(e) => handleInputChange(e, employee.id, 'email')}
                       />
                     </td>
                     <td style={styles.td}>
                       <select
-                        style={styles.input}
                         value={employee.position_id}
                         onChange={(e) => handleInputChange(e, employee.id, 'position_id')}
                       >
@@ -278,12 +357,10 @@ const MManageEmployees = () => {
                       />
                     </td>
                     <td style={styles.td}>
-                      <button style={styles.button} onClick={() => setEditingId(null)}>
+                      <button style={styles.button} onClick={() => handleUpdateEmployee(employee.id)}>
                         Save
                       </button>
-                      <button style={styles.button} onClick={handleCancelEdit}>
-                        Cancel
-                      </button>
+                      <button style={styles.button} onClick={handleCancelEdit}>Cancel</button>
                     </td>
                   </>
                 ) : (
@@ -293,100 +370,18 @@ const MManageEmployees = () => {
                     <td style={styles.td}>{employee.phone}</td>
                     <td style={styles.td}>{employee.nic}</td>
                     <td style={styles.td}>{employee.email}</td>
-                    <td style={styles.td}>{positions.find(pos => pos.id === employee.position_id)?.title}</td>
+                    <td style={styles.td}>
+                      {positions.find((pos) => pos.id === employee.position_id)?.title}
+                    </td>
                     <td style={styles.td}>{employee.username}</td>
                     <td style={styles.td}>
-                      <button style={styles.button} onClick={() => handleEditEmployee(employee)}>
-                        Edit
-                      </button>
-                      <button
-                        style={styles.button}
-                        onClick={() => confirmRemoveEmployee(employee.id)}
-                      >
-                        Remove
-                      </button>
+                      <button style={styles.button} onClick={() => handleEditEmployee(employee)}>Edit</button>
+                      <button style={styles.button} onClick={() => confirmRemoveEmployee(employee.id)}>Remove</button>
                     </td>
                   </>
                 )}
               </tr>
             ))}
-            {newEmployee && (
-              <tr>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.first_name}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, first_name: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.last_name}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, last_name: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.phone}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, phone: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.nic}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, nic: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="email"
-                    style={styles.input}
-                    value={newEmployee.email}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <select
-                    style={styles.input}
-                    value={newEmployee.position_id}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, position_id: e.target.value })}
-                  >
-                    <option value="">Select Position</option>
-                    {positions.map((position) => (
-                      <option key={position.id} value={position.id}>
-                        {position.title}
-                      </option>
-                    ))}
-                  </select>
-                </td>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.username}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, username: e.target.value })}
-                  />
-                </td>
-                <td style={styles.td}>
-                  <button style={styles.button} onClick={handleSaveNewEmployee}>
-                    Save
-                  </button>
-                  <button
-                    style={styles.button}
-                    onClick={() => setNewEmployee(null)}
-                  >
-                    Cancel
-                  </button>
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
         {showModal && (
@@ -394,18 +389,8 @@ const MManageEmployees = () => {
             <div style={styles.modalContent}>
               <h3>Confirm Removal</h3>
               <p>Are you sure you want to remove this employee?</p>
-              <button
-                style={{ ...styles.modalButton, ...styles.confirmButton }}
-                onClick={handleRemoveEmployee} // Call the function on click
-              >
-                Confirm
-              </button>
-              <button
-                style={{ ...styles.modalButton, ...styles.cancelButton }}
-                onClick={() => setShowModal(false)} // Close modal without action
-              >
-                Cancel
-              </button>
+              <button onClick={handleRemoveEmployee} style={{...styles.modalButton, ...styles.confirmButton}}>Confirm</button>
+              <button onClick={() => setShowModal(false)} style={{...styles.modalButton, ...styles.cancelButton}}>Cancel</button>
             </div>
           </div>
         )}
