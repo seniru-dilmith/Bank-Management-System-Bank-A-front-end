@@ -3,104 +3,179 @@ import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
 import Layout from '../layouts/Layout';
 
 const ManagerDashboard = () => {
-  const [showModal, setShowModal] = useState(false); // State for modal visibility
+  const [showModal, setShowModal] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); // State for error message
+  const [errorMessage, setErrorMessage] = useState('');
 
-  // Function to handle fetching reports
   const fetchReport = async (reportType, params = {}) => {
     try {
-      let url = `/api/reports/${reportType}`;
-
-      // Add startDate and endDate as query parameters if provided
-      if (params.startDate && params.endDate) {
-        url += `?startDate=${params.startDate}&endDate=${params.endDate}`;
-      }
+      let url = `http://localhost:5000/branch-manager/${reportType}`;
+      const queryParams = new URLSearchParams(params).toString();
+      if (queryParams) url += `?${queryParams}`;
 
       const response = await fetch(url, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/pdf',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
 
       if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(new Blob([blob]));
-        window.open(url, '_blank');
+        const data = await response.json();
+        console.log('Report Data:', data);
+        if (reportType === 'transaction-report') {
+          openTransactionReportWindow(data);
+        } else if (reportType === 'late-loan-report') {
+          openLoanReportWindow(data);
+        }
       } else {
-        console.error('Failed to fetch the report');
+        const errorData = await response.json();
+        alert(errorData.message || 'Failed to fetch the report');
       }
     } catch (error) {
-      console.error('Error fetching report:', error);
+      alert('An unexpected error occurred.');
+      console.error('Fetch error:', error);
     }
   };
 
-  // Validate date range and handle submit from modal
+  const openTransactionReportWindow = (data) => {
+    const newWindow = window.open('', '_blank', 'width=900,height=700,scrollbars=yes');
+    newWindow.document.write(`
+      <html>
+        <head>
+          <title>Transaction Report</title>
+          <style>
+            ${popupStyles}
+          </style>
+        </head>
+        <body>
+          <h2>Transaction Report</h2>
+          ${generateTable(data, 'transaction')}
+          <div class="button-container">
+            <button class="close-btn" onclick="window.close()">Close</button>
+          </div>
+        </body>
+      </html>
+    `);
+    newWindow.document.close();
+  };
+
+  const openLoanReportWindow = (data) => {
+    const newWindow = window.open('', '_blank', 'width=900,height=700,scrollbars=yes');
+    newWindow.document.write(`
+      <html>
+        <head>
+          <title>Loan Installment Report</title>
+          <style>
+            ${popupStyles}
+          </style>
+        </head>
+        <body>
+          <h2>Loan Installment Report</h2>
+          ${generateTable(data, 'loan')}
+          <div class="button-container">
+            <button class="close-btn" onclick="window.close()">Close</button>
+          </div>
+        </body>
+      </html>
+    `);
+    newWindow.document.close();
+  };
+
+  const generateTable = (data, type) => {
+    const headers =
+      type === 'transaction'
+        ? `<tr>
+            <th>Transaction ID</th>
+            <th>Transaction Time</th>
+            <th>From Account</th>
+            <th>To Account</th>
+            <th>Amount</th>
+            <th>Type</th>
+            <th>Beneficiary</th>
+          </tr>`
+        : `<tr>
+            <th>Loan ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Next Due Date</th>
+            <th>Installment Amount</th>
+            <th>Paid</th>
+          </tr>`;
+
+    const rows = data
+      .map((item) =>
+        type === 'transaction'
+          ? `<tr>
+              <td>${item.transaction_id}</td>
+              <td>${new Date(item.transaction_time).toLocaleString()}</td>
+              <td>${item.from_account_number}</td>
+              <td>${item.to_account_number}</td>
+              <td>${item.amount}</td>
+              <td>${item.transaction_type}</td>
+              <td>${item.beneficiary_name || 'N/A'}</td>
+            </tr>`
+          : `<tr>
+              <td>${item.loan_id}</td>
+              <td>${item.first_name}</td>
+              <td>${item.last_name}</td>
+              <td>${item.next_due_date ? new Date(item.next_due_date).toLocaleDateString() : 'N/A'}</td>
+              <td>${item.installment_amount}</td>
+              <td>${item.paid}</td>
+            </tr>`
+      )
+      .join('');
+
+    return `
+      <table>
+        <thead>${headers}</thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  };
+
   const handleSubmit = () => {
-    // Check if start date is later than end date
     if (new Date(startDate) > new Date(endDate)) {
       setErrorMessage('End date must be later than start date.');
       return;
     }
-
-    // Clear the error message and proceed with fetching the report
     setErrorMessage('');
-    fetchReport('total-transactions', { startDate, endDate });
+    fetchReport('transaction-report', { start_date: startDate, end_date: endDate });
     setShowModal(false);
   };
 
   return (
     <Layout NavigationBar={<ManagerNaviBar />}>
       <div style={styles.container}>
-        {/* Branch Manager Dashboard title */}
-        <div style={styles.dashboardBox}>
-          <h2 style={styles.dashboardTitle}>Branch Manager Dashboard</h2>
-        </div>
+        <h2 style={styles.dashboardTitle}>Branch Manager Dashboard</h2>
         <h3 style={styles.reportTitle}>Generate Reports</h3>
         <div style={styles.buttonContainer}>
-          <button
-            style={styles.button}
-            onClick={() => setShowModal(true)}
-          >
+          <button style={styles.button} onClick={() => setShowModal(true)}>
             Total Transaction Report
           </button>
-          <button
-            style={styles.button}
-            onClick={() => fetchReport('late-loan-installments')}
-          >
+          <button style={styles.button} onClick={() => fetchReport('late-loan-report')}>
             Late Loan Installment Report
           </button>
         </div>
-
-        {/* Modal for Date Range */}
         {showModal && (
           <div style={styles.modalOverlay}>
             <div style={styles.modalContent}>
-              <h3 style={styles.modalTitle}>Enter Date Range</h3>
-              <label>
-                Start Date:
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  style={styles.input}
-                />
-              </label>
-              <label>
-                End Date:
-                <input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  style={styles.input}
-                />
-              </label>
-              
-              {/* Display error message if validation fails */}
+              <h3>Enter Date Range</h3>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                style={styles.input}
+              />
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                style={styles.input}
+              />
               {errorMessage && <p style={styles.error}>{errorMessage}</p>}
-
               <button onClick={handleSubmit} style={styles.submitButton}>
                 Submit
               </button>
@@ -115,6 +190,18 @@ const ManagerDashboard = () => {
   );
 };
 
+const popupStyles = `
+  body { font-family: 'Arial', sans-serif; padding: 20px; }
+  h2 { text-align: center; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 12px; border: 1px solid #ddd; text-align: center; }
+  th { background-color: #003366; color: white; }
+  tr:nth-child(even) { background-color: #f2f2f2; }
+  .button-container { text-align: center; margin-top: 15px; }
+  .close-btn { padding: 10px 20px; background-color: #dc3545; color: white; }
+`;
+
+// Styles for the component
 const styles = {
   container: {
     display: 'flex',
@@ -156,8 +243,6 @@ const styles = {
     border: 'none',
     borderRadius: '10px',
     cursor: 'pointer',
-    transition: 'background-color 0.3s',
-    minWidth: '350px',
   },
   modalOverlay: {
     position: 'fixed',
@@ -169,23 +254,19 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1000, // Ensure modal is above everything
+    zIndex: 1000,
   },
   modalContent: {
     backgroundColor: '#fff',
     padding: '20px',
     borderRadius: '10px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '15px',
     width: '300px',
-    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', // Add shadow for visibility
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
   },
   modalTitle: {
     fontSize: '1.5rem',
     marginBottom: '10px',
-    color: '#333', // Ensure text is visible
+    color: '#333',
   },
   input: {
     padding: '10px',
