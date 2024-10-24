@@ -11,6 +11,8 @@ const OpenLoanRequest = () => {
     interestRate: '',
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false); // For handling the form submission state
+
   // Handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -21,7 +23,7 @@ const OpenLoanRequest = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validate form fields
@@ -31,8 +33,45 @@ const OpenLoanRequest = () => {
       return; // Stop form submission
     }
 
-    alert('New loan request submitted!');
-    // Add logic to submit the form data
+    // Set form submission state
+    setIsSubmitting(true);
+
+    try {
+      // Send the data to the backend API
+      const response = await fetch('http://localhost:5000/loans/request-loan-emp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`, // Assuming JWT token is stored in localStorage
+        },
+        body: JSON.stringify({
+          customerAccountNumber: customerAccount,
+          loanAmount: parseFloat(loanAmount),  // Ensure amount is a number
+          loanTerm: parseInt(loanTerm, 10),    // Ensure term is an integer
+          interestRate: parseFloat(interestRate), // Ensure interest rate is a number
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error submitting loan request');
+      }
+
+      const result = await response.json();
+
+      alert(result.message); // Show success message
+      // Optionally reset the form
+      setFormData({
+        customerAccount: '',
+        loanAmount: '',
+        loanTerm: '',
+        interestRate: '',
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to submit loan request.');
+    } finally {
+      setIsSubmitting(false); // Reset form submission state
+    }
   };
 
   return (
@@ -49,6 +88,7 @@ const OpenLoanRequest = () => {
                 value={formData.customerAccount}
                 onChange={handleInputChange}
                 style={styles.inputField}
+                disabled={isSubmitting}
               />
             </div>
             <div style={styles.formGroup}>
@@ -59,6 +99,7 @@ const OpenLoanRequest = () => {
                 value={formData.loanAmount}
                 onChange={handleInputChange}
                 style={styles.inputField}
+                disabled={isSubmitting}
               />
             </div>
             <div style={styles.formGroup}>
@@ -69,6 +110,7 @@ const OpenLoanRequest = () => {
                 value={formData.loanTerm}
                 onChange={handleInputChange}
                 style={styles.inputField}
+                disabled={isSubmitting}
               />
             </div>
             <div style={styles.formGroup}>
@@ -79,10 +121,11 @@ const OpenLoanRequest = () => {
                 value={formData.interestRate}
                 onChange={handleInputChange}
                 style={styles.inputField}
+                disabled={isSubmitting}
               />
             </div>
-            <button type="submit" style={styles.button}>
-              Confirm
+            <button type="submit" style={styles.button} disabled={isSubmitting}>
+              {isSubmitting ? 'Submitting...' : 'Confirm'}
             </button>
           </form>
         </div>
@@ -96,16 +139,16 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100vh', // Full viewport height to center vertically
+    height: '100vh',
   },
   container: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     padding: '20px',
-    borderRadius: '10px', // Consistent border radius
+    borderRadius: '10px',
     backgroundColor: '#fff',
-    width: '400px', // Matching width to maintain consistency
+    width: '400px',
     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
   },
   header: {
@@ -121,7 +164,7 @@ const styles = {
   inputField: {
     width: '100%',
     padding: '10px',
-    borderRadius: '5px', // Consistent border radius for inputs
+    borderRadius: '5px',
     border: '1px solid #ccc',
     backgroundColor: '#f5f5f5',
     fontSize: '14px',
@@ -129,10 +172,10 @@ const styles = {
   button: {
     width: '100%',
     padding: '10px',
-    backgroundColor: '#ff7f00', // Orange confirm button
+    backgroundColor: '#ff7f00',
     color: 'white',
     border: 'none',
-    borderRadius: '5px', // Consistent rounded button
+    borderRadius: '5px',
     cursor: 'pointer',
     fontSize: '16px',
   },
