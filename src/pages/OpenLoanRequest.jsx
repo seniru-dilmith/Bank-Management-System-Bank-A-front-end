@@ -5,14 +5,11 @@ import Layout from '../layouts/Layout';
 const OpenLoanRequest = () => {
   // State to manage form inputs
   const [formData, setFormData] = useState({
-    customerId: '',
-    branchId: '',
+    customerAccount: '',
     loanAmount: '',
     loanTerm: '',
-    startDate: '',
+    interestRate: '',
   });
-
-  const interestRate = '5%'; // Static interest rate
 
   // Handle input change
   const handleInputChange = (e) => {
@@ -26,6 +23,14 @@ const OpenLoanRequest = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Validate form fields
+    const { customerAccount, loanAmount, loanTerm, interestRate } = formData;
+    if (!customerAccount || !loanAmount || !loanTerm || !interestRate) {
+      alert('Please fill in all fields.');
+      return; // Stop form submission
+    }
+
     alert('New loan request submitted!');
     // Add logic to submit the form data
   };
@@ -37,21 +42,11 @@ const OpenLoanRequest = () => {
           <h2 style={styles.header}>Open Loan Request</h2>
           <form onSubmit={handleSubmit}>
             <div style={styles.formGroup}>
-              <label>Customer ID</label>
+              <label>Customer Account</label>
               <input
                 type="text"
-                name="customerId"
-                value={formData.customerId}
-                onChange={handleInputChange}
-                style={styles.inputField}
-              />
-            </div>
-            <div style={styles.formGroup}>
-              <label>Branch ID</label>
-              <input
-                type="text"
-                name="branchId"
-                value={formData.branchId}
+                name="customerAccount"
+                value={formData.customerAccount}
                 onChange={handleInputChange}
                 style={styles.inputField}
               />
@@ -67,7 +62,7 @@ const OpenLoanRequest = () => {
               />
             </div>
             <div style={styles.formGroup}>
-              <label>Loan Term (in years)</label>
+              <label>Loan Term (in months)</label>
               <input
                 type="text"
                 name="loanTerm"
@@ -77,20 +72,11 @@ const OpenLoanRequest = () => {
               />
             </div>
             <div style={styles.formGroup}>
-              <label>Interest Rate</label>
+              <label>Interest Rate (%)</label>
               <input
                 type="text"
-                value={interestRate}
-                readOnly
-                style={{ ...styles.inputField, backgroundColor: '#e0e0e0' }}
-              />
-            </div>
-            <div style={styles.formGroup}>
-              <label>Start Date</label>
-              <input
-                type="date"
-                name="startDate"
-                value={formData.startDate}
+                name="interestRate"
+                value={formData.interestRate}
                 onChange={handleInputChange}
                 style={styles.inputField}
               />
