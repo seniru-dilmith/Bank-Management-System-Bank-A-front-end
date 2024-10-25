@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // For handling API requests
-import { jwtDecode } from 'jwt-decode'; // Ensure this is installed: npm install jwt-decode
+import axios from 'axios'; 
+import { jwtDecode } from 'jwt-decode'; 
 import EmployeeNaviBar from '../components/NaviBar/EmployeeNaviBar';
 import Layout from '../layouts/Layout';
+import useAuth from '../utils/useAuth';
 
 const EmployeeDashboard = () => {
+  useAuth(); // Redirect to login if token is invalid
   const [accountSummaries, setAccountSummaries] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [branchId, setBranchId] = useState('');

@@ -3,8 +3,10 @@ import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import useAuth from "../utils/useAuth";
 
 const CustomerDashboard = () => {
+  useAuth(); // Redirect to login if token is invalid
   const [accounts, setAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState('');
   const [accountType, setAccountType] = useState('');
