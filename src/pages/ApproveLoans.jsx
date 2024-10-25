@@ -3,8 +3,10 @@ import axios from 'axios';
 import Layout from '../layouts/Layout';
 import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
 import { Link } from 'react-router-dom';
+import useAuth from '../utils/useAuth';
 
 const ApproveLoans = () => {
+  useAuth(); // Redirect to login if token is invalid
   // State to store loan applications
   const [loans, setLoans] = useState([]);
   const [message, setMessage] = useState(null);

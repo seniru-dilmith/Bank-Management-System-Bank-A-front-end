@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TechnicianNaviBar from '../components/NaviBar/TechnicianNaviBar';
 import Layout from '../layouts/Layout';
 import axios from 'axios';
+import useAuth from '../utils/useAuth';
 
 const styles = {
   container: {
@@ -91,6 +92,7 @@ const styles = {
 };
 
 const ManageEmployees = () => {
+  useAuth(); // Custom hook to check for authentication
   const [employees, setEmployees] = useState([]);
   const [editingId, setEditingId] = useState(null); // Track editing row
   const [newEmployee, setNewEmployee] = useState(null); // Track new employee row

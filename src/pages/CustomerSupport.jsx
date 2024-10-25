@@ -1,6 +1,7 @@
 import React from "react";
 import HomeNaviBar from '../components/NaviBar/HomeNaviBar';
 import Layout from '../layouts/Layout';
+import useAuth from "../utils/useAuth";
 
 const CustomerSupport = () => {
   return (
