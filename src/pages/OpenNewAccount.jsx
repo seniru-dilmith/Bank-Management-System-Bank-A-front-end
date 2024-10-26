@@ -1,33 +1,107 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import EmployeeNaviBar from '../components/NaviBar/EmployeeNaviBar';
 import Layout from '../layouts/Layout';
+import { useAuth } from '../routes/AuthContext';
+import axios from 'axios';
 
 const OpenNewAccount = () => {
-  // State to manage form inputs
+  useAuth(); // Redirect to login if token is invalid
+
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    address: '',
-    accountType: '',
+    accountTypeId: '',
     nic: '',
-    email: '',
-    phoneNumber: '',
+    initialDeposit: '', // Initial Deposit Amount
   });
 
-  // Handle input change
+  const [accountTypes, setAccountTypes] = useState([]);
+  const [customerDetails, setCustomerDetails] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState(null); // Track selected customer
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch account types
+  useEffect(() => {
+    const fetchAccountTypes = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(
+          'http://localhost:5000/customer-account/account-types',
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setAccountTypes(response.data);
+      } catch (error) {
+        console.error('Error fetching account types:', error);
+        alert('Failed to load account types. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchAccountTypes();
+  }, []);
+
+  // Fetch customer details
+  useEffect(() => {
+    const fetchCustomerDetails = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(
+          'http://localhost:5000/customer-account/customer-details',
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setCustomerDetails(response.data);
+      } catch (error) {
+        console.error('Error fetching customer details:', error);
+      }
+    };
+    fetchCustomerDetails();
+  }, []);
+
+  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Handle NIC selection and auto-fill
+  const handleNicChange = (e) => {
+    const selectedNic = e.target.value;
+    setFormData((prev) => ({ ...prev, nic: selectedNic }));
+
+    const customer = customerDetails.find((cust) => cust.nic === selectedNic);
+    if (customer) {
+      setSelectedCustomer(customer); // Store selected customer details
+    }
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('New account created!');
-    // Add logic to submit the form data
+    try {
+      const token = localStorage.getItem('token');
+      const { accountTypeId, initialDeposit, nic } = formData;
+      const customer = customerDetails.find((cust) => cust.nic === nic);
+
+      if (!customer) {
+        alert('Please select a valid NIC.');
+        return;
+      }
+
+      const requestData = {
+        account_type_id: accountTypeId,
+        customer_id: customer.id,
+        initial_deposit: initialDeposit,
+      };
+
+      const response = await axios.post(
+        'http://localhost:5000/customer-account/open-account',
+        requestData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert('New account created!');
+      console.log('Account created:', response.data);
+    } catch (error) {
+      console.error('Error creating account:', error);
+      alert('Error creating account. Please try again.');
+    }
   };
 
   return (
@@ -35,81 +109,116 @@ const OpenNewAccount = () => {
       <div style={styles.pageContainer}>
         <div style={styles.container}>
           <h2 style={styles.header}>Open New Account</h2>
-          <form onSubmit={handleSubmit}>
-            <div style={styles.formGroup}>
-              <label>First Name</label>
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleInputChange}
-                style={styles.inputField}
-              />
-            </div>
-            <div style={styles.formGroup}>
-              <label>Last Name</label>
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleInputChange}
-                style={styles.inputField}
-              />
-            </div>
-            <div style={styles.formGroup}>
-              <label>Address</label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleInputChange}
-                style={styles.inputField}
-              />
-            </div>
-            <div style={styles.formGroup}>
-              <label>Account Type</label>
-              <input
-                type="text"
-                name="accountType"
-                value={formData.accountType}
-                onChange={handleInputChange}
-                style={styles.inputField}
-              />
-            </div>
-            <div style={styles.formGroup}>
-              <label>NIC</label>
-              <input
-                type="text"
-                name="nic"
-                value={formData.nic}
-                onChange={handleInputChange}
-                style={styles.inputField}
-              />
-            </div>
-            <div style={styles.formGroup}>
-              <label>Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                style={styles.inputField}
-              />
-            </div>
-            <div style={styles.formGroup}>
-              <label>Phone Number</label>
-              <input
-                type="text"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                style={styles.inputField}
-              />
-            </div>
-            <button type="submit" style={styles.button}>
-              Confirm
-            </button>
-          </form>
+
+          {isLoading ? (
+            <p>Loading account types...</p>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <div style={styles.formGroup}>
+                <label>NIC</label>
+                <select
+                  name="nic"
+                  value={formData.nic}
+                  onChange={handleNicChange}
+                  style={styles.inputField}
+                >
+                  <option value="">Select NIC</option>
+                  {customerDetails.map((cust) => (
+                    <option key={cust.id} value={cust.nic}>
+                      {cust.nic}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {selectedCustomer && (
+                <>
+                  <div style={styles.formGroup}>
+                    <label>First Name</label>
+                    <input
+                      type="text"
+                      value={selectedCustomer.first_name}
+                      disabled
+                      style={styles.inputField}
+                    />
+                  </div>
+
+                  <div style={styles.formGroup}>
+                    <label>Last Name</label>
+                    <input
+                      type="text"
+                      value={selectedCustomer.last_name}
+                      disabled
+                      style={styles.inputField}
+                    />
+                  </div>
+
+                  <div style={styles.formGroup}>
+                    <label>Address</label>
+                    <input
+                      type="text"
+                      value={selectedCustomer.address}
+                      disabled
+                      style={styles.inputField}
+                    />
+                  </div>
+
+                  <div style={styles.formGroup}>
+                    <label>Email</label>
+                    <input
+                      type="email"
+                      value={selectedCustomer.email}
+                      disabled
+                      style={styles.inputField}
+                    />
+                  </div>
+
+                  <div style={styles.formGroup}>
+                    <label>Phone Number</label>
+                    <input
+                      type="text"
+                      value={selectedCustomer.phone}
+                      disabled
+                      style={styles.inputField}
+                    />
+                  </div>
+                </>
+              )}
+
+              <div style={styles.formGroup}>
+                <label>Account Type</label>
+                <select
+                  name="accountTypeId"
+                  value={formData.accountTypeId}
+                  onChange={handleInputChange}
+                  style={styles.inputField}
+                >
+                  <option value="">Select an account type</option>
+                  {accountTypes.map((type) => (
+                    <option key={type.id} value={type.id}>
+                      {type.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div style={styles.formGroup}>
+                <label>Initial Deposit</label>
+                <input
+                  type="number"
+                  name="initialDeposit"
+                  value={formData.initialDeposit}
+                  onChange={handleInputChange}
+                  style={styles.inputField}
+                  placeholder="Enter initial deposit amount"
+                />
+              </div>
+
+              <button type="submit" style={styles.button}>
+                Confirm
+              </button>
+            </form>
+          )}
         </div>
       </div>
     </Layout>
@@ -121,7 +230,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100vh', // Full viewport height to vertically center
+    height: '100vh',
   },
   container: {
     display: 'flex',

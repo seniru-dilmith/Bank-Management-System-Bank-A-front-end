@@ -2,8 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for routing
 import TechnicianNaviBar from '../components/NaviBar/TechnicianNaviBar';
 import Layout from '../layouts/Layout';
+import useAuth from '../utils/useAuth';
 
 const TechnicianDashboard = () => {
+  useAuth(); // Redirect to login if token is invalid
   const navigate = useNavigate(); // Initialize the navigate function
 
   return (

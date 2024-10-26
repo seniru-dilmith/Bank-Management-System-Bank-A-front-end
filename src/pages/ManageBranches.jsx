@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TechnicianNaviBar from '../components/NaviBar/TechnicianNaviBar';
 import Layout from '../layouts/Layout';
 import axios from 'axios';
+import useAuth from '../utils/useAuth';
 
 const styles = {
   container: {
@@ -91,6 +92,7 @@ const styles = {
 };
 
 const ManageBranches = () => {
+  useAuth(); // redirect if token is not valid
   const [branches, setBranches] = useState([]);
   const [editingId, setEditingId] = useState(null); // Track editing row
   const [newBranch, setNewBranch] = useState(null); // Track new branch row

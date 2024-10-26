@@ -1,17 +1,16 @@
-import React, { useState } from "react";
-import axios from 'axios'; // Import axios for API calls
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { useAuth } from '../routes/AuthContext'; // Import useAuth for login context
 import HomeNaviBar from '../components/NaviBar/HomeNaviBar';
 import Layout from '../layouts/Layout';
-import CustomerDashboard from './CustomerDashboard';
-import EmployeeDashboard from './EmployeeDashboard';
-import TechnicianDashboard from './TechnicianDashboard';
-import ManagerDashboard from './ManagerDashboard';
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [loggedInAs, setLoggedInAs] = useState(null);
-  const [error, setError] = useState(""); // Track errors
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const { login } = useAuth(); // Use the login function from AuthContext
+  const navigate = useNavigate(); // Use navigate to change the route
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,29 +20,15 @@ const Login = () => {
         password,
       });
 
-      console.log(response.data); // Log the response for debugging
+      const { token, userType } = response.data;
+      login(userType, token); // Log the user in and store credentials
 
-      const { token, userType } = response.data; // Extract token and user type
-
-      // Store the token in localStorage or state for future API requests
-      localStorage.setItem('token', token);
-
-      // Redirect based on the user type
-      if (userType === "customer") setLoggedInAs("customer");
-      else if (userType === "employee") setLoggedInAs("employee");
-      else if (userType === "technician") setLoggedInAs("technician");
-      else if (userType === "manager") setLoggedInAs("manager");
+      navigate(`/${userType}`); // Ensure the URL changes correctly
     } catch (error) {
       console.error(error);
-      setError("Invalid username or password");
+      setError('Invalid username or password');
     }
   };
-
-  // Redirect based on the logged-in user type
-  if (loggedInAs === "customer") return <CustomerDashboard />;
-  if (loggedInAs === "employee") return <EmployeeDashboard />;
-  if (loggedInAs === "technician") return <TechnicianDashboard />;
-  if (loggedInAs === "manager") return <ManagerDashboard />;
 
   return (
     <Layout NavigationBar={<HomeNaviBar />}>
@@ -62,7 +47,6 @@ const Login = () => {
                 style={styles.input}
               />
             </div>
-
             <div style={styles.inputGroup}>
               <label style={styles.label}>Password</label>
               <input
@@ -73,15 +57,7 @@ const Login = () => {
                 style={styles.input}
               />
             </div>
-
-            {error && <p style={styles.error}>{error}</p>} {/* Show error message */}
-
-            <div style={styles.forgotPassword}>
-              <a href="#forgot" style={styles.forgotLink}>
-                Forgot password?
-              </a>
-            </div>
-
+            {error && <p style={styles.error}>{error}</p>}
             <button type="submit" style={styles.loginBtn}>
               Log in
             </button>

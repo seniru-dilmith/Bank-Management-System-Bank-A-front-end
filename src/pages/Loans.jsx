@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Import axios for API requests
 import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
+import useAuth from '../utils/useAuth';
 
 const LoanDetails = () => {
+  useAuth(); // Redirect to login if token is invalid
   // State to manage form inputs
   const [formData, setFormData] = useState({
     loanType: '',

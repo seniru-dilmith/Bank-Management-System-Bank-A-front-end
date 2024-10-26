@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
-import { useState } from 'react';
 import Layout from '../layouts/Layout';
+import axios from 'axios';
+import useAuth from '../utils/useAuth';
 
 const ManageBranch = () => {
+  useAuth(); // Redirect to login if token is invalid
   const [branchInfo, setBranchInfo] = useState({
-    name: 'Victoria',
-    address: 'A Bank Headquarters, 123 Avenue, Central Park City, Seychelles',
-    contactNumber: '+248 11 444 4444',
+    id: null,
+    name: '',
+    address: '',
+    contactNumber: '',
   });
 
   const [editInfo, setEditInfo] = useState({
@@ -15,6 +18,79 @@ const ManageBranch = () => {
     address: '',
     contactNumber: '',
   });
+
+  const token = localStorage.getItem('token'); // Get JWT token from localStorage
+
+  // Fetch branch information for the logged-in manager
+  const fetchBranchInfo = async () => {
+    try {
+      const response = await axios.get(
+        'http://localhost:5000/branch-manager/get-branch-details',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add JWT token to request headers
+          },
+        }
+      );
+
+      const { id, name, branch_address, contact_number } = response.data;
+
+      console.log('Fetched Branch Info:', { id, name, branch_address, contact_number });
+
+      setBranchInfo({
+        id,
+        name,
+        address: branch_address,
+        contactNumber: contact_number,
+      });
+
+      setEditInfo({
+        name,
+        address: branch_address,
+        contactNumber: contact_number,
+      });
+    } catch (error) {
+      console.error('Error fetching branch information:', error);
+    }
+  };
+
+  // Update branch details
+  const handleSaveDetails = async () => {
+    if (!editInfo.name || !editInfo.address || !editInfo.contactNumber) {
+      alert('Please fill in all fields before saving.');
+      return;
+    }
+
+    console.log('Branch Info before Update:', branchInfo); // Debug log
+
+    try {
+      await axios.put(
+        `http://localhost:5000/branch-manager/update-branch-details/${branchInfo.id}`,
+        {
+          name: editInfo.name,
+          branch_address: editInfo.address,
+          contact_number: editInfo.contactNumber,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include token in the request
+          },
+        }
+      );
+
+      setBranchInfo((prev) => ({
+        ...prev,
+        name: editInfo.name,
+        address: editInfo.address,
+        contactNumber: editInfo.contactNumber,
+      }));
+
+      alert('Branch details updated successfully!');
+    } catch (error) {
+      console.error('Error updating branch details:', error);
+      alert('Failed to update branch details. Please try again.');
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,30 +100,26 @@ const ManageBranch = () => {
     }));
   };
 
-  const handleSaveDetails = () => {
-    // Validate inputs to make sure none of them are empty
-    if (!editInfo.name || !editInfo.address || !editInfo.contactNumber) {
-      alert('Please fill in all fields before saving.');
-      return; // Stop the save process if any field is empty
-    }
-
-    // Save the new branch info if all inputs are filled
-    setBranchInfo(editInfo);
-  };
+  useEffect(() => {
+    fetchBranchInfo(); // Fetch branch info when the component mounts
+  }, []);
 
   return (
     <Layout NavigationBar={<ManagerNaviBar />}>
       <div style={styles.dashboard}>
-        {/* Branch Information */}
         <div style={styles.infoBox}>
           <h3 style={styles.title}>Branch Information</h3>
           <p style={styles.detailItem}><strong>Name:</strong> {branchInfo.name}</p>
           <p style={styles.detailItem}><strong>Address:</strong> {branchInfo.address}</p>
           <p style={styles.detailItem}><strong>Contact Number:</strong> {branchInfo.contactNumber}</p>
-          <button style={styles.button} onClick={() => setEditInfo(branchInfo)}>Change Details</button>
+          <button
+            style={styles.button}
+            onClick={() => setEditInfo(branchInfo)}
+          >
+            Change Details
+          </button>
         </div>
 
-        {/* Edit Branch Information */}
         <div style={styles.infoBox}>
           <h3 style={styles.title}>Edit Branch Information</h3>
           <div style={styles.inputGroup}>
@@ -80,14 +152,15 @@ const ManageBranch = () => {
               style={styles.input}
             />
           </div>
-          <button style={styles.button} onClick={handleSaveDetails}>Save Details</button>
+          <button style={styles.button} onClick={handleSaveDetails}>
+            Save Details
+          </button>
         </div>
       </div>
     </Layout>
   );
 };
 
-// Inline styles for the dashboard and form elements
 const styles = {
   dashboard: {
     display: 'flex',
@@ -103,17 +176,19 @@ const styles = {
     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
     width: '40%',
     textAlign: 'left',
-    minHeight: '300px', // Ensure both boxes have a similar height
+    minHeight: '300px',
   },
   title: {
-    fontSize: '1.8rem', // Increased font size for the titles
+    fontSize: '1.8rem',
     marginBottom: '1.5rem',
     color: '#333',
   },
   detailItem: {
-    fontSize: '1.2rem', // Increased font size for the branch details
-    marginBottom: '1.2rem', // Add more spacing between the details
-    lineHeight: '1.6rem', // Increase line spacing for better readability
+    fontSize: '1.2rem',
+    marginBottom: '1.2rem',
+    color: 'black',
+    textAlign: 'left',
+    lineHeight: '1.6rem',
   },
   inputGroup: {
     marginBottom: '1.5rem',

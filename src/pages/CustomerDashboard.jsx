@@ -2,126 +2,115 @@ import React, { useState, useEffect } from "react";
 import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import useAuth from "../utils/useAuth";
 
 const CustomerDashboard = () => {
-  const [accountType, setAccountType] = useState("");  
-  const [accountNumber, setAccountNumber] = useState("");  
-  const [currentBalance, setCurrentBalance] = useState("");  
+  useAuth(); // Redirect to login if token is invalid
+  const [accounts, setAccounts] = useState([]);
+  const [selectedAccount, setSelectedAccount] = useState('');
+  const [accountType, setAccountType] = useState('');
+  const [currentBalance, setCurrentBalance] = useState('');
   const [transactions, setTransactions] = useState([]);
 
-  // Fetch account details from the backend API
+  // Extract customerId from the token
+  const getCustomerIdFromToken = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      
+      return decodedToken.id; // Ensure this matches the key in your token payload
+    }
+    return null; // Handle case where token is missing or invalid
+  };
+
+  const customerId = getCustomerIdFromToken(); // Extracted customerId
+
+  // Fetch all accounts for the customer
   useEffect(() => {
-    const fetchAccountDetails = async () => {
+    const fetchAccounts = async () => {
+      if (!customerId) return; // Ensure customerId exists
+
       try {
-        const token = localStorage.getItem('token'); // Assuming you store the token in localStorage
-    
-        const accountResponse = await axios.get('http://localhost:5000/accounts/account-summary', {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(
+          `http://localhost:5000/accounts/account-summary?customerId=${customerId}`, 
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        const accountsData = response.data.accounts;
+        setAccounts(accountsData);
+        if (accountsData.length > 0) {
+          const firstAccount = accountsData[0];
+          setSelectedAccount(firstAccount.account_number);
+          setAccountType(firstAccount.account_type);
+          setCurrentBalance(firstAccount.acc_balance);
+          fetchTransactions(firstAccount.account_number); // Fetch transactions for the first account
+        }
+      } catch (error) {
+        console.error('Error fetching accounts:', error);
+      }
+    };
+
+    fetchAccounts();
+  }, [customerId]);
+
+  // Fetch transactions for the selected account
+  const fetchTransactions = async (accountNumber) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(
+        `http://localhost:5000/transactions/recent-by-customer?customerId=${customerId}&accountNumber=${accountNumber}`,
+        {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-       // Call to your backend route
-        const accountData = accountResponse.data.accounts[0];  // only for one account in the list
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-        setAccountType(accountData.account_type);
-        setAccountNumber(accountData.account_number);
-        setCurrentBalance(accountData.acc_balance);
-      } catch (error) {
-        console.error('Error fetching account details:', error);
-      }
-    };
+      setTransactions(response.data);
+    } catch (error) {
+      console.error('Error fetching transactions:', error);
+    }
+  };
 
-    fetchAccountDetails();
-  }, []);
-
-  // Uncomment this when ready to fetch data from an API
-  /*
-  useEffect(() => {
-    const fetchAccountDetails = async () => {
-      try {
-        const accountResponse = await axios.get('/api/account');  // Replace with actual API endpoint
-        setAccountType(accountResponse.data.accountType);
-        setAccountNumber(accountResponse.data.accountNumber);
-        setCurrentBalance(accountResponse.data.currentBalance);
-      } catch (error) {
-        console.error('Error fetching account details:', error);
-      }
-    };
-
-    const fetchTransactions = async () => {
-      try {
-        const transactionsResponse = await axios.get('/api/transactions');  // Replace with actual API endpoint
-        setTransactions(transactionsResponse.data);  // Assuming transactions data is in response.data
-      } catch (error) {
-        console.error('Error fetching transactions:', error);
-      }
-    };
-
-    fetchAccountDetails();
-    fetchTransactions();
-  }, []);
-  */
+  // Handle account selection change
+  const handleAccountChange = (e) => {
+    const accountNumber = e.target.value;
+    const selectedAcc = accounts.find(acc => acc.account_number === accountNumber);
+    setSelectedAccount(accountNumber);
+    setAccountType(selectedAcc?.account_type || '');
+    setCurrentBalance(selectedAcc?.acc_balance || '');
+    fetchTransactions(accountNumber); // Fetch transactions for the selected account
+  };
 
   const styles = {
     container: {
       display: "flex",
-      flexDirection: "column",  
-      alignItems: "flex-start",  // Aligned to the left
+      flexDirection: "column",
+      alignItems: "flex-start",
       padding: "2rem",
-      minHeight: "100vh",  
-      width: "100%",  
+      minHeight: "100vh",
+      width: "100%",
       boxSizing: "border-box",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
     },
     dashboardBox: {
-      backgroundColor: "rgba(255, 255, 255, 0.9)",  
+      backgroundColor: "rgba(255, 255, 255, 0.9)",
       padding: "2rem",
       borderRadius: "8px",
-      boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",  
-      width: "90%",  
-      maxWidth: "500px",  
+      boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",
+      width: "90%",
+      maxWidth: "500px",
       textAlign: "center",
-      marginBottom: "2rem",  
-    },
-    heading: {
-      color: "#000",
-      fontSize: "2rem",
-      marginBottom: "1rem",
-    },
-    infoGroup: {
-      marginBottom: "1.5rem",
-    },
-    infoLabel: {
-      display: "block",
-      color: "#333",
-      marginBottom: "0.5rem",
-      textAlign: "left",
-      fontWeight: "bold",
-    },
-    infoText: {
-      width: "100%",
-      padding: "0.75rem",
-      border: "1px solid #ddd",
-      borderRadius: "4px",
-      backgroundColor: "#f4f4f4",
-      textAlign: "left",
+      marginBottom: "2rem",
     },
     transactionsContainer: {
-      backgroundColor: "rgba(255, 255, 255, 0.9)",  
+      backgroundColor: "rgba(255, 255, 255, 0.9)",
       borderRadius: "8px",
-      boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",  
+      boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",
       padding: "2rem",
-      textAlign: "left",
-      width: "90%",  
-      maxWidth: "600px",  
-    },
-    transactionsHeading: {
-      fontSize: "1.8rem",
-      marginBottom: "1rem",
-      borderBottom: "2px solid #ddd",
-      paddingBottom: "0.5rem",
+      width: "90%",
+      maxWidth: "600px",
     },
     transactionsTable: {
       width: "100%",
@@ -130,64 +119,41 @@ const CustomerDashboard = () => {
     tableHeader: {
       backgroundColor: "#1a2a63",
       color: "#fff",
-      textAlign: "left",
     },
     tableRow: {
       borderBottom: "1px solid #ddd",
     },
     tableCell: {
       padding: "0.75rem",
-      textAlign: "left",
     },
-    viewAllLink: {
-      textAlign: "right",
-      fontSize: "0.9rem",
-      marginTop: "1rem",
-    },
-    CustomerDashboardBox: {
-      background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
-      padding: '10px 20px',
-      borderRadius: '20px',
-      marginBottom: '20px',
-      display: 'inline-block',
-    },
-    CustomerDashboardTitle: {
-      fontSize: '1.8rem',
-      color: '#fff',
-      margin: '0',
+    heading: {
+      fontSize: "1.8rem",
+      marginBottom: "1rem",
+      borderBottom: "2px solid #ddd",
     },
   };
 
   return (
     <Layout NavigationBar={<CustomerNaviBar />}>
       <div style={styles.container}>
-
-        <div style={styles.CustomerDashboardBox}>
-          <h2 style={styles.CustomerDashboardTitle}>Customer Dashboard</h2>
-        </div>
-
         <div style={styles.dashboardBox}>
-          <h2 style={styles.heading}>Account Summary</h2>
-
-          <div style={styles.infoGroup}>
-            <label style={styles.infoLabel}>Account Type</label>
-            <div style={styles.infoText}>{accountType}</div>
+          <h2>Account Summary</h2>
+          <div>
+            <label>Select Account: </label>
+            <select value={selectedAccount} onChange={handleAccountChange}>
+              {accounts.map((account) => (
+                <option key={account.account_number} value={account.account_number}>
+                  {account.account_number}
+                </option>
+              ))}
+            </select>
           </div>
-
-          <div style={styles.infoGroup}>
-            <label style={styles.infoLabel}>Account Number</label>
-            <div style={styles.infoText}>{accountNumber}</div>
-          </div>
-
-          <div style={styles.infoGroup}>
-            <label style={styles.infoLabel}>Current Balance</label>
-            <div style={styles.infoText}>{currentBalance}</div>
-          </div>
+          <p><strong>Account Type:</strong> {accountType}</p>
+          <p><strong>Current Balance:</strong> ${currentBalance}</p>
         </div>
 
-        {/* Recent Transactions Section */}
         <div style={styles.transactionsContainer}>
-          <h3 style={styles.transactionsHeading}>Recent Transactions</h3>
+          <h3 style={styles.heading}>Recent Transactions</h3>
           <table style={styles.transactionsTable}>
             <thead>
               <tr style={styles.tableHeader}>
@@ -201,33 +167,23 @@ const CustomerDashboard = () => {
               {transactions.length > 0 ? (
                 transactions.map((transaction, index) => (
                   <tr key={index} style={styles.tableRow}>
-                    <td style={styles.tableCell}>{transaction.date}</td>
-                    <td style={styles.tableCell}>{transaction.type}</td>
-                    <td style={styles.tableCell}>{transaction.description}</td>
-                    <td style={styles.tableCell}>{transaction.amount}</td>
+                    <td style={styles.tableCell}>
+                      {new Date(transaction.Date).toLocaleString()}
+                    </td>
+                    <td style={styles.tableCell}>{transaction.TransactionType}</td>
+                    <td style={styles.tableCell}>{transaction.Description}</td>
+                    <td style={styles.tableCell}>${transaction.Amount}</td>
                   </tr>
                 ))
               ) : (
-                <>
-                  <tr style={styles.tableRow}>
-                    <td style={styles.tableCell}>09/25/2024</td>
-                    <td style={styles.tableCell}>Deposit</td>
-                    <td style={styles.tableCell}>Monthly Salary</td>
-                    <td style={styles.tableCell}>$2,500</td>
-                  </tr>
-                  <tr style={styles.tableRow}>
-                    <td style={styles.tableCell}>09/20/2024</td>
-                    <td style={styles.tableCell}>Withdrawal</td>
-                    <td style={styles.tableCell}>ATM Withdrawal</td>
-                    <td style={styles.tableCell}>$300</td>
-                  </tr>
-                </>
+                <tr style={styles.tableRow}>
+                  <td style={styles.tableCell} colSpan="4">
+                    No recent transactions found.
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>
-          <div style={styles.viewAllLink}>
-            <a href="transactions.html">Go to Transactions Page to view all</a>
-          </div>
         </div>
       </div>
     </Layout>
