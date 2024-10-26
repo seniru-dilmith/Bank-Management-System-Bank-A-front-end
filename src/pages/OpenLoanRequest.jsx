@@ -1,40 +1,102 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import EmployeeNaviBar from '../components/NaviBar/EmployeeNaviBar';
 import Layout from '../layouts/Layout';
 import useAuth from '../utils/useAuth';
 
 const OpenLoanRequest = () => {
   useAuth(); // Redirect to login if token is invalid
-  // State to manage form inputs
+
   const [formData, setFormData] = useState({
     customerAccount: '',
     loanAmount: '',
     loanTerm: '',
     interestRate: '',
+    loanTypeId: '',
   });
+
+  const [loanTypes, setLoanTypes] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Fetch loan types from the backend
+  useEffect(() => {
+    const fetchLoanTypes = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:5000/loans/types', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch loan types');
+        }
+
+        const data = await response.json();
+        setLoanTypes(data);
+      } catch (error) {
+        console.error('Error fetching loan types:', error);
+        alert('Failed to load loan types. Please try again.');
+      }
+    };
+
+    fetchLoanTypes();
+  }, []);
 
   // Handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate form fields
-    const { customerAccount, loanAmount, loanTerm, interestRate } = formData;
-    if (!customerAccount || !loanAmount || !loanTerm || !interestRate) {
+    const { customerAccount, loanAmount, loanTerm, interestRate, loanTypeId } = formData;
+
+    if (!customerAccount || !loanAmount || !loanTerm || !interestRate || !loanTypeId) {
       alert('Please fill in all fields.');
-      return; // Stop form submission
+      return;
     }
 
-    alert('New loan request submitted!');
-    // Add logic to submit the form data
+    setIsSubmitting(true);
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/loans/request-loan-emp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          customerAccountNumber: customerAccount,
+          loanAmount: parseFloat(loanAmount),
+          loanTerm: parseInt(loanTerm, 10),
+          interestRate: parseFloat(interestRate),
+          typeId: parseInt(loanTypeId), 
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error submitting loan request');
+      }
+
+      const result = await response.json();
+      alert(result.message);
+
+      setFormData({
+        customerAccount: '',
+        loanAmount: '',
+        loanTerm: '',
+        interestRate: '',
+        loanTypeId: '',
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to submit loan request.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -51,8 +113,28 @@ const OpenLoanRequest = () => {
                 value={formData.customerAccount}
                 onChange={handleInputChange}
                 style={styles.inputField}
+                disabled={isSubmitting}
               />
             </div>
+
+            <div style={styles.formGroup}>
+              <label>Loan Type</label>
+              <select
+                name="loanTypeId"
+                value={formData.loanTypeId}
+                onChange={handleInputChange}
+                style={styles.inputField}
+                disabled={isSubmitting}
+              >
+                <option value="">Select Loan Type</option>
+                {loanTypes.map((type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.type_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div style={styles.formGroup}>
               <label>Loan Amount</label>
               <input
@@ -61,8 +143,10 @@ const OpenLoanRequest = () => {
                 value={formData.loanAmount}
                 onChange={handleInputChange}
                 style={styles.inputField}
+                disabled={isSubmitting}
               />
             </div>
+
             <div style={styles.formGroup}>
               <label>Loan Term (in months)</label>
               <input
@@ -71,8 +155,10 @@ const OpenLoanRequest = () => {
                 value={formData.loanTerm}
                 onChange={handleInputChange}
                 style={styles.inputField}
+                disabled={isSubmitting}
               />
             </div>
+
             <div style={styles.formGroup}>
               <label>Interest Rate (%)</label>
               <input
@@ -81,10 +167,12 @@ const OpenLoanRequest = () => {
                 value={formData.interestRate}
                 onChange={handleInputChange}
                 style={styles.inputField}
+                disabled={isSubmitting}
               />
             </div>
-            <button type="submit" style={styles.button}>
-              Confirm
+
+            <button type="submit" style={styles.button} disabled={isSubmitting}>
+              {isSubmitting ? 'Submitting...' : 'Confirm'}
             </button>
           </form>
         </div>
@@ -98,16 +186,16 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100vh', // Full viewport height to center vertically
+    height: '100vh',
   },
   container: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     padding: '20px',
-    borderRadius: '10px', // Consistent border radius
+    borderRadius: '10px',
     backgroundColor: '#fff',
-    width: '400px', // Matching width to maintain consistency
+    width: '400px',
     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
   },
   header: {
@@ -123,7 +211,7 @@ const styles = {
   inputField: {
     width: '100%',
     padding: '10px',
-    borderRadius: '5px', // Consistent border radius for inputs
+    borderRadius: '5px',
     border: '1px solid #ccc',
     backgroundColor: '#f5f5f5',
     fontSize: '14px',
@@ -131,10 +219,10 @@ const styles = {
   button: {
     width: '100%',
     padding: '10px',
-    backgroundColor: '#ff7f00', // Orange confirm button
+    backgroundColor: '#ff7f00',
     color: 'white',
     border: 'none',
-    borderRadius: '5px', // Consistent rounded button
+    borderRadius: '5px',
     cursor: 'pointer',
     fontSize: '16px',
   },
