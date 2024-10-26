@@ -3,7 +3,6 @@ import axios from 'axios'; // Import axios for API requests
 import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
 import useAuth from '../utils/useAuth';
-import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 
 const LoanDetails = () => {
   useAuth(); // Redirect to login if token is invalid
@@ -24,7 +23,6 @@ const LoanDetails = () => {
 
   // State for messages (success or error)
   const [message, setMessage] = useState(null);
-  const { Spinner, setWaiting } = LoadingSpinner();
 
   // Handle input change for the form
   const handleInputChange = (e) => {
@@ -48,7 +46,6 @@ const LoanDetails = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setWaiting(true); // Show loading spinner
       const token = localStorage.getItem('token'); // Get JWT token from localStorage
 
       // Make the POST request to the backend
@@ -73,8 +70,6 @@ const LoanDetails = () => {
       // Handle errors
       setMessage('Loan application failed. Please try again.');
       console.error('Error submitting loan application:', error);
-    } finally {
-      setWaiting(false); // Hide loading spinner
     }
   };
 
@@ -82,7 +77,6 @@ const LoanDetails = () => {
   useEffect(() => {
     const fetchLoanDetails = async (loanId) => {
       try {
-        setWaiting(true); // Show loading
         const token = localStorage.getItem('token'); // Get JWT token from localStorage
 
         // Make the GET request to the backend
@@ -101,8 +95,6 @@ const LoanDetails = () => {
         });
       } catch (error) {
         console.error('Error fetching loan details:', error);
-      } finally {
-        setWaiting(false); // Hide loading
       }
     };
 
@@ -227,7 +219,6 @@ const LoanDetails = () => {
           </table>
         </div>
       </div>
-      <Spinner />
     </Layout>
   );
 };
