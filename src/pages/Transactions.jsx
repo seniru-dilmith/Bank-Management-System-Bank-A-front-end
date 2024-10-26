@@ -3,6 +3,7 @@ import axios from 'axios'; // Import axios to handle the API request
 import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
 import useAuth from '../utils/useAuth';
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 
 const Transactions = () => {
   useAuth(); // Redirect to login if token is invalid
@@ -15,6 +16,8 @@ const Transactions = () => {
     receiverReference: '',
     myReference: '',
   });
+
+  const { Spinner, setWaiting } = LoadingSpinner();
 
   // State to manage success or error messages
   const [message, setMessage] = useState(null);
@@ -32,6 +35,7 @@ const Transactions = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setWaiting(true); // Show loading spinner
       const token = localStorage.getItem('token'); // Retrieve JWT from localStorage
 
       // Make the POST request to the backend
@@ -59,6 +63,8 @@ const Transactions = () => {
       // Handle errors
       setMessage('Transaction failed. Please try again.');
       console.error('Error making transaction:', error);
+    } finally { // Hide loading spinner
+      setWaiting(false);
     }
   };
 
@@ -146,6 +152,7 @@ const Transactions = () => {
           {message && <p>{message}</p>}
         </div>
       </div>
+      <Spinner />
     </Layout>
   );
 };
