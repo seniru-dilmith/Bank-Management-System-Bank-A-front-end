@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
 import Layout from '../layouts/Layout';
 import useAuth from '../utils/useAuth';
-import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 
 const ManagerDashboard = () => {
   useAuth(); // Redirect to login if token is invalid
@@ -10,11 +9,9 @@ const ManagerDashboard = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const { Spinner, setWaiting } = LoadingSpinner();
 
   const fetchReport = async (reportType, params = {}) => {
     try {
-      setWaiting(true); // Show loading spinner
       let url = `http://localhost:5000/branch-manager/${reportType}`;
       const queryParams = new URLSearchParams(params).toString();
       if (queryParams) url += `?${queryParams}`;
@@ -42,9 +39,7 @@ const ManagerDashboard = () => {
     } catch (error) {
       alert('An unexpected error occurred.');
       console.error('Fetch error:', error);
-    } finally {
-      setWaiting(false); // Hide loading spinner
-    }
+    } 
   };
 
   const openTransactionReportWindow = (data) => {
@@ -193,7 +188,6 @@ const ManagerDashboard = () => {
           </div>
         )}
       </div>
-      <Spinner />
     </Layout>
   );
 };
