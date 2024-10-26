@@ -3,6 +3,7 @@ import EmployeeNaviBar from '../components/NaviBar/EmployeeNaviBar';
 import Layout from '../layouts/Layout';
 import { useAuth } from '../routes/AuthContext';
 import axios from 'axios';
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 
 const OpenNewAccount = () => {
   useAuth(); // Redirect to login if token is invalid
@@ -17,11 +18,13 @@ const OpenNewAccount = () => {
   const [customerDetails, setCustomerDetails] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null); // Track selected customer
   const [isLoading, setIsLoading] = useState(true);
+  const { Spinner, setWaiting } = LoadingSpinner();
 
   // Fetch account types
   useEffect(() => {
     const fetchAccountTypes = async () => {
       try {
+        setWaiting(true); // Show loading spinner
         const token = localStorage.getItem('token');
         const response = await axios.get(
           'http://localhost:5000/customer-account/account-types',
@@ -33,6 +36,7 @@ const OpenNewAccount = () => {
         alert('Failed to load account types. Please try again.');
       } finally {
         setIsLoading(false);
+        setWaiting(false); // Hide loading spinner
       }
     };
     fetchAccountTypes();
@@ -42,6 +46,7 @@ const OpenNewAccount = () => {
   useEffect(() => {
     const fetchCustomerDetails = async () => {
       try {
+        setWaiting(true); // Show loading spinner
         const token = localStorage.getItem('token');
         const response = await axios.get(
           'http://localhost:5000/customer-account/customer-details',
@@ -50,6 +55,8 @@ const OpenNewAccount = () => {
         setCustomerDetails(response.data);
       } catch (error) {
         console.error('Error fetching customer details:', error);
+      } finally {
+        setWaiting(false); // Hide loading spinner
       }
     };
     fetchCustomerDetails();
@@ -76,6 +83,7 @@ const OpenNewAccount = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setWaiting(true); // Show loading spinner
       const token = localStorage.getItem('token');
       const { accountTypeId, initialDeposit, nic } = formData;
       const customer = customerDetails.find((cust) => cust.nic === nic);
@@ -101,6 +109,8 @@ const OpenNewAccount = () => {
     } catch (error) {
       console.error('Error creating account:', error);
       alert('Error creating account. Please try again.');
+    } finally {
+      setWaiting(false); // Hide loading spinner
     }
   };
 
@@ -221,6 +231,7 @@ const OpenNewAccount = () => {
           )}
         </div>
       </div>
+      <Spinner />
     </Layout>
   );
 };
