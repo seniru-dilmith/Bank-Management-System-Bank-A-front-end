@@ -18,7 +18,6 @@ const HomeNaviBar = () => {
           <p><NavLink to="/aboutus" activeClassName="active">About Us</NavLink></p>
           <p><NavLink to="/login" activeClassName="active">Login</NavLink></p>
           <p><NavLink to="/customersupport" activeClassName="active">Customer Support</NavLink></p>
-          <p><NavLink to="/login" activeClassName="active" onClick={handleLogout}>Logout</NavLink></p>
         </div>
       </div>
     </div>

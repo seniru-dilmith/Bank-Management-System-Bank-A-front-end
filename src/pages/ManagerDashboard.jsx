@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
 import Layout from '../layouts/Layout';
+import useAuth from '../utils/useAuth';
 
 const ManagerDashboard = () => {
+  useAuth(); // Redirect to login if token is invalid
   const [showModal, setShowModal] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');

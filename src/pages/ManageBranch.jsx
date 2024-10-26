@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
 import Layout from '../layouts/Layout';
 import axios from 'axios';
+import useAuth from '../utils/useAuth';
 
 const ManageBranch = () => {
+  useAuth(); // Redirect to login if token is invalid
   const [branchInfo, setBranchInfo] = useState({
     id: null,
     name: '',

@@ -24,6 +24,7 @@ import ManageBranch from "../pages/ManageBranch";
 import MHelp from "../pages/MHelp";
 import ProtectedRoute from './ProtectedRoute';
 import { AuthProvider } from './AuthContext';
+import NotFound from "../pages/NotFound";
 
 const AppRoutes = () => {
   return (
@@ -65,6 +66,8 @@ const AppRoutes = () => {
 
         <Route path="/settings" element={<Settings />} />
         <Route path="/customersupport" element={<CustomerSupport />} />
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </AuthProvider>
   );

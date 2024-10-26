@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import EmployeeNaviBar from '../components/NaviBar/EmployeeNaviBar';
 import Layout from '../layouts/Layout';
+import useAuth from '../utils/useAuth';
 
 const OpenLoanRequest = () => {
+  useAuth(); // Redirect to login if token is invalid
   // State to manage form inputs
   const [formData, setFormData] = useState({
     customerAccount: '',

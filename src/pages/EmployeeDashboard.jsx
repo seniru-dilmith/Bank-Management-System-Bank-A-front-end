@@ -1,30 +1,60 @@
-import React, { useState, useEffect } from "react";
-import axios from 'axios'; // Include axios to handle API requests
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'; 
+import { jwtDecode } from 'jwt-decode'; 
 import EmployeeNaviBar from '../components/NaviBar/EmployeeNaviBar';
 import Layout from '../layouts/Layout';
+import useAuth from '../utils/useAuth';
 
 const EmployeeDashboard = () => {
-  const [accountHolderName, setAccountHolderName] = useState("John Doe");
-  const [accountNumber, setAccountNumber] = useState("123456789");
-  const [accountType, setAccountType] = useState("Checking");
-  const [balance, setBalance] = useState("$5,000");
-
-  // Transaction data
+  useAuth(); // Redirect to login if token is invalid
+  const [accountSummaries, setAccountSummaries] = useState([]);
   const [transactions, setTransactions] = useState([]);
+  const [branchId, setBranchId] = useState('');
 
-  // Fetching recent transactions dynamically
+  // Fetch branch ID from the token and get account summaries
+  useEffect(() => {
+    const fetchAccountSummaries = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const emp_id = jwtDecode(token).id;
+        const account_summaries = await axios.get(
+          `http://localhost:5000/customer-account/account-summaries/${emp_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!account_summaries) {
+          console.error('error fetching account summaries.');
+          return;
+        }
+        setAccountSummaries(account_summaries.data);
+        
+      } catch (error) {
+        console.error('Error fetching account summaries:', error);
+      }
+    };
+
+    fetchAccountSummaries();
+  }, []);
+
+  // Fetch recent transactions
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const token = localStorage.getItem('token'); // Get the JWT from localStorage
-        const response = await axios.get('http://localhost:5000/transactions/recent-transactions', {
-          headers: {
-            'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
-          },
-        });
+        const token = localStorage.getItem('token');
+        const response = await axios.get(
+          'http://localhost:5000/transactions/recent-transactions',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        // Update transactions based on backend response
-        setTransactions(response.data);
+        setTransactions(response.data || []);
       } catch (error) {
         console.error('Error fetching transactions:', error);
       }
@@ -32,100 +62,48 @@ const EmployeeDashboard = () => {
 
     fetchTransactions();
   }, []);
-
-  // Uncomment below code for fetching account details dynamically
-  /*
-  useEffect(() => {
-    const fetchAccountDetails = async () => {
-      try {
-        const response = await axios.get('/api/account-details'); // Replace with your API endpoint
-        setAccountHolderName(response.data.accountHolderName);
-        setAccountNumber(response.data.accountNumber);
-        setAccountType(response.data.accountType);
-        setBalance(response.data.balance);
-      } catch (error) {
-        console.error('Error fetching account details:', error);
-      }
-    };
-    fetchAccountDetails();
-  }, []);
-  */
-
-  // Uncomment below code for fetching transaction details dynamically
-  /*
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const response = await axios.get('/api/transactions'); // Replace with your API endpoint
-        setTransactions(response.data);
-      } catch (error) {
-        console.error('Error fetching transactions:', error);
-      }
-    };
-    fetchTransactions();
-  }, []);
-  */
 
   const styles = {
     container: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "2rem",
-      minHeight: "100vh",
-      width: "100%",
-      boxSizing: "border-box",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: '2rem',
+      minHeight: '100vh',
+      width: '100%',
+      boxSizing: 'border-box',
     },
     dashboardBox: {
-      backgroundColor: "rgba(255, 255, 255, 0.9)",
-      padding: "2rem",
-      borderRadius: "8px",
-      boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",
-      width: "90%",
-      maxWidth: "600px",
-      textAlign: "center",
-      marginBottom: "2rem",
+      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+      padding: '2rem',
+      borderRadius: '8px',
+      boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.2)',
+      width: '90%',
+      maxWidth: '600px',
+      marginBottom: '2rem',
+      textAlign: 'center',
     },
     table: {
-      width: "100%",
-      borderCollapse: "collapse",
-      marginTop: "1rem",
+      width: '100%',
+      borderCollapse: 'collapse',
+      marginTop: '1rem',
     },
     tableHeader: {
-      backgroundColor: "#1a2a63",
-      color: "#fff",
-      textAlign: "center",
-      padding: "1rem",
+      backgroundColor: '#1a2a63',
+      color: '#fff',
+      padding: '1rem',
+      textAlign: 'center',
     },
     tableRow: {
-      borderBottom: "1px solid #ddd",
+      borderBottom: '1px solid #ddd',
     },
     tableCell: {
-      padding: "1rem",
-      textAlign: "center",
+      padding: '1rem',
+      textAlign: 'center',
     },
     heading: {
-      color: "#000",
-      fontSize: "2rem",
-      marginBottom: "1rem",
-    },
-    transactionsContainer: {
-      backgroundColor: "rgba(255, 255, 255, 0.9)",
-      borderRadius: "8px",
-      boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",
-      padding: "2rem",
-      width: "90%",
-      maxWidth: "600px",
-      textAlign: "center",
-      marginBottom: "2rem",
-    },
-    transactionsHeading: {
-      fontSize: "1.8rem",
-      marginBottom: "1rem",
+      fontSize: '2rem',
+      marginBottom: '1rem',
     },
   };
 
@@ -138,44 +116,66 @@ const EmployeeDashboard = () => {
           <table style={styles.table}>
             <thead>
               <tr>
-                <th style={styles.tableHeader}>Account Holder's Name</th>
+                <th style={styles.tableHeader}>Account Holder</th>
                 <th style={styles.tableHeader}>Account Number</th>
                 <th style={styles.tableHeader}>Account Type</th>
-                <th style={styles.tableHeader}>Balance</th>
+                <th style={styles.tableHeader}>Balance (Rs.)</th>
               </tr>
             </thead>
             <tbody>
-              <tr style={styles.tableRow}>
-                <td style={styles.tableCell}>{accountHolderName}</td>
-                <td style={styles.tableCell}>{accountNumber}</td>
-                <td style={styles.tableCell}>{accountType}</td>
-                <td style={styles.tableCell}>{balance}</td>
-              </tr>
+              {accountSummaries?.length > 0 ? (
+                accountSummaries.map((account, index) => (
+                  <tr key={index} style={styles.tableRow}>
+                    <td style={styles.tableCell}>
+                      {`${account.account_holder_name}`}
+                    </td>
+                    <td style={styles.tableCell}>{account.account_number}</td>
+                    <td style={styles.tableCell}>{account.account_type}</td>
+                    <td style={styles.tableCell}>{account.acc_balance}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr style={styles.tableRow}>
+                  <td style={styles.tableCell} colSpan="4">
+                    No accounts found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
 
         {/* Recent Transactions Section */}
-        <div style={styles.transactionsContainer}>
-          <h3 style={styles.transactionsHeading}>Recent Transactions</h3>
+        <div style={styles.dashboardBox}>
+          <h3 style={styles.heading}>Recent Transactions</h3>
           <table style={styles.table}>
             <thead>
               <tr>
                 <th style={styles.tableHeader}>Date</th>
-                <th style={styles.tableHeader}>Account Holder's Name</th>
+                <th style={styles.tableHeader}>Account Holder</th>
                 <th style={styles.tableHeader}>Transaction Type</th>
-                <th style={styles.tableHeader}>Amount</th>
+                <th style={styles.tableHeader}>Amount (Rs.)</th>
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction, index) => (
-                <tr key={index} style={styles.tableRow}>
-                  <td style={styles.tableCell}>{transaction.timestamp}</td>
-                  <td style={styles.tableCell}>{transaction.name}</td>
-                  <td style={styles.tableCell}>{transaction.description}</td>
-                  <td style={styles.tableCell}>{transaction.amount}</td>
+              {transactions?.length > 0 ? (
+                transactions.map((transaction, index) => (
+                  <tr key={index} style={styles.tableRow}>
+                    <td style={styles.tableCell}>
+                      {new Date(transaction.timestamp).toLocaleString()}
+                    </td>
+                    <td style={styles.tableCell}>{transaction.account_holder_name}</td>
+                    <td style={styles.tableCell}>{transaction.transaction_type}</td>
+                    <td style={styles.tableCell}>{transaction.amount}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr style={styles.tableRow}>
+                  <td style={styles.tableCell} colSpan="4">
+                    No recent transactions found.
+                  </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

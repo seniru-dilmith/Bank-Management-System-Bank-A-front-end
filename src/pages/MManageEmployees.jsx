@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
 import Layout from '../layouts/Layout';
 import axios from 'axios'; // Axios for API requests
+import useAuth from '../utils/useAuth';
 
 const styles = {
   container: {
@@ -100,6 +101,7 @@ const positions = [
 ];
 
 const MManageEmployees = () => {
+  useAuth(); // Custom hook to check for JWT token
   const [employees, setEmployees] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [newEmployee, setNewEmployee] = useState(null);
