@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
 import Layout from '../layouts/Layout';
 import axios from 'axios'; // Axios for API requests
+import useAuth from '../utils/useAuth';
 
 const styles = {
   container: {
@@ -90,7 +91,17 @@ const styles = {
   },
 };
 
-const ManageEmployees = () => {
+const positions = [
+  { id: 1, title: 'Branch Manager' },
+  { id: 2, title: 'Teller' },
+  { id: 3, title: 'Loan Officer' },
+  { id: 4, title: 'Security Officer' },
+  { id: 5, title: 'Operations Manager' },
+  { id: 6, title: 'Technician' },
+];
+
+const MManageEmployees = () => {
+  useAuth(); // Custom hook to check for JWT token
   const [employees, setEmployees] = useState([]);
   const [editingId, setEditingId] = useState(null); // Track editing row
   const [newEmployee, setNewEmployee] = useState(null); // Track new employee row
@@ -107,6 +118,8 @@ const ManageEmployees = () => {
         console.error('Error fetching employees:', error);
       }
     };
+    fetchData();
+  }, []);
 
     fetchEmployees();
   }, []);*/
@@ -141,8 +154,7 @@ const ManageEmployees = () => {
       phone: '',
       nic: '',
       email: '',
-      position: '',
-      branch: '',
+      position_id: '',
       username: '',
     });
   };
@@ -234,70 +246,67 @@ const ManageEmployees = () => {
                       <input
                         type="text"
                         style={styles.input}
-                        value={employee.firstName}
-                        onChange={(e) => handleInputChange(e, employee.id, 'firstName')}
+                        value={employee.first_name}
+                        onChange={(e) => handleInputChange(e, employee.id, 'first_name')}
                       />
                     </td>
                     <td style={styles.td}>
                       <input
                         type="text"
                         style={styles.input}
-                        value={employee.lastName}
-                        onChange={(e) => handleInputChange(e, employee.id, 'lastName')}
+                        value={employee.last_name}
+                        onChange={(e) => handleInputChange(e, employee.id, 'last_name')}
                       />
                     </td>
                     <td style={styles.td}>
                       <input
                         type="text"
                         style={styles.input}
-                        value={tempEmployee.phone}
-                        onChange={(e) => setTempEmployee({ ...tempEmployee, phone: e.target.value })}
+                        value={employee.phone}
+                        onChange={(e) => handleInputChange(e, employee.id, 'phone')}
                       />
                     </td>
                     <td style={styles.td}>
                       <input
                         type="text"
                         style={styles.input}
-                        value={tempEmployee.nic}
-                        onChange={(e) => setTempEmployee({ ...tempEmployee, nic: e.target.value })}
+                        value={employee.nic}
+                        onChange={(e) => handleInputChange(e, employee.id, 'nic')}
                       />
                     </td>
                     <td style={styles.td}>
                       <input
                         type="email"
-                        style={styles.input}
                         value={employee.email}
                         onChange={(e) => handleInputChange(e, employee.id, 'email')}
                       />
                     </td>
                     <td style={styles.td}>
-                      <input
-                        type="text"
-                        style={styles.input}
-                        value={employee.position}
-                        onChange={(e) => handleInputChange(e, employee.id, 'position')}
-                      />
+                      <select
+                        value={employee.position_id}
+                        onChange={(e) => handleInputChange(e, employee.id, 'position_id')}
+                      >
+                        <option value="">Select Position</option>
+                        {positions.map((position) => (
+                          <option key={position.id} value={position.id}>
+                            {position.title}
+                          </option>
+                        ))}
+                      </select>
                     </td>
                     <td style={styles.td}>
                       <input
                         type="text"
                         style={styles.input}
-                        value={employee.branch}
-                        onChange={(e) => handleInputChange(e, employee.id, 'branch')}
+                        value={employee.username}
+                        onChange={(e) => handleInputChange(e, employee.id, 'username')}
                       />
                     </td>
                     <td style={styles.td}>
-                      <input
-                        type="text"
-                        style={styles.input}
-                        value={tempEmployee.username}
-                        onChange={(e) => setTempEmployee({ ...tempEmployee, username: e.target.value })}
-                      />
-                    </td>
-                    <td style={styles.td}>
-                      <button style={styles.button} onClick={() => setEditingId(null)}>
+                      <button style={styles.button} onClick={() => handleUpdateEmployee(employee.id)}>
                         Save
                       </button>
+                      <button style={styles.button} onClick={handleCancelEdit}>Cancel</button>
                     </td>
                   </>
                 ) : (
@@ -312,39 +321,15 @@ const ManageEmployees = () => {
                     </td>
                     <td style={styles.td}>{employee.username}</td>
                     <td style={styles.td}>
-                      <button style={styles.button} onClick={() => setEditingId(employee.id)}>
-                        Update Employee
-                      </button>
-                      <button style={styles.button} onClick={() => confirmRemoveEmployee(employee.id)}>
-                        Remove Employee
-                      </button>
+                      <button style={styles.button} onClick={() => handleEditEmployee(employee)}>Edit</button>
+                      <button style={styles.button} onClick={() => confirmRemoveEmployee(employee.id)}>Remove</button>
                     </td>
                   </>
                 )}
               </tr>
             ))}
-            {newEmployee && (
-              <tr>
-                <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.firstName}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, firstName: e.target.value })}
-                  />
-                </td>
-                {/* Same for other fields */}
-                <td style={styles.td}>
-                  <button style={styles.button} onClick={handleSaveNewEmployee}>
-                    Save
-                  </button>
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
-
-        {/* Custom Confirmation Modal */}
         {showModal && (
           <div style={styles.modalOverlay}>
             <div style={styles.modalContent}>
