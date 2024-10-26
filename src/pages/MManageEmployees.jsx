@@ -4,7 +4,6 @@ import Layout from '../layouts/Layout';
 import axios from 'axios'; // Axios for API requests
 import useAuth from '../utils/useAuth';
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
-import { findDOMNode } from 'react-dom';
 
 const styles = {
   container: {
@@ -103,14 +102,14 @@ const MManageEmployees = () => {
   const [originalEmployeeData, setOriginalEmployeeData] = useState(null);
   const [branchId, setBranchId] = useState(null);
   const [positions, setPositions] = useState([]);
-  const { Spinner, SetWaitng } = LoadingSpinner();
+  const { Spinner, setWaiting } = LoadingSpinner(); // Ensure LoadingSpinner returns Spinner and setWaiting
 
   const token = localStorage.getItem('token'); // Get JWT token from localStorage
 
   // Fetch Branch ID from the backend
   const fetchBranchId = async () => {
     try {
-      SetWaitng(true);
+      setWaiting(true);
       const branchResponse = await axios.get(
         'http://localhost:5000/branch-manager/get-branch-id',
         {
@@ -123,14 +122,14 @@ const MManageEmployees = () => {
     } catch (error) {
       console.error('Error fetching branch ID:', error);
     } finally {
-      SetWaitng(false);
+      setWaiting(false);
     }
   };
 
-  // fetch positions from backend
+  // Fetch positions from backend
   const fetchPositions = async () => {
     try {
-      SetWaitng(true);
+      setWaiting(true);
       const response = await axios.get('http://localhost:5000/branch-manager/get-positions', {
         headers: {
           Authorization: `Bearer ${token}`, // Add JWT token to request headers
@@ -140,15 +139,14 @@ const MManageEmployees = () => {
     } catch (error) {
       console.error('Error fetching positions:', error);
     } finally {
-      SetWaitng(false);
+      setWaiting(false);
     }
   };
-
 
   // Fetch employees for a specific branch
   const fetchEmployees = async (branchId) => {
     try {
-      SetWaitng(true);
+      setWaiting(true);
       const response = await axios.get(
         `http://localhost:5000/employee/general/branch/${branchId}`,
         {
@@ -161,7 +159,7 @@ const MManageEmployees = () => {
     } catch (error) {
       console.error('Error fetching employees:', error);
     } finally {
-      SetWaitng(false);
+      setWaiting(false);
     }
   };
 
@@ -203,7 +201,7 @@ const MManageEmployees = () => {
 
   const handleSaveNewEmployee = async () => {
     try {
-      SetWaitng(true);
+      setWaiting(true);
       const response = await axios.post(
         'http://localhost:5000/employee/add',
         newEmployee,
@@ -218,7 +216,7 @@ const MManageEmployees = () => {
     } catch (error) {
       console.error('Error saving employee:', error);
     } finally {
-      SetWaitng(false);
+      setWaiting(false);
     }
   };
 
@@ -230,7 +228,7 @@ const MManageEmployees = () => {
   const handleUpdateEmployee = async (id) => {
     const employeeToUpdate = employees.find((employee) => employee.id === id);
     try {
-      SetWaitng(true);
+      setWaiting(true);
       await axios.put(
         `http://localhost:5000/employee/update/${id}`,
         employeeToUpdate,
@@ -245,7 +243,7 @@ const MManageEmployees = () => {
     } catch (error) {
       console.error('Error updating employee:', error);
     } finally {
-      SetWaitng(false);
+      setWaiting(false);
     }
   };
 
@@ -256,7 +254,7 @@ const MManageEmployees = () => {
 
   const handleRemoveEmployee = async () => {
     try {
-      SetWaitng(true);
+      setWaiting(true);
       await axios.delete(
         `http://localhost:5000/employee/delete/${employeeToRemove}`,
         {
@@ -273,7 +271,7 @@ const MManageEmployees = () => {
     } catch (error) {
       console.error('Error removing employee:', error);
     } finally {
-      SetWaitng(false);
+      setWaiting(false);
     }
   };
 
@@ -310,87 +308,98 @@ const MManageEmployees = () => {
               <tr key={employee.id}>
                 {editingId === employee.id ? (
                   <>
-                    <td style={styles.td}>
+                    <td>
                       <input
-                        type="text"
                         style={styles.input}
                         value={employee.first_name}
                         onChange={(e) => handleInputChange(e, employee.id, 'first_name')}
                       />
                     </td>
-                    <td style={styles.td}>
+                    <td>
                       <input
-                        type="text"
                         style={styles.input}
                         value={employee.last_name}
                         onChange={(e) => handleInputChange(e, employee.id, 'last_name')}
                       />
                     </td>
-                    <td style={styles.td}>
+                    <td>
                       <input
-                        type="text"
                         style={styles.input}
                         value={employee.phone}
                         onChange={(e) => handleInputChange(e, employee.id, 'phone')}
                       />
                     </td>
-                    <td style={styles.td}>
+                    <td>
                       <input
-                        type="text"
                         style={styles.input}
                         value={employee.nic}
                         onChange={(e) => handleInputChange(e, employee.id, 'nic')}
                       />
                     </td>
-                    <td style={styles.td}>
+                    <td>
                       <input
-                        type="email"
+                        style={styles.input}
                         value={employee.email}
                         onChange={(e) => handleInputChange(e, employee.id, 'email')}
                       />
                     </td>
-                    <td style={styles.td}>
+                    <td>
                       <select
+                        style={styles.input}
                         value={employee.position_id}
                         onChange={(e) => handleInputChange(e, employee.id, 'position_id')}
                       >
-                        <option value="">Select Position</option>
                         {positions.map((position) => (
                           <option key={position.id} value={position.id}>
-                            {position.title}
+                            {position.name}
                           </option>
                         ))}
                       </select>
                     </td>
-                    <td style={styles.td}>
+                    <td>
                       <input
-                        type="text"
                         style={styles.input}
                         value={employee.username}
                         onChange={(e) => handleInputChange(e, employee.id, 'username')}
                       />
                     </td>
-                    <td style={styles.td}>
-                      <button style={styles.button} onClick={() => handleUpdateEmployee(employee.id)}>
+                    <td>
+                      <button
+                        style={{ ...styles.button, backgroundColor: '#007bff' }}
+                        onClick={() => handleUpdateEmployee(employee.id)}
+                      >
                         Save
                       </button>
-                      <button style={styles.button} onClick={handleCancelEdit}>Cancel</button>
+                      <button
+                        style={{ ...styles.button, backgroundColor: '#dc3545' }}
+                        onClick={handleCancelEdit}
+                      >
+                        Cancel
+                      </button>
                     </td>
                   </>
                 ) : (
                   <>
-                    <td style={styles.td}>{employee.first_name}</td>
-                    <td style={styles.td}>{employee.last_name}</td>
-                    <td style={styles.td}>{employee.phone}</td>
-                    <td style={styles.td}>{employee.nic}</td>
-                    <td style={styles.td}>{employee.email}</td>
-                    <td style={styles.td}>
-                      {positions.find((pos) => pos.id === employee.position_id)?.title}
-                    </td>
-                    <td style={styles.td}>{employee.username}</td>
-                    <td style={styles.td}>
-                      <button style={styles.button} onClick={() => handleEditEmployee(employee)}>Edit</button>
-                      <button style={styles.button} onClick={() => confirmRemoveEmployee(employee.id)}>Remove</button>
+                    <td>{employee.first_name}</td>
+                    <td>{employee.last_name}</td>
+                    <td>{employee.phone}</td>
+                    <td>{employee.nic}</td>
+                    <td>{employee.email}</td>
+                    <td>{employee.position_id}</td>
+                    <td>{employee.username}</td>
+                    <td>
+                      <button
+                        style={{ ...styles.button, backgroundColor: '#28a745' }}
+                        onClick={() => handleEditEmployee(employee)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        style={{ ...styles.button, backgroundColor: '#dc3545' }}
+                        onClick={() => confirmRemoveEmployee(employee.id)}
+                      >
+                        Remove
+                      </button>
                     </td>
                   </>
                 )}
@@ -398,18 +407,87 @@ const MManageEmployees = () => {
             ))}
           </tbody>
         </table>
+        <div>
+          {newEmployee && (
+            <div>
+              <h3>Add New Employee</h3>
+              <input
+                style={styles.input}
+                placeholder="First Name"
+                value={newEmployee.first_name}
+                onChange={(e) => setNewEmployee({ ...newEmployee, first_name: e.target.value })}
+              />
+              <input
+                style={styles.input}
+                placeholder="Last Name"
+                value={newEmployee.last_name}
+                onChange={(e) => setNewEmployee({ ...newEmployee, last_name: e.target.value })}
+              />
+              <input
+                style={styles.input}
+                placeholder="Phone"
+                value={newEmployee.phone}
+                onChange={(e) => setNewEmployee({ ...newEmployee, phone: e.target.value })}
+              />
+              <input
+                style={styles.input}
+                placeholder="NIC"
+                value={newEmployee.nic}
+                onChange={(e) => setNewEmployee({ ...newEmployee, nic: e.target.value })}
+              />
+              <input
+                style={styles.input}
+                placeholder="Email"
+                value={newEmployee.email}
+                onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })}
+              />
+              <select
+                style={styles.input}
+                value={newEmployee.position_id}
+                onChange={(e) => setNewEmployee({ ...newEmployee, position_id: e.target.value })}
+              >
+                {positions.map((position) => (
+                  <option key={position.id} value={position.id}>
+                    {position.name}
+                  </option>
+                ))}
+              </select>
+              <input
+                style={styles.input}
+                placeholder="Username"
+                value={newEmployee.username}
+                onChange={(e) => setNewEmployee({ ...newEmployee, username: e.target.value })}
+              />
+              <button style={styles.button} onClick={handleSaveNewEmployee}>
+                Save New Employee
+              </button>
+              <button style={styles.button} onClick={() => setNewEmployee(null)}>
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
         {showModal && (
           <div style={styles.modalOverlay}>
             <div style={styles.modalContent}>
-              <h3>Confirm Removal</h3>
-              <p>Are you sure you want to remove this employee?</p>
-              <button onClick={handleRemoveEmployee} style={{...styles.modalButton, ...styles.confirmButton}}>Confirm</button>
-              <button onClick={() => setShowModal(false)} style={{...styles.modalButton, ...styles.cancelButton}}>Cancel</button>
+              <h4>Are you sure you want to remove this employee?</h4>
+              <button
+                style={{ ...styles.modalButton, ...styles.confirmButton }}
+                onClick={handleRemoveEmployee}
+              >
+                Yes
+              </button>
+              <button
+                style={{ ...styles.modalButton, ...styles.cancelButton }}
+                onClick={() => setShowModal(false)}
+              >
+                No
+              </button>
             </div>
           </div>
         )}
+        <Spinner /> {/* Place your Spinner component */}
       </div>
-      <Spinner />
     </Layout>
   );
 };
