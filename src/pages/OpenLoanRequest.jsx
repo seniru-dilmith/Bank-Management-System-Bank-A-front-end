@@ -1,56 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import EmployeeNaviBar from '../components/NaviBar/EmployeeNaviBar';
 import Layout from '../layouts/Layout';
 import useAuth from '../utils/useAuth';
 
 const OpenLoanRequest = () => {
   useAuth(); // Redirect to login if token is invalid
-  // State to manage form inputs
+
   const [formData, setFormData] = useState({
     customerAccount: '',
     loanAmount: '',
     loanTerm: '',
     interestRate: '',
+    loanTypeId: '',
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false); // For handling the form submission state
+  const [loanTypes, setLoanTypes] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Fetch loan types from the backend
+  useEffect(() => {
+    const fetchLoanTypes = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:5000/loans/types', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch loan types');
+        }
+
+        const data = await response.json();
+        setLoanTypes(data);
+      } catch (error) {
+        console.error('Error fetching loan types:', error);
+        alert('Failed to load loan types. Please try again.');
+      }
+    };
+
+    fetchLoanTypes();
+  }, []);
 
   // Handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate form fields
-    const { customerAccount, loanAmount, loanTerm, interestRate } = formData;
-    if (!customerAccount || !loanAmount || !loanTerm || !interestRate) {
+    const { customerAccount, loanAmount, loanTerm, interestRate, loanTypeId } = formData;
+
+    if (!customerAccount || !loanAmount || !loanTerm || !interestRate || !loanTypeId) {
       alert('Please fill in all fields.');
-      return; // Stop form submission
+      return;
     }
 
-    // Set form submission state
     setIsSubmitting(true);
 
     try {
-      // Send the data to the backend API
+      const token = localStorage.getItem('token');
       const response = await fetch('http://localhost:5000/loans/request-loan-emp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`, // Assuming JWT token is stored in localStorage
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           customerAccountNumber: customerAccount,
-          loanAmount: parseFloat(loanAmount),  // Ensure amount is a number
-          loanTerm: parseInt(loanTerm, 10),    // Ensure term is an integer
-          interestRate: parseFloat(interestRate), // Ensure interest rate is a number
+          loanAmount: parseFloat(loanAmount),
+          loanTerm: parseInt(loanTerm, 10),
+          interestRate: parseFloat(interestRate),
+          typeId: parseInt(loanTypeId), 
         }),
       });
 
@@ -59,20 +82,20 @@ const OpenLoanRequest = () => {
       }
 
       const result = await response.json();
+      alert(result.message);
 
-      alert(result.message); // Show success message
-      // Optionally reset the form
       setFormData({
         customerAccount: '',
         loanAmount: '',
         loanTerm: '',
         interestRate: '',
+        loanTypeId: '',
       });
     } catch (error) {
       console.error('Error:', error);
       alert('Failed to submit loan request.');
     } finally {
-      setIsSubmitting(false); // Reset form submission state
+      setIsSubmitting(false);
     }
   };
 
@@ -93,6 +116,25 @@ const OpenLoanRequest = () => {
                 disabled={isSubmitting}
               />
             </div>
+
+            <div style={styles.formGroup}>
+              <label>Loan Type</label>
+              <select
+                name="loanTypeId"
+                value={formData.loanTypeId}
+                onChange={handleInputChange}
+                style={styles.inputField}
+                disabled={isSubmitting}
+              >
+                <option value="">Select Loan Type</option>
+                {loanTypes.map((type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.type_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div style={styles.formGroup}>
               <label>Loan Amount</label>
               <input
@@ -104,6 +146,7 @@ const OpenLoanRequest = () => {
                 disabled={isSubmitting}
               />
             </div>
+
             <div style={styles.formGroup}>
               <label>Loan Term (in months)</label>
               <input
@@ -115,6 +158,7 @@ const OpenLoanRequest = () => {
                 disabled={isSubmitting}
               />
             </div>
+
             <div style={styles.formGroup}>
               <label>Interest Rate (%)</label>
               <input
@@ -126,6 +170,7 @@ const OpenLoanRequest = () => {
                 disabled={isSubmitting}
               />
             </div>
+
             <button type="submit" style={styles.button} disabled={isSubmitting}>
               {isSubmitting ? 'Submitting...' : 'Confirm'}
             </button>
