@@ -61,11 +61,11 @@ const Layout = ({ children, NavigationBar }) => {
         <div className="footer-links">
           <h4>Contact Us</h4>
           <ul>
-            <li>Hotline</li>
+            <li><b>Hotline</b></li>
             <li>0112 345 678</li>
-            <li>Mobile Number</li>
+            <li><b>Mobile Number</b></li>
             <li>071 123 4568</li>
-            <li>Email</li>
+            <li><b>Email</b></li>
             <li>abcbank@gmail.com</li>
           </ul>
         </div>
