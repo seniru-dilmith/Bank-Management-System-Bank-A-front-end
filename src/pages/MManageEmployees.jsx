@@ -3,6 +3,8 @@ import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
 import Layout from '../layouts/Layout';
 import axios from 'axios'; // Axios for API requests
 import useAuth from '../utils/useAuth';
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
+import { findDOMNode } from 'react-dom';
 
 const styles = {
   container: {
@@ -91,32 +93,83 @@ const styles = {
   },
 };
 
-const positions = [
-  { id: 1, title: 'Branch Manager' },
-  { id: 2, title: 'Teller' },
-  { id: 3, title: 'Loan Officer' },
-  { id: 4, title: 'Security Officer' },
-  { id: 5, title: 'Operations Manager' },
-  { id: 6, title: 'Technician' },
-];
-
 const MManageEmployees = () => {
   useAuth(); // Custom hook to check for JWT token
   const [employees, setEmployees] = useState([]);
-  const [editingId, setEditingId] = useState(null); // Track editing row
-  const [newEmployee, setNewEmployee] = useState(null); // Track new employee row
-  const [showModal, setShowModal] = useState(false); // Control modal visibility
-  const [employeeToRemove, setEmployeeToRemove] = useState(null); // Track employee to remove
+  const [editingId, setEditingId] = useState(null);
+  const [newEmployee, setNewEmployee] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [employeeToRemove, setEmployeeToRemove] = useState(null);
+  const [originalEmployeeData, setOriginalEmployeeData] = useState(null);
+  const [branchId, setBranchId] = useState(null);
+  const [positions, setPositions] = useState([]);
+  const { Spinner, SetWaitng } = LoadingSpinner();
 
-  // Fetch employees from the database
-  /*useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const response = await axios.get('/api/employees'); // Replace with your API endpoint
-        setEmployees(response.data); // Assuming the data is in response.data
-      } catch (error) {
-        console.error('Error fetching employees:', error);
-      }
+  const token = localStorage.getItem('token'); // Get JWT token from localStorage
+
+  // Fetch Branch ID from the backend
+  const fetchBranchId = async () => {
+    try {
+      SetWaitng(true);
+      const branchResponse = await axios.get(
+        'http://localhost:5000/branch-manager/get-branch-id',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add JWT token to request headers
+          },
+        }
+      );
+      setBranchId(branchResponse.data.branch_id); // Ensure the correct data is used
+    } catch (error) {
+      console.error('Error fetching branch ID:', error);
+    } finally {
+      SetWaitng(false);
+    }
+  };
+
+  // fetch positions from backend
+  const fetchPositions = async () => {
+    try {
+      SetWaitng(true);
+      const response = await axios.get('http://localhost:5000/branch-manager/get-positions', {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add JWT token to request headers
+        },
+      });
+      setPositions(response.data);
+    } catch (error) {
+      console.error('Error fetching positions:', error);
+    } finally {
+      SetWaitng(false);
+    }
+  };
+
+
+  // Fetch employees for a specific branch
+  const fetchEmployees = async (branchId) => {
+    try {
+      SetWaitng(true);
+      const response = await axios.get(
+        `http://localhost:5000/employee/general/branch/${branchId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add JWT token to request headers
+          },
+        }
+      );
+      setEmployees(response.data);
+    } catch (error) {
+      console.error('Error fetching employees:', error);
+    } finally {
+      SetWaitng(false);
+    }
+  };
+
+  // Fetch branch ID and then employees
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchBranchId(); // Fetch the branch ID first
+      await fetchPositions(); // Fetch the positions
     };
     fetchData();
   }, []);
@@ -161,11 +214,22 @@ const MManageEmployees = () => {
 
   const handleSaveNewEmployee = async () => {
     try {
-      const response = await axios.post('/api/employees', newEmployee); // API call to add the new employee
-      setEmployees([...employees, response.data]); // Add the new employee data from the response
+      SetWaitng(true);
+      const response = await axios.post(
+        'http://localhost:5000/employee/add',
+        newEmployee,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include token in the request
+          },
+        }
+      );
+      setEmployees([...employees, response.data]);
       setNewEmployee(null);
     } catch (error) {
       console.error('Error saving employee:', error);
+    } finally {
+      SetWaitng(false);
     }
   };
 
@@ -177,6 +241,7 @@ const MManageEmployees = () => {
   const handleUpdateEmployee = async (id) => {
     const employeeToUpdate = employees.find((employee) => employee.id === id);
     try {
+      SetWaitng(true);
       await axios.put(
         `http://localhost:5000/employee/update/${id}`,
         employeeToUpdate,
@@ -190,6 +255,8 @@ const MManageEmployees = () => {
       fetchEmployees(branchId); // Refresh the list
     } catch (error) {
       console.error('Error updating employee:', error);
+    } finally {
+      SetWaitng(false);
     }
   };
 
@@ -200,12 +267,24 @@ const MManageEmployees = () => {
 
   const handleRemoveEmployee = async () => {
     try {
-      await axios.delete(`/api/employees/${employeeToRemove}`); // API call to remove the employee
-      setEmployees(employees.filter((employee) => employee.id !== employeeToRemove));
+      SetWaitng(true);
+      await axios.delete(
+        `http://localhost:5000/employee/delete/${employeeToRemove}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include token in the request
+          },
+        }
+      );
+      setEmployees((prevEmployees) =>
+        prevEmployees.filter((employee) => employee.id !== employeeToRemove)
+      );
       setShowModal(false);
       setEmployeeToRemove(null);
     } catch (error) {
       console.error('Error removing employee:', error);
+    } finally {
+      SetWaitng(false);
     }
   };
 
@@ -350,6 +429,7 @@ const MManageEmployees = () => {
           </div>
         )}
       </div>
+      <Spinner />
     </Layout>
   );
 };
