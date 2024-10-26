@@ -3,7 +3,6 @@ import TechnicianNaviBar from '../components/NaviBar/TechnicianNaviBar';
 import Layout from '../layouts/Layout';
 import axios from 'axios';
 import useAuth from '../utils/useAuth';
-import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 
 const styles = {
   container: {
@@ -100,7 +99,6 @@ const ManageBranches = () => {
   const [showModal, setShowModal] = useState(false); // Control modal visibility
   const [branchToRemove, setBranchToRemove] = useState(null); // Track branch to remove
   const [originalBranchName, setOriginalBranchName] = useState(null); // Store original name
-  const { Spinner, setWaiting } = LoadingSpinner();
 
 const handleEditBranch = (id, name) => {
   setEditingId(id);
@@ -110,7 +108,6 @@ const handleEditBranch = (id, name) => {
   // Fetch branches from the database
   const fetchBranches = async () => {
     try {
-      setWaiting(true);
       const response = await axios.get('http://localhost:5000/branch-management/branches', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -119,9 +116,7 @@ const handleEditBranch = (id, name) => {
       setBranches(response.data);
     } catch (error) {
       console.error('Error fetching branches:', error);
-    } finally {
-      setWaiting(false);
-    }
+    } 
   };
 
 
@@ -143,7 +138,6 @@ const handleEditBranch = (id, name) => {
 
   const handleSaveNewBranch = async () => {
     try {
-      setWaiting(true);
       await axios.post('http://localhost:5000/branch-management/add-branch', newBranch, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
@@ -151,8 +145,6 @@ const handleEditBranch = (id, name) => {
       fetchBranches();
     } catch (error) {
       console.error('Error adding branch:', error);
-    } finally {
-      setWaiting(false);
     }
   };
 
@@ -165,7 +157,6 @@ const handleEditBranch = (id, name) => {
     }
   
     try {
-      setWaiting(true);
       await axios.put('http://localhost:5000/branch-management/update-branch', {
         currentName: originalBranchName, // Original name before editing
         newName: branchToUpdate.name, // Updated name
@@ -180,8 +171,6 @@ const handleEditBranch = (id, name) => {
       fetchBranches(); // Refresh the branch list
     } catch (error) {
       console.error('Error updating branch:', error);
-    } finally {
-      setWaiting(false);
     }
   };
   
@@ -192,7 +181,6 @@ const handleEditBranch = (id, name) => {
 
   const handleRemoveBranch = async () => {
     try {
-      setWaiting(true);
       await axios.delete(`http://localhost:5000/branch-management/remove-branch/${branchToRemove}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
@@ -201,8 +189,6 @@ const handleEditBranch = (id, name) => {
       setBranchToRemove(null);
     } catch (error) {
       console.error('Error removing branch:', error);
-    } finally {
-      setWaiting(false);
     }
   };
 
@@ -330,7 +316,6 @@ const handleEditBranch = (id, name) => {
           </div>
         )}
       </div>
-      <Spinner />
     </Layout>
   );
 };

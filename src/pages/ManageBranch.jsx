@@ -3,7 +3,6 @@ import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
 import Layout from '../layouts/Layout';
 import axios from 'axios';
 import useAuth from '../utils/useAuth';
-import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 
 const ManageBranch = () => {
   useAuth(); // Redirect to login if token is invalid
@@ -20,14 +19,11 @@ const ManageBranch = () => {
     contactNumber: '',
   });
 
-  const { Spinner, setWaiting } = LoadingSpinner();
-
   const token = localStorage.getItem('token'); // Get JWT token from localStorage
 
   // Fetch branch information for the logged-in manager
   const fetchBranchInfo = async () => {
     try {
-      setWaiting(true); // Show loading spinner
       const response = await axios.get(
         'http://localhost:5000/branch-manager/get-branch-details',
         {
@@ -55,8 +51,6 @@ const ManageBranch = () => {
       });
     } catch (error) {
       console.error('Error fetching branch information:', error);
-    } finally {
-      setWaiting(false); // Hide loading spinner
     }
   };
 
@@ -70,7 +64,6 @@ const ManageBranch = () => {
     console.log('Branch Info before Update:', branchInfo); // Debug log
 
     try {
-      setWaiting(true); // Show loading spinner
       await axios.put(
         `http://localhost:5000/branch-manager/update-branch-details/${branchInfo.id}`,
         {
@@ -96,9 +89,7 @@ const ManageBranch = () => {
     } catch (error) {
       console.error('Error updating branch details:', error);
       alert('Failed to update branch details. Please try again.');
-    } finally {
-      setWaiting(false); // Hide loading spinner
-    }
+    } 
   };
 
   const handleChange = (e) => {
@@ -166,7 +157,6 @@ const ManageBranch = () => {
           </button>
         </div>
       </div>
-      <Spinner />
     </Layout>
   );
 };
