@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios'; // Import axios to handle the API request
 import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
+import useAuth from '../utils/useAuth';
 
 const Transactions = () => {
+  useAuth(); // Redirect to login if token is invalid
   // State for form fields
   const [formData, setFormData] = useState({
     fromAccount: '',

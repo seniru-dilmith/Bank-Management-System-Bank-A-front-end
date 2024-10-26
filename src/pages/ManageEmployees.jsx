@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TechnicianNaviBar from '../components/NaviBar/TechnicianNaviBar';
 import Layout from '../layouts/Layout';
 import axios from 'axios';
+import useAuth from '../utils/useAuth';
 
 const styles = {
   container: {
@@ -91,12 +92,13 @@ const styles = {
 };
 
 const ManageEmployees = () => {
+  useAuth(); // Custom hook to check for authentication
   const [employees, setEmployees] = useState([]);
   const [editingId, setEditingId] = useState(null); // Track editing row
   const [newEmployee, setNewEmployee] = useState(null); // Track new employee row
   const [showModal, setShowModal] = useState(false); // Control modal visibility
+  const [positions, setPositions] = useState([]); // Track positions
   const [employeeToRemove, setEmployeeToRemove] = useState(null); // Track employee to remove
-
   
   // Fetch employees from the database
 
@@ -117,8 +119,23 @@ const ManageEmployees = () => {
     }
   };
 
+  const fetchPositions = async () => {
+    try {
+      const token = localStorage.getItem('token'); // Get the token from local storage
+      const response = await axios.get('http://localhost:5000/employee-management/positions', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setPositions(response.data);
+    } catch (error) {
+      console.error('Error fetching positions:', error);
+    }
+  };
+
   useEffect(() => {
     fetchEmployees();
+    fetchPositions();
   }, []);
 
   const handleInputChange = (e, id, field) => {
@@ -136,7 +153,7 @@ const ManageEmployees = () => {
       phone: '',
       nic: '',
       email: '',
-      position: '',
+      position_id: '',
       address: '',
       username: '',
     });
@@ -161,22 +178,31 @@ const ManageEmployees = () => {
 
   // handler to update the employee
   const handleUpdateEmployee = async (id) => {
-    console.log('updating employee');
-    try {
-      const token = localStorage.getItem('token'); // Get the token from local storage
-      const employeeToUpdate = employees.find((employee) => employee.id === id);
-      console.log('updating employee:', employeeToUpdate);
-      
-      const response = await axios.put(`http://localhost:5000/employee-management/update-employee`, employeeToUpdate, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log('Employee updated: ', response.data);
-      setEditingId(null);
-      
-      fetchEmployees();
+    
+    const employeeToUpdate = employees.find((employee) => employee.id === id);
+    
+    // Prepare the correct format for the backend request
+    const updatedEmployeeData = {
+      id: employeeToUpdate.id,
+      first_name: employeeToUpdate.first_name,
+      last_name: employeeToUpdate.last_name,
+      address: employeeToUpdate.address,
+      phone: employeeToUpdate.phone,
+      nic: employeeToUpdate.nic,
+      email: employeeToUpdate.email,
+      username: employeeToUpdate.username,
+      position_id: employeeToUpdate.position_id,
+      branch_id: employeeToUpdate.branch_id,
+      supervisor_id: employeeToUpdate.supervisor_id,
+    };
 
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put('http://localhost:5000/employee-management/update-employee', updatedEmployeeData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setEditingId(null);
+      fetchEmployees();
     } catch (error) {
       console.error('Error updating employee:', error);
     }
@@ -186,6 +212,15 @@ const ManageEmployees = () => {
     setShowModal(true);
     setEmployeeToRemove(id); // Set the employee to remove when the modal is shown
   };
+
+  const handlePositionChange = (e, id) => {
+    const selectedPosition = positions.find((pos) => pos.name === e.target.value);
+    setEmployees((prev) =>
+      prev.map((employee) =>
+        employee.id === id ? { ...employee, position_id: selectedPosition.id } : employee
+      )
+    );
+  };  
 
   const handleRemoveEmployee = () => {
     // Remove the employee from the database
@@ -213,9 +248,9 @@ const ManageEmployees = () => {
     <Layout NavigationBar={<TechnicianNaviBar />}>
       <div style={styles.container}>
         
-        <button style={styles.addButton} onClick={handleAddEmployee}>
+        {/* <button style={styles.addButton} onClick={handleAddEmployee}>
           Add New Employee
-        </button>
+        </button> */}
         <table style={styles.table}>
           <thead>
             <tr>
@@ -281,13 +316,20 @@ const ManageEmployees = () => {
                       />
                     </td>
                     <td style={styles.td}>
-                      <input
-                        type="text"
-                        id={`position-${employee.id}`}
-                        style={styles.input}
-                        value={employee.position}
-                        onChange={(e) => handleInputChange(e, employee.id, 'position')}
-                      />
+                    <select
+                      id={`position-${employee.id}`}
+                      style={styles.select}
+                      value={positions.find((pos) => pos.id === employee.position_id)?.name || ''}
+                      onChange={(e) => handlePositionChange(e, employee.id)}
+                      disabled={employee.id === 1} // Disable if the employee ID is 1
+                    >
+                      {positions.map((position) => (
+                        <option key={position.id} value={position.name}>
+                          {position.name}
+                        </option>
+                      ))}
+                    </select>
+
                     </td>
                     <td style={styles.td}>
                       <input
@@ -378,12 +420,22 @@ const ManageEmployees = () => {
                   />
                 </td>
                 <td style={styles.td}>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    value={newEmployee.position}
-                    onChange={(e) => setNewEmployee({ ...newEmployee, position: e.target.value })}
-                  />
+                  <select
+                    style={styles.select}
+                    value={newEmployee.position_id}
+                    onChange={(e) =>
+                      setNewEmployee({
+                        ...newEmployee,
+                        position_id: positions.find((pos) => pos.name === e.target.value)?.id,
+                      })
+                    }
+                  >
+                    {positions.map((position) => (
+                      <option key={position.id} value={position.name}>
+                        {position.name}
+                      </option>
+                    ))}
+                  </select>
                 </td>
                 <td style={styles.td}>
                   <input

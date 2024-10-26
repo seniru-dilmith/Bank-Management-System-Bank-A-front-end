@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
+import useAuth from '../utils/useAuth';
 
 const Settings = () => {
+  useAuth(); // Redirect to login if token is invalid
   const { settingType } = useParams(); // Get the type of setting to display
   const [currentValue, setCurrentValue] = useState('');
   const [newValue, setNewValue] = useState('');
