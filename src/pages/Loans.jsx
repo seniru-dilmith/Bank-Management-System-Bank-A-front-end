@@ -105,11 +105,12 @@ const LoanDetails = () => {
 
   return (
     <Layout NavigationBar={<CustomerNaviBar />}>
+      <div style={styles.CustomerDashboardBox}>
+          <h2 style={styles.CustomerDashboardTitle}>Customer Dashboard</h2>
+        </div>
       <div style={styles.container}>
         {/* Customer Dashboard Box */}
-        <div style={styles.CustomerDashboardBox}>
-          <h2 style={styles.CustomerDashboardTitle}>Customer Manager Dashboard</h2>
-        </div>
+        
 
         {/* Loan Application Form */}
         <div style={styles.loanDetailsBox}>
@@ -227,8 +228,9 @@ const styles = {
   container: {
     padding: '40px 20px',
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    gap: '20px', // Space between Customer Dashboard and Loan Application
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     height: 'auto',
@@ -240,9 +242,7 @@ const styles = {
     padding: '10px 20px',
     borderRadius: '20px',
     marginBottom: '20px',
-    width: '100%',
-    maxWidth: '600px',
-    textAlign: 'left',
+    display: 'inline-block',
   },
   CustomerDashboardTitle: {
     fontSize: '1.8rem',
@@ -254,9 +254,8 @@ const styles = {
     borderRadius: '10px',
     padding: '30px',
     width: '100%',
-    maxWidth: '600px',
+    maxWidth: '600px', // Center box will be wider
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-    marginBottom: '40px',
     textAlign: 'center',
   },
   formGroup: {

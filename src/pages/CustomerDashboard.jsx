@@ -86,6 +86,33 @@ const CustomerDashboard = () => {
 
   const styles = {
     container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    padding: "2rem",
+    minHeight: "100vh",
+    width: "100%",
+    boxSizing: "border-box",
+  },
+  dashboardBox: {
+    backgroundColor: "#ffffff", // Change this to make it fully opaque
+    padding: "2rem",
+    borderRadius: "8px",
+    boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",
+    width: "90%",
+    maxWidth: "500px",
+    textAlign: "center",
+    marginBottom: "2rem",
+  },
+  transactionsContainer: {
+    backgroundColor: "#ffffff", // Change this to make it fully opaque
+    borderRadius: "8px",
+    boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",
+    padding: "2rem",
+    width: "90%",
+    maxWidth: "600px",
+  },
+    container: {
       display: "flex",
       flexDirection: "column",
       alignItems: "flex-start",
