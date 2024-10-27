@@ -4,6 +4,7 @@ import Layout from '../layouts/Layout';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import useAuth from "../utils/useAuth";
+import { useSpinner } from '../utils/SpinnerContext';
 
 const CustomerDashboard = () => {
   useAuth(); // Redirect to login if token is invalid
@@ -12,6 +13,7 @@ const CustomerDashboard = () => {
   const [accountType, setAccountType] = useState('');
   const [currentBalance, setCurrentBalance] = useState('');
   const [transactions, setTransactions] = useState([]);
+  const { setWaiting } = useSpinner();
 
   // Extract customerId from the token
   const getCustomerIdFromToken = () => {
@@ -32,6 +34,7 @@ const CustomerDashboard = () => {
       if (!customerId) return; // Ensure customerId exists
 
       try {
+        setWaiting(true);
         const token = localStorage.getItem('token');
         const response = await axios.get(
           `http://localhost:5000/accounts/account-summary?customerId=${customerId}`, 
@@ -49,6 +52,8 @@ const CustomerDashboard = () => {
         }
       } catch (error) {
         console.error('Error fetching accounts:', error);
+      } finally {
+        setWaiting(false);
       }
     };
 
@@ -58,6 +63,7 @@ const CustomerDashboard = () => {
   // Fetch transactions for the selected account
   const fetchTransactions = async (accountNumber) => {
     try {
+      setWaiting(true);
       const token = localStorage.getItem('token');
       const response = await axios.get(
         `http://localhost:5000/transactions/recent-by-customer?customerId=${customerId}&accountNumber=${accountNumber}`,
@@ -71,6 +77,8 @@ const CustomerDashboard = () => {
       setTransactions(response.data);
     } catch (error) {
       console.error('Error fetching transactions:', error);
+    } finally {
+      setWaiting(false);
     }
   };
 
