@@ -4,17 +4,20 @@ import Layout from '../layouts/Layout';
 import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
 import { Link } from 'react-router-dom';
 import useAuth from '../utils/useAuth';
+import { useSpinner } from '../utils/SpinnerContext';
 
 const ApproveLoans = () => {
   useAuth(); // Redirect to login if token is invalid
   // State to store loan applications
   const [loans, setLoans] = useState([]);
   const [message, setMessage] = useState(null);
+  const { setWaiting } = useSpinner();
 
   // Fetch pending loans when the component mounts
   useEffect(() => {
     const fetchPendingLoans = async () => {
       try {
+        setWaiting(true);
         const token = localStorage.getItem('token'); // Get JWT token from localStorage
         const response = await axios.get('http://localhost:5000/loan-approval/pending-loans', {
           headers: {
@@ -24,6 +27,8 @@ const ApproveLoans = () => {
         setLoans(response.data); // Set the loans in state
       } catch (error) {
         console.error('Error fetching loans:', error);
+      } finally {
+        setWaiting(false);
       }
     };
 
@@ -33,6 +38,7 @@ const ApproveLoans = () => {
   // Function to approve or reject a loan
   const handleLoanAction = async (loanId, action) => {
     try {
+      setWaiting(true);
       const token = localStorage.getItem('token');
       await axios.put('http://localhost:5000/loan-approval/update-loan-status', 
         {
@@ -51,6 +57,8 @@ const ApproveLoans = () => {
     } catch (error) {
       console.error(`Error ${action}ing loan:`, error);
       setMessage(`Failed to ${action} the loan.`);
+    } finally {
+      setWaiting(false);
     }
   };
 

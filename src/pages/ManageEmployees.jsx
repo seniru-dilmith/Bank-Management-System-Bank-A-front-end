@@ -3,6 +3,7 @@ import TechnicianNaviBar from '../components/NaviBar/TechnicianNaviBar';
 import Layout from '../layouts/Layout';
 import axios from 'axios';
 import useAuth from '../utils/useAuth';
+import { useSpinner } from '../utils/SpinnerContext';
 
 const styles = {
   container: {
@@ -99,11 +100,13 @@ const ManageEmployees = () => {
   const [showModal, setShowModal] = useState(false); // Control modal visibility
   const [positions, setPositions] = useState([]); // Track positions
   const [employeeToRemove, setEmployeeToRemove] = useState(null); // Track employee to remove
+  const { setWaiting } = useSpinner();
 
   // Fetch employees from the database
 
   const fetchEmployees = async () => {
     try {
+      setWaiting(true); // Show spinner
       const token = localStorage.getItem('token'); // Get the token from local storage
 
       const response = await axios.get('http://localhost:5000/employee-management/employees', {
@@ -116,11 +119,14 @@ const ManageEmployees = () => {
       
     } catch (error) {
       console.error('Error fetching employees:', error);
+    } finally {
+      setWaiting(false); // Hide spinner
     }
   };
 
   const fetchPositions = async () => {
     try {
+      setWaiting(true); // Show spinner
       const token = localStorage.getItem('token'); // Get the token from local storage
       const response = await axios.get('http://localhost:5000/employee-management/positions', {
         headers: {
@@ -130,7 +136,9 @@ const ManageEmployees = () => {
       setPositions(response.data);
     } catch (error) {
       console.error('Error fetching positions:', error);
-    } 
+    } finally {
+      setWaiting(false); // Hide spinner
+    }
   };
 
   useEffect(() => {
@@ -161,6 +169,7 @@ const ManageEmployees = () => {
 
   const handleSaveNewEmployee = async () => {
     try {
+      setWaiting(true); // Show spinner
       const token = localStorage.getItem('token'); // Get the token from local storage
       const response = await axios.post('http://localhost:5000/employee-management/add-employee', newEmployee, {
         headers: {
@@ -173,6 +182,8 @@ const ManageEmployees = () => {
       fetchEmployees();
     } catch (error) {
       console.error('Error adding employee:', error);
+    } finally {
+      setWaiting(false); // Hide spinner
     }
   };
 
@@ -197,6 +208,7 @@ const ManageEmployees = () => {
     };
 
     try {
+      setWaiting(true); // Show spinner
       const token = localStorage.getItem('token');
       await axios.put('http://localhost:5000/employee-management/update-employee', updatedEmployeeData, {
         headers: { Authorization: `Bearer ${token}` },
@@ -205,6 +217,8 @@ const ManageEmployees = () => {
       fetchEmployees();
     } catch (error) {
       console.error('Error updating employee:', error);
+    } finally {
+      setWaiting(false); // Hide spinner
     }
   };
 
@@ -226,6 +240,7 @@ const ManageEmployees = () => {
     // Remove the employee from the database
     const removeEmployee = async () => {
       try {
+        setWaiting(true); // Show spinner
         const token = localStorage.getItem('token');
         await axios.delete(`http://localhost:5000/employee-management/remove-employee/${employeeToRemove}`, {
           headers: {
@@ -238,7 +253,9 @@ const ManageEmployees = () => {
         setEmployeeToRemove(null);
       } catch (error) {
         console.error('Error removing employee:', error);
-      } 
+      } finally {
+        setWaiting(false); // Hide spinner
+      }
     };
     
     removeEmployee();

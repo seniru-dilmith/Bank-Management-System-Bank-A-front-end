@@ -3,6 +3,7 @@ import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
 import Layout from '../layouts/Layout';
 import axios from 'axios'; // Axios for API requests
 import useAuth from '../utils/useAuth';
+import { useSpinner } from '../utils/SpinnerContext';
 import { findDOMNode } from 'react-dom';
 
 const styles = {
@@ -102,12 +103,14 @@ const MManageEmployees = () => {
   const [originalEmployeeData, setOriginalEmployeeData] = useState(null);
   const [branchId, setBranchId] = useState(null);
   const [positions, setPositions] = useState([]);
+  const { setWaiting } = useSpinner();
 
   const token = localStorage.getItem('token'); // Get JWT token from localStorage
 
   // Fetch Branch ID from the backend
   const fetchBranchId = async () => {
     try {
+      setWaiting(true); // Show loading spinner
       const branchResponse = await axios.get(
         'http://localhost:5000/branch-manager/get-branch-id',
         {
@@ -120,12 +123,14 @@ const MManageEmployees = () => {
     } catch (error) {
       console.error('Error fetching branch ID:', error);
     } finally {
+      setWaiting(false); // Hide loading spinner
     }
   };
 
   // Fetch positions from backend
   const fetchPositions = async () => {
     try {
+      setWaiting(true); // Show loading spinner
       const response = await axios.get('http://localhost:5000/branch-manager/get-positions', {
         headers: {
           Authorization: `Bearer ${token}`, // Add JWT token to request headers
@@ -135,12 +140,14 @@ const MManageEmployees = () => {
     } catch (error) {
       console.error('Error fetching positions:', error);
     } finally {
+      setWaiting(false); // Hide loading spinner
     }
   };
 
   // Fetch employees for a specific branch
   const fetchEmployees = async (branchId) => {
     try {
+      setWaiting(true); // Show loading spinner
       const response = await axios.get(
         `http://localhost:5000/employee/general/branch/${branchId}`,
         {
@@ -152,7 +159,9 @@ const MManageEmployees = () => {
       setEmployees(response.data);
     } catch (error) {
       console.error('Error fetching employees:', error);
-    } 
+    } finally {
+      setWaiting(false); // Hide loading spinner
+    }
   };
 
   // Fetch branch ID and then employees
@@ -193,6 +202,7 @@ const MManageEmployees = () => {
 
   const handleSaveNewEmployee = async () => {
     try {
+      setWaiting(true); // Show loading spinner
       const response = await axios.post(
         'http://localhost:5000/employee/add',
         newEmployee,
@@ -206,6 +216,8 @@ const MManageEmployees = () => {
       setNewEmployee(null);
     } catch (error) {
       console.error('Error saving employee:', error);
+    } finally {
+      setWaiting(false); // Hide loading spinner
     }
   };
 
@@ -217,6 +229,7 @@ const MManageEmployees = () => {
   const handleUpdateEmployee = async (id) => {
     const employeeToUpdate = employees.find((employee) => employee.id === id);
     try {
+      setWaiting(true); // Show loading spinner
       await axios.put(
         `http://localhost:5000/employee/update/${id}`,
         employeeToUpdate,
@@ -230,6 +243,8 @@ const MManageEmployees = () => {
       fetchEmployees(branchId); // Refresh the list
     } catch (error) {
       console.error('Error updating employee:', error);
+    } finally {
+      setWaiting(false); // Hide loading spinner
     }
   };
 
@@ -240,6 +255,7 @@ const MManageEmployees = () => {
 
   const handleRemoveEmployee = async () => {
     try {
+      setWaiting(true); // Show loading spinner
       await axios.delete(
         `http://localhost:5000/employee/delete/${employeeToRemove}`,
         {
@@ -255,6 +271,8 @@ const MManageEmployees = () => {
       setEmployeeToRemove(null);
     } catch (error) {
       console.error('Error removing employee:', error);
+    } finally { 
+      setWaiting(false); // Hide loading spinner
     }
   };
 
