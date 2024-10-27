@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import EmployeeNaviBar from '../components/NaviBar/EmployeeNaviBar';
 import Layout from '../layouts/Layout';
 import useAuth from '../utils/useAuth';
+import { useSpinner } from '../utils/SpinnerContext';
 
 const OpenLoanRequest = () => {
   useAuth(); // Redirect to login if token is invalid
@@ -16,11 +17,13 @@ const OpenLoanRequest = () => {
 
   const [loanTypes, setLoanTypes] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { setWaiting } = useSpinner();
 
   // Fetch loan types from the backend
   useEffect(() => {
     const fetchLoanTypes = async () => {
       try {
+        setWaiting(true);
         const token = localStorage.getItem('token');
         const response = await fetch('http://localhost:5000/loans/types', {
           headers: { Authorization: `Bearer ${token}` },
@@ -35,6 +38,8 @@ const OpenLoanRequest = () => {
       } catch (error) {
         console.error('Error fetching loan types:', error);
         alert('Failed to load loan types. Please try again.');
+      } finally {
+        setWaiting(false);
       }
     };
 
@@ -61,6 +66,7 @@ const OpenLoanRequest = () => {
     setIsSubmitting(true);
 
     try {
+      setWaiting(true);
       const token = localStorage.getItem('token');
       const response = await fetch('http://localhost:5000/loans/request-loan-emp', {
         method: 'POST',
@@ -96,6 +102,7 @@ const OpenLoanRequest = () => {
       alert('Failed to submit loan request.');
     } finally {
       setIsSubmitting(false);
+      setWaiting(false);
     }
   };
 

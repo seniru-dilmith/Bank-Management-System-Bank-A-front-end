@@ -4,17 +4,20 @@ import { jwtDecode } from 'jwt-decode';
 import EmployeeNaviBar from '../components/NaviBar/EmployeeNaviBar';
 import Layout from '../layouts/Layout';
 import useAuth from '../utils/useAuth';
+import { useSpinner } from '../utils/SpinnerContext';
 
 const EmployeeDashboard = () => {
   useAuth(); // Redirect to login if token is invalid
   const [accountSummaries, setAccountSummaries] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [branchId, setBranchId] = useState('');
+  const { setWaiting } = useSpinner();
 
   // Fetch branch ID from the token and get account summaries
   useEffect(() => {
     const fetchAccountSummaries = async () => {
       try {
+        setWaiting(true);
         const token = localStorage.getItem('token');
         const emp_id = jwtDecode(token).id;
         const account_summaries = await axios.get(
@@ -34,6 +37,8 @@ const EmployeeDashboard = () => {
         
       } catch (error) {
         console.error('Error fetching account summaries:', error);
+      } finally {
+        setWaiting(false);
       }
     };
 
@@ -44,6 +49,7 @@ const EmployeeDashboard = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
+        setWaiting(true);
         const token = localStorage.getItem('token');
         const response = await axios.get(
           'http://localhost:5000/transactions/recent-transactions',
@@ -57,6 +63,8 @@ const EmployeeDashboard = () => {
         setTransactions(response.data || []);
       } catch (error) {
         console.error('Error fetching transactions:', error);
+      } finally {
+        setWaiting(false);
       }
     };
 
