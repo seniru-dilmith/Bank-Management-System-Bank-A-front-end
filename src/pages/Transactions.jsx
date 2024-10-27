@@ -74,7 +74,9 @@ const Transactions = () => {
         <div style={styles.CustomerDashboardBox}>
           <h2 style={styles.CustomerDashboardTitle}>Customer Dashboard</h2>
         </div>
-
+        <div style={styles.ContentBox}>
+          <h2 style={styles.ContentTitle}>Transaction Section</h2>
+      </div>
         {/* Centered Transactions Box */}
         <div style={styles.transactionsBox}>
           <h3>Transactions</h3>
@@ -197,6 +199,19 @@ const styles = {
     display: 'inline-block',
   },
   CustomerDashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
+  ContentBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+  },
+
+  ContentTitle: {
     fontSize: '1.8rem',
     color: '#fff',
     margin: '0',

@@ -102,100 +102,84 @@ const CustomerDashboard = () => {
       width: "100%",
       boxSizing: "border-box",
     },
-    CustomerDashboardBox: {
+    dashboardBox: {
+      backgroundColor: "rgba(255, 255, 255, 0.9)",
+      padding: "2rem",
+      borderRadius: "8px",
+      boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",
+      width: "90%",
+      maxWidth: "500px",
+      textAlign: "left",
+      marginBottom: "2rem",
+    },
+    dashboardbox: {
       background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
       padding: '10px 20px',
       borderRadius: '20px',
       marginBottom: '20px',
       display: 'inline-block',
     },
-    CustomerDashboardTitle: {
+    dashboardTitle: {
       fontSize: '1.8rem',
       color: '#fff',
       margin: '0',
     },
-    dashboardBox: {
-      backgroundColor: "#ffffff", // Fully opaque white background
-      padding: "2rem",
-      borderRadius: "8px",
-      boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",
-      width: "90%",
-      maxWidth: "500px",
-      textAlign: "center",
-      marginBottom: "2rem",
-      color: "#000", // Set all text inside box to black
-      position: "relative", // Ensures proper layering
-    },
-    label: {
-      fontWeight: "bold",
-      color: "#000", // Black color for label text
-    },
-    select: {
-      margin: "1rem 0",
-      padding: "0.5rem",
-      border: "1px solid #ddd",
-      borderRadius: "4px",
-      color: "#000", // Black color for dropdown text
-    },
-    accountInfo: {
-      color: "#000", // Black color for account info text
-      fontSize: "1rem",
-      marginTop: "1rem",
+    detailItem: {
+      fontSize: '1.2rem',
+      marginBottom: '1rem',
+      color: 'black', // Set text color to black
+      textAlign: 'left', // Align text to the left
+      lineHeight: '1.5rem',
     },
     transactionsContainer: {
-      backgroundColor: "#ffffff", // Fully opaque white background
+      backgroundColor: "rgba(255, 255, 255, 0.9)",
       borderRadius: "8px",
       boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",
       padding: "2rem",
       width: "90%",
       maxWidth: "600px",
-      color: "#000", // Black text for transactions container
     },
     transactionsTable: {
       width: "100%",
       borderCollapse: "collapse",
     },
     tableHeader: {
-      backgroundColor: "#e0e0e0",
-      color: "#000", // Black text for header
+      backgroundColor: "#1a2a63",
+      color: "#fff",
     },
     tableRow: {
       borderBottom: "1px solid #ddd",
     },
     tableCell: {
       padding: "0.75rem",
-      color: "#000", // Black text for cells
     },
     heading: {
       fontSize: "1.8rem",
       marginBottom: "1rem",
       borderBottom: "2px solid #ddd",
-      color: "#000", // Black text for heading
     },
   };
-  
-  
 
   return (
     <Layout NavigationBar={<CustomerNaviBar />}>
-      <div style={styles.CustomerDashboardBox}>
-          <h2 style={styles.CustomerDashboardTitle}>Customer Dashboard</h2>
-        </div>
       <div style={styles.container}>
+        <div style={styles.dashboardbox}>
+          <h2 style={styles.dashboardTitle}>Customer Dashboard</h2>
+        </div>
         <div style={styles.dashboardBox}>
-              <h2 style={styles.heading}>Account Summary</h2>
-      <div>
-        <label style={styles.label}>Select Account: </label>
-        <select style={styles.select} value={selectedAccount} onChange={handleAccountChange}>
-          {accounts.map((account) => (
-            <option key={account.account_number} value={account.account_number}>
-              {account.account_number}
-            </option>
-          ))}
-        </select>
-      </div>
-      <p style={styles.accountInfo}><strong>Account Type:</strong> {accountType}</p>
-      <p style={styles.accountInfo}><strong>Current Balance:</strong> ${currentBalance}</p>
+          <h3 style={styles.heading}>Account Summery</h3>
+          <div>
+            <label>Select Account: </label>
+            <select value={selectedAccount} onChange={handleAccountChange}>
+              {accounts.map((account) => (
+                <option key={account.account_number} value={account.account_number}>
+                  {account.account_number}
+                </option>
+              ))}
+            </select>
+          </div>
+          <p style={styles.detailItem}><strong>Account Type:</strong> {accountType}</p>
+          <p style={styles.detailItem}><strong>Current Balance:</strong> ${currentBalance}</p>
         </div>
 
         <div style={styles.transactionsContainer}>
