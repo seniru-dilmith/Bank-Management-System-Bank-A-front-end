@@ -112,7 +112,7 @@ const ApproveLoans = () => {
       <div style={styles.container}>
         {/* Reused Gradient box for the Branch Manager Dashboard title */}
         <div style={styles.dashboardBox}>
-          <h2 style={styles.dashboardTitle}>Branch Manager Dashboard</h2>
+          <h2 style={styles.dashboardTitle}>Approve Loans Section</h2>
         </div>
 
         <table style={styles.table}>

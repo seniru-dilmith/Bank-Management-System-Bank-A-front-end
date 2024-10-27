@@ -156,7 +156,9 @@ const ManagerDashboard = () => {
   return (
     <Layout NavigationBar={<ManagerNaviBar />}>
       <div style={styles.container}>
-        <h2 style={styles.dashboardTitle}>Branch Manager Dashboard</h2>
+        <div style={styles.dashboardBox}>
+          <h2 style={styles.dashboardTitle}>Manager Dashboard</h2>
+        </div>
         <h3 style={styles.reportTitle}>Generate Reports</h3>
         <div style={styles.buttonContainer}>
           <button style={styles.button} onClick={() => setShowModal(true)}>

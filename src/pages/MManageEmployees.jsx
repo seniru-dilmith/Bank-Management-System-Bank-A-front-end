@@ -10,7 +10,19 @@ const styles = {
   container: {
     width: '90%',
     margin: '0 auto',
-    textAlign: 'center',
+    textAlign: 'left',
+  },
+  dashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
+  dashboardBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
   },
   table: {
     width: '100%',
@@ -289,6 +301,9 @@ const MManageEmployees = () => {
   return (
     <Layout NavigationBar={<ManagerNaviBar />}>
       <div style={styles.container}>
+        <div style={styles.dashboardBox}>
+          <h2 style={styles.dashboardTitle}>Manage Employees Section</h2>
+        </div>
         <button style={styles.addButton} onClick={handleAddEmployee}>
           Add New Employee
         </button>
