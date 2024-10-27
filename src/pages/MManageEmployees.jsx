@@ -11,6 +11,7 @@ const styles = {
     width: '90%',
     margin: '0 auto',
     textAlign: 'center',
+    
   },
   table: {
     width: '100%',
@@ -109,7 +110,7 @@ const styles = {
     borderRadius: '20px',
     marginBottom: '20px',
     display: 'inline-block',
-    textAlign: 'center', // Center text inside the box
+    textAlign: 'center',
   },
   ContentTitle: {
     fontSize: '1.8rem',
@@ -315,11 +316,12 @@ const MManageEmployees = () => {
       <div style={styles.dashboardbox}>
           <h2 style={styles.dashboardTitle}>Branch Manager Dashboard</h2>
         </div>
-
+        <div></div>
         <div style={styles.ContentBox}>
           <h2 style={styles.ContentTitle}>Manage Employees</h2>
       </div>
       <div style={styles.container}>
+      
         <button style={styles.addButton} onClick={handleAddEmployee}>
           Add New Employee
         </button>
