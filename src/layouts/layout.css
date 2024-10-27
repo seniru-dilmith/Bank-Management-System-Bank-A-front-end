@@ -126,6 +126,8 @@ html, body {
   color: white;
   padding: 50px;
   width: 100%;
+  position: relative;
+  margin-top: auto;
 }
 
 .footer-container {
