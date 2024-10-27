@@ -117,7 +117,9 @@ const LoanDetails = () => {
           <h2 style={styles.CustomerDashboardTitle}>Customer Dashboard</h2>
         </div>
       <div style={styles.container}>
-        {/* Customer Dashboard Box */}
+      <div style={styles.ContentBox}>
+          <h2 style={styles.ContentTitle}>Loans Section</h2>
+      </div>
         
 
         {/* Loan Application Form */}
@@ -236,8 +238,8 @@ const styles = {
   container: {
     padding: '40px 20px',
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    flexDirection: 'column', // Changed to column for stacking ContentBox and LoanDetailsBox
+    alignItems: 'center', // Center items horizontally
     gap: '20px', // Space between Customer Dashboard and Loan Application
     backgroundSize: 'cover',
     backgroundPosition: 'center',
@@ -305,6 +307,19 @@ const styles = {
     cursor: 'pointer',
     width: '100%',
     marginTop: '20px',
+  },
+  ContentBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+    textAlign: 'center', // Center text inside the box
+  },
+  ContentTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
   },
 };
 
