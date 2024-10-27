@@ -27,7 +27,7 @@ html, body {
 }
 
 .logo {
-  height: 80px; /* Adjust logo size to match reduced header */
+  height: 100px; /* Adjust logo size to match reduced header */
 }
 
 .logo-container {
@@ -38,7 +38,7 @@ html, body {
 
 .bank-name {
   margin: 0;
-  font-size: 1.2em; /* Slightly smaller font size */
+  font-size: 1.5em; /* Slightly smaller font size */
   font-weight: bold;
 }
 
