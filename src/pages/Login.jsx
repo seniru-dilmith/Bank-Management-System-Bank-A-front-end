@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate for redire
 import { useAuth } from '../routes/AuthContext'; // Import useAuth for login context
 import HomeNaviBar from '../components/NaviBar/HomeNaviBar';
 import Layout from '../layouts/Layout';
+import { useSpinner } from '../utils/SpinnerContext';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -11,11 +12,13 @@ const Login = () => {
   const [error, setError] = useState('');
   const { login } = useAuth(); // Use the login function from AuthContext
   const navigate = useNavigate(); // Use navigate to change the route
+  const { setWaiting } = useSpinner();
   
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setWaiting(true);
       const response = await axios.post('http://localhost:5000/auth/login', {
         username,
         password,
@@ -28,7 +31,9 @@ const Login = () => {
     } catch (error) {
       console.error(error);
       setError('Invalid username or password');
-    } 
+    } finally {
+      setWaiting(false);
+    }
   };
 
   return (
