@@ -243,6 +243,7 @@ const ManageBranches = () => {
       <div style={styles.dashboardbox}>
         <h2 style={styles.dashboardTitle}>Technician Dashboard</h2>
       </div>
+      <div></div>
       <div style={styles.ContentBox}>
         <h2 style={styles.ContentTitle}>Manage Branches</h2>
       </div>
