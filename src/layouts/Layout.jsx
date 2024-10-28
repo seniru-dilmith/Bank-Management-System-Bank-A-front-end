@@ -26,7 +26,7 @@ const Layout = ({ children, NavigationBar }) => {
         {/* Logo and description */}
         <div className="footer-logo-section">
           <img src={logo} alt="Bank Logo" className="logo" />
-          <h2 className="bank-name">ABC Online Banking</h2> 
+          <h2 className="bank-name">A Online Banking</h2> 
           <p>
             Safe Trust and Future
           </p>

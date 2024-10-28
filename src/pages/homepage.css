@@ -1,0 +1,58 @@
+/* General Container */
+.welcome-section {
+    min-height: 60vh; /* You can adjust this value for height */
+    width: 80vw; /* Adjusted width for wider boxes */
+    max-width: 1200px; /* Optional: limit max width for larger screens */
+    background-size: cover;
+    background-position: center;
+    padding: 40px;
+    color: white;
+    margin: 20px auto; /* Center boxes with margin */
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out; /* Smooth transition on hover */
+    border-radius: 10px; /* Optional: add rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Optional: add shadow */
+    background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+  }
+  
+  /* Overlay for Transparency */
+  .welcome-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1); /* White overlay with transparency */
+    border-radius: 10px; /* Match box border-radius */
+    transition: background 0.3s ease-in-out; /* Smooth transition for hover effect */
+  }
+  
+  /* Text Styles */
+  .welcome-section h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.95); /* Increased opacity for better contrast */
+    transition: color 0.3s ease; /* Smooth color transition */
+  }
+  
+  .welcome-section p {
+    font-size: 1.2em;
+    text-align: center;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.95); /* Increased opacity for better contrast */
+    max-width: 800px;
+  }
+  
+  /* Hover Effects */
+  .welcome-section:hover {
+    transform: translateY(-10px); /* Raise the section on hover */
+  }
+  
+  .welcome-section:hover h1 {
+    color: #ffcc00; /* Adds a golden glow to headings on hover */
+  }
+  
