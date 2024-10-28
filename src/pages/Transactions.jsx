@@ -41,7 +41,7 @@ const Transactions = () => {
       // Make the POST request to the backend
       const response = await axios.post('http://localhost:5000/transactions/do-transaction', formData, {
         headers: {
-          'Authorization': `Bearer ${token}`, // Include JWT in the Authorization header
+          'Authorization': 'Bearer ${token}', // Include JWT in the Authorization header
           'Content-Type': 'application/json',
         },
       });
