@@ -23,10 +23,12 @@ const HomePage = () => {
 
   const paragraphStyle = {
     fontSize: '1.2em',
+    textAlign: 'left',
     lineHeight: '1.5',
     maxWidth: '800px',
     color: 'rgba(255, 255, 255, 0.85)', // Adjusted for contrast
   };
+  
 
   return (
     <Layout NavigationBar={<HomeNaviBar />}>

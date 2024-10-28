@@ -70,11 +70,14 @@ const Transactions = () => {
 
   return (
     <Layout NavigationBar={<CustomerNaviBar />}>
-      <div style={styles.transactionsContainer}>
-        <div style={styles.CustomerDashboardBox}>
+      <div style={styles.CustomerDashboardBox}>
           <h2 style={styles.CustomerDashboardTitle}>Customer Dashboard</h2>
         </div>
-
+        <div></div>
+        <div style={styles.ContentBox}>
+          <h2 style={styles.ContentTitle}>Transaction Section</h2>
+      </div>
+      <div style={styles.transactionsContainer}>
         {/* Centered Transactions Box */}
         <div style={styles.transactionsBox}>
           <h3>Transactions</h3>
@@ -161,7 +164,7 @@ const styles = {
     padding: '20px',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   transactionsBox: {
     backgroundColor: 'white',
@@ -197,6 +200,19 @@ const styles = {
     display: 'inline-block',
   },
   CustomerDashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
+  ContentBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+    textAlign: 'center', // Center text inside the box
+  },
+  ContentTitle: {
     fontSize: '1.8rem',
     color: '#fff',
     margin: '0',
