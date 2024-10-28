@@ -7,27 +7,10 @@ const THelp = () => {
   useAuth(); // Redirect to login if token is invalid
   return (
     <Layout NavigationBar={<TechnicianNaviBar/>}>
-      <div style={styles.dashboardbox}>
-          <h2 style={styles.dashboardTitle}>Help Technicians</h2>
-        </div>
+      <h1>Help technicians</h1>
     </Layout>
   );
 };
-const styles = {
-  dashboardbox: {
-    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
-    padding: '10px 20px',
-    borderRadius: '20px',
-    marginBottom: '20px',
-    display: 'inline-block',
-    float: 'left',
-  },
-  dashboardTitle: {
-    fontSize: '1.8rem',
-    color: '#fff',
-    margin: '0',
-  },
-}
 
 
 export default THelp;

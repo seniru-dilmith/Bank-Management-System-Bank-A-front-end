@@ -10,7 +10,7 @@ const Layout = ({ children, NavigationBar }) => {
       <div className="header">
         <div className="logo-container">
           <img src={logo} alt="Bank Logo" className="logo" />
-          <h2 className="bank-name">ABC Online Banking</h2> 
+          <h2 className="bank-name">A Online Banking</h2> 
         </div>
         <div className="nav-container">
           {NavigationBar}
@@ -77,6 +77,7 @@ const Layout = ({ children, NavigationBar }) => {
       </div>
     </footer>
     </div>
+    
   );
 };
 

@@ -237,8 +237,9 @@ const styles = {
   container: {
     padding: '40px 20px',
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    flexDirection: 'column', // Changed to column for stacking ContentBox and LoanDetailsBox
+    alignItems: 'center', // Center items horizontally
+    gap: '20px', // Space between Customer Dashboard and Loan Application
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     height: 'auto',
@@ -250,9 +251,7 @@ const styles = {
     padding: '10px 20px',
     borderRadius: '20px',
     marginBottom: '20px',
-    width: '100%',
-    maxWidth: '600px',
-    textAlign: 'left',
+    display: 'inline-block',
   },
   CustomerDashboardTitle: {
     fontSize: '1.8rem',
@@ -264,9 +263,8 @@ const styles = {
     borderRadius: '10px',
     padding: '30px',
     width: '100%',
-    maxWidth: '600px',
+    maxWidth: '600px', // Center box will be wider
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-    marginBottom: '40px',
     textAlign: 'center',
   },
   formGroup: {
@@ -308,6 +306,19 @@ const styles = {
     cursor: 'pointer',
     width: '100%',
     marginTop: '20px',
+  },
+  ContentBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+    textAlign: 'center', // Center text inside the box
+  },
+  ContentTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
   },
 };
 

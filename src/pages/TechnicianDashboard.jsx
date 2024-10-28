@@ -10,12 +10,11 @@ const TechnicianDashboard = () => {
 
   return (
     <Layout NavigationBar={<TechnicianNaviBar />}>
-      <div style={styles.container}>
-        {/* Gradient box for the Technician Dashboard title */}
-        <div style={styles.dashboardBox}>
+      <div style={styles.dashboardbox}>
           <h2 style={styles.dashboardTitle}>Technician Dashboard</h2>
         </div>
-        <h3 style={styles.manageTitle}>Manage</h3>
+      <div style={styles.container}>
+        {/* Gradient box for the Technician Dashboard title */}
         <div style={styles.buttonContainer}>
           <button
             style={styles.button}
@@ -36,6 +35,18 @@ const TechnicianDashboard = () => {
 };
 
 const styles = {
+  dashboardbox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+  },
+  dashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
   container: {
     display: 'flex',
     flexDirection: 'column',

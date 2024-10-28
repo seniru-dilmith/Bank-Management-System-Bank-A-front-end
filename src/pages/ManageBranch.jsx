@@ -125,9 +125,6 @@ const ManageBranch = () => {
         <h2 style={styles.ContentTitle}>Manage Branch</h2>
       </div>
       <div style={styles.dashboard}>
-      <div style={styles.dashboardBox}>
-          <h2 style={styles.dashboardTitle}>Manage Branch Section</h2>
-        </div>
         <div style={styles.infoBox}>
           <h3 style={styles.title}>Branch Information</h3>
           <p style={styles.detailItem}><strong>Name:</strong> {branchInfo.name}</p>
@@ -187,30 +184,10 @@ const ManageBranch = () => {
 const styles = {
   dashboard: {
     display: 'flex',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-around',
     alignItems: 'flex-start',
     padding: '2rem',
     gap: '2rem',
-  },
-  dashboardWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '2rem',
-    gap: 'rem',
-    width: '100%',
-  },
-  dashboardTitle: {
-    fontSize: '1.8rem',
-    color: '#fff',
-    margin: '0',
-  },
-  dashboardBox: {
-    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
-    padding: '10px 20px',
-    borderRadius: '20px',
-    marginBottom: '20px',
-    display: 'inline-block',
   },
   infoBox: {
     backgroundColor: '#f4f4f4',

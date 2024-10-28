@@ -72,9 +72,6 @@ const Settings = () => {
       default:
         return (
           <div style={styles.buttonContainer}>
-            <div style={styles.dashboardbox}>
-              <h2 style={styles.dashboardTitle}>Settings</h2>
-            </div>
             <Link to="/settings/change-password">
               <button style={styles.button}>Change Password</button>
             </Link>
@@ -112,6 +109,9 @@ const Settings = () => {
 
   return (
     <Layout NavigationBar={<CustomerNaviBar />}>
+      <div style={styles.CustomerDashboardBox}>
+          <h2 style={styles.CustomerDashboardTitle}>Customer Dashboard</h2>
+        </div>
       <div style={styles.loginPage}>
         {renderForm()}
       </div>
@@ -120,6 +120,18 @@ const Settings = () => {
 };
 
 const styles = {
+  CustomerDashboardBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+  },
+  CustomerDashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
   loginPage: {
     display: "flex",
     justifyContent: "center",
@@ -131,18 +143,6 @@ const styles = {
     backgroundRepeat: "no-repeat",
     padding: "20px",
     boxSizing: "border-box",
-  },
-  dashboardbox: {
-    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
-    padding: '10px 20px',
-    borderRadius: '20px',
-    marginBottom: '20px',
-    display: 'inline-block',
-  },
-  dashboardTitle: {
-    fontSize: '1.8rem',
-    color: '#fff',
-    margin: '0',
   },
   loginBox: {
     backgroundColor: "rgba(255, 255, 255, 0.9)",
