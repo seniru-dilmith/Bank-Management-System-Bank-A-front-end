@@ -116,12 +116,11 @@ const LoanDetails = () => {
       <div style={styles.CustomerDashboardBox}>
           <h2 style={styles.CustomerDashboardTitle}>Customer Dashboard</h2>
         </div>
-      <div style={styles.container}>
-      <div style={styles.ContentBox}>
+        <div></div>
+        <div style={styles.ContentBox}>
           <h2 style={styles.ContentTitle}>Loans Section</h2>
       </div>
-        
-
+      <div style={styles.container}>
         {/* Loan Application Form */}
         <div style={styles.loanDetailsBox}>
           <h3>Loan Application</h3>

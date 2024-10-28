@@ -66,13 +66,13 @@ const Layout = ({ children, NavigationBar }) => {
             <li><b>Mobile Number</b></li>
             <li>071 123 4568</li>
             <li><b>Email</b></li>
-            <li>abcbank@gmail.com</li>
+            <li>abank@gmail.com</li>
           </ul>
         </div>
 
         <div className="footer-address">
           <h4>Address</h4>
-          <p>No.123,University of Moratuwa,Katubadda</p>
+          <p>Seychelles</p>
         </div>
       </div>
     </footer>
