@@ -41,7 +41,7 @@ const Transactions = () => {
       // Make the POST request to the backend
       const response = await axios.post('http://localhost:5000/transactions/do-transaction', formData, {
         headers: {
-          'Authorization': `Bearer ${token}`, // Include JWT in the Authorization header
+          'Authorization': 'Bearer ${token}', // Include JWT in the Authorization header
           'Content-Type': 'application/json',
         },
       });
@@ -70,8 +70,7 @@ const Transactions = () => {
 
   return (
     <Layout NavigationBar={<CustomerNaviBar />}>
-      <div style={styles.transactionsContainer}>
-        <div style={styles.CustomerDashboardBox}>
+      <div style={styles.CustomerDashboardBox}>
           <h2 style={styles.CustomerDashboardTitle}>Customer Dashboard</h2>
         </div>
         <div></div>
@@ -165,29 +164,25 @@ const styles = {
     padding: '20px',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
-  
   transactionsBox: {
     backgroundColor: 'white',
     borderRadius: '10px',
     padding: '20px',
     width: '300px',
-    margin: '20px 0',  // Keeps the vertical spacing
+    margin: '20px auto',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
-
   formGroup: {
     marginBottom: '15px',
   },
-  
   inputField: {
     width: '100%',
     padding: '10px',
     borderRadius: '5px',
     border: '1px solid #ccc',
   },
-  
   transferBtn: {
     backgroundColor: '#ff7300',
     color: 'white',
@@ -197,7 +192,6 @@ const styles = {
     fontSize: '16px',
     cursor: 'pointer',
   },
-
   CustomerDashboardBox: {
     background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
     padding: '10px 20px',
@@ -205,13 +199,24 @@ const styles = {
     marginBottom: '20px',
     display: 'inline-block',
   },
-
   CustomerDashboardTitle: {
     fontSize: '1.8rem',
     color: '#fff',
     margin: '0',
   },
+  ContentBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+    textAlign: 'center', // Center text inside the box
+  },
+  ContentTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
 };
-
 
 export default Transactions;
