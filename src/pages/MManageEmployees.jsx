@@ -291,7 +291,7 @@ const MManageEmployees = () => {
       <div style={styles.container}>
         <button style={styles.addButton} onClick={handleAddEmployee}>
           Add New Employee
-        </button> */}
+        </button> 
         <table style={styles.table}>
           <thead>
             <tr>
