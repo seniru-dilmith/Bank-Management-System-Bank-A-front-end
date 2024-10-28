@@ -74,7 +74,11 @@ const Transactions = () => {
         <div style={styles.CustomerDashboardBox}>
           <h2 style={styles.CustomerDashboardTitle}>Customer Dashboard</h2>
         </div>
-
+        <div></div>
+        <div style={styles.ContentBox}>
+          <h2 style={styles.ContentTitle}>Transaction Section</h2>
+      </div>
+      <div style={styles.transactionsContainer}>
         {/* Centered Transactions Box */}
         <div style={styles.transactionsBox}>
           <h3>Transactions</h3>
