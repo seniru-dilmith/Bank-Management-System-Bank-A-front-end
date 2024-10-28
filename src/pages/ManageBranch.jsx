@@ -117,6 +117,13 @@ const ManageBranch = () => {
 
   return (
     <Layout NavigationBar={<ManagerNaviBar />}>
+      <div style={styles.dashboardbox}>
+        <h2 style={styles.dashboardTitle}>Branch Manager Dashboard</h2>
+      </div>
+      <div></div>
+      <div style={styles.ContentBox}>
+        <h2 style={styles.ContentTitle}>Manage Branch</h2>
+      </div>
       <div style={styles.dashboard}>
         <div style={styles.infoBox}>
           <h3 style={styles.title}>Branch Information</h3>
@@ -228,6 +235,32 @@ const styles = {
     cursor: 'pointer',
     fontSize: '1rem',
   },
+  dashboardbox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+  },
+  dashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
+  ContentBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+    textAlign: 'center',
+  },
+  ContentTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
 };
+
 
 export default ManageBranch;
