@@ -114,9 +114,6 @@ const ApproveLoans = () => {
         <div style={styles.dashboardBox}>
           <h2 style={styles.dashboardTitle}>Approve Loans Section</h2>
         </div>
-        <div style={styles.ContentBox}>
-          <h2 style={styles.ContentTitle}>Approve Loans</h2>
-      </div>
 
         <table style={styles.table}>
           <thead>
@@ -221,19 +218,6 @@ const styles = {
     marginTop: '20px',
     fontWeight: 'bold',
     color: '#fff',
-  },
-  ContentBox: {
-    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
-    padding: '10px 20px',
-    borderRadius: '20px',
-    marginBottom: '20px',
-    display: 'inline-block',
-    textAlign: 'center', // Center text inside the box
-  },
-  ContentTitle: {
-    fontSize: '1.8rem',
-    color: '#fff',
-    margin: '0',
   },
 };
 

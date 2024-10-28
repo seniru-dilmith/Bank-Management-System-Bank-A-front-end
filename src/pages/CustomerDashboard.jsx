@@ -109,27 +109,8 @@ const CustomerDashboard = () => {
       boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",
       width: "90%",
       maxWidth: "500px",
-      textAlign: "left",
+      textAlign: "center",
       marginBottom: "2rem",
-    },
-    dashboardbox: {
-      background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
-      padding: '10px 20px',
-      borderRadius: '20px',
-      marginBottom: '20px',
-      display: 'inline-block',
-    },
-    dashboardTitle: {
-      fontSize: '1.8rem',
-      color: '#fff',
-      margin: '0',
-    },
-    detailItem: {
-      fontSize: '1.2rem',
-      marginBottom: '1rem',
-      color: 'black', // Set text color to black
-      textAlign: 'left', // Align text to the left
-      lineHeight: '1.5rem',
     },
     transactionsContainer: {
       backgroundColor: "rgba(255, 255, 255, 0.9)",
@@ -163,11 +144,8 @@ const CustomerDashboard = () => {
   return (
     <Layout NavigationBar={<CustomerNaviBar />}>
       <div style={styles.container}>
-        <div style={styles.dashboardbox}>
-          <h2 style={styles.dashboardTitle}>Customer Dashboard</h2>
-        </div>
         <div style={styles.dashboardBox}>
-          <h3 style={styles.heading}>Account Summery</h3>
+          <h2>Account Summary</h2>
           <div>
             <label>Select Account: </label>
             <select value={selectedAccount} onChange={handleAccountChange}>
@@ -178,8 +156,8 @@ const CustomerDashboard = () => {
               ))}
             </select>
           </div>
-          <p style={styles.detailItem}><strong>Account Type:</strong> {accountType}</p>
-          <p style={styles.detailItem}><strong>Current Balance:</strong> ${currentBalance}</p>
+          <p><strong>Account Type:</strong> {accountType}</p>
+          <p><strong>Current Balance:</strong> ${currentBalance}</p>
         </div>
 
         <div style={styles.transactionsContainer}>
