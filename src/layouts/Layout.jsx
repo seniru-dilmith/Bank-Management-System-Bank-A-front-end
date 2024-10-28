@@ -1,5 +1,7 @@
 import React from "react";
 import './layout.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebookF, faTwitter, faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import logo from './ABCLogo.png'; // Adjust the path to your logo
 
 const Layout = ({ children, NavigationBar }) => {
