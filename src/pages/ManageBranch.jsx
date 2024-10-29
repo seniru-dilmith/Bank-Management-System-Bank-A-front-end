@@ -31,7 +31,7 @@ const ManageBranch = () => {
       setWaiting(true); // Set waiting state to show spinner
       const backend_port = process.env.REACT_APP_BACKEND_PORT;
       const response = await axios.get(
-        'http://localhost:${backend_port}/branch-manager/get-branch-details',
+        `http://localhost:${backend_port}/branch-manager/get-branch-details`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Add JWT token to request headers

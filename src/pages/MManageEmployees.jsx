@@ -140,7 +140,7 @@ const MManageEmployees = () => {
       setWaiting(true); // Show loading spinner
       const backend_port = process.env.REACT_APP_BACKEND_PORT;
       const branchResponse = await axios.get(
-        'http://localhost:${backend_port}/branch-manager/get-branch-id',
+        `http://localhost:${backend_port}/branch-manager/get-branch-id`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Add JWT token to request headers
