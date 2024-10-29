@@ -20,6 +20,7 @@ const ManageBranch = () => {
     contactNumber: '',
   });
 
+  const [showEditBox, setShowEditBox] = useState(false); // New state for toggling edit box visibility
   const { setWaiting } = useSpinner();
 
   const token = localStorage.getItem('token'); // Get JWT token from localStorage
@@ -28,8 +29,9 @@ const ManageBranch = () => {
   const fetchBranchInfo = async () => {
     try {
       setWaiting(true); // Set waiting state to show spinner
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
       const response = await axios.get(
-        'http://localhost:5000/branch-manager/get-branch-details',
+        `http://localhost:${backend_port}/branch-manager/get-branch-details`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Add JWT token to request headers
@@ -93,6 +95,7 @@ const ManageBranch = () => {
       }));
 
       alert('Branch details updated successfully!');
+      setShowEditBox(false); // Hide edit box after saving
     } catch (error) {
       console.error('Error updating branch details:', error);
       alert('Failed to update branch details. Please try again.');
@@ -115,6 +118,13 @@ const ManageBranch = () => {
 
   return (
     <Layout NavigationBar={<ManagerNaviBar />}>
+      <div style={styles.dashboardbox}>
+        <h2 style={styles.dashboardTitle}>Branch Manager Dashboard</h2>
+      </div>
+      <div></div>
+      <div style={styles.ContentBox}>
+        <h2 style={styles.ContentTitle}>Manage Branch</h2>
+      </div>
       <div style={styles.dashboard}>
         <div style={styles.infoBox}>
           <h3 style={styles.title}>Branch Information</h3>
@@ -123,48 +133,50 @@ const ManageBranch = () => {
           <p style={styles.detailItem}><strong>Contact Number:</strong> {branchInfo.contactNumber}</p>
           <button
             style={styles.button}
-            onClick={() => setEditInfo(branchInfo)}
+            onClick={() => setShowEditBox(true)} // Show edit box when clicked
           >
             Change Details
           </button>
         </div>
 
-        <div style={styles.infoBox}>
-          <h3 style={styles.title}>Edit Branch Information</h3>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Name</label>
-            <input
-              type="text"
-              name="name"
-              value={editInfo.name}
-              onChange={handleChange}
-              style={styles.input}
-            />
+        {showEditBox && ( // Conditionally render edit box
+          <div style={styles.infoBox}>
+            <h3 style={styles.title}>Edit Branch Information</h3>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Name</label>
+              <input
+                type="text"
+                name="name"
+                value={editInfo.name}
+                onChange={handleChange}
+                style={styles.input}
+              />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Address</label>
+              <input
+                type="text"
+                name="address"
+                value={editInfo.address}
+                onChange={handleChange}
+                style={styles.input}
+              />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Contact Number</label>
+              <input
+                type="text"
+                name="contactNumber"
+                value={editInfo.contactNumber}
+                onChange={handleChange}
+                style={styles.input}
+              />
+            </div>
+            <button style={styles.button} onClick={handleSaveDetails}>
+              Save Details
+            </button>
           </div>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Address</label>
-            <input
-              type="text"
-              name="address"
-              value={editInfo.address}
-              onChange={handleChange}
-              style={styles.input}
-            />
-          </div>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Contact Number</label>
-            <input
-              type="text"
-              name="contactNumber"
-              value={editInfo.contactNumber}
-              onChange={handleChange}
-              style={styles.input}
-            />
-          </div>
-          <button style={styles.button} onClick={handleSaveDetails}>
-            Save Details
-          </button>
-        </div>
+        )}
       </div>
     </Layout>
   );
@@ -224,6 +236,32 @@ const styles = {
     cursor: 'pointer',
     fontSize: '1rem',
   },
+  dashboardbox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+  },
+  dashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
+  ContentBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+    textAlign: 'center',
+  },
+  ContentTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
 };
+
 
 export default ManageBranch;

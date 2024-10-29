@@ -90,7 +90,33 @@ const styles = {
     backgroundColor: '#dc3545',
     color: 'white',
   },
+  ContentBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+    textAlign: 'center', // Center text inside the box
+  },
+  ContentTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
+  dashboardbox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+  },
+  dashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin:'0',
+  },
 };
+
 
 const ManageEmployees = () => {
   useAuth(); // Custom hook to check for authentication
@@ -108,8 +134,8 @@ const ManageEmployees = () => {
     try {
       setWaiting(true); // Show spinner
       const token = localStorage.getItem('token'); // Get the token from local storage
-
-      const response = await axios.get('http://localhost:5000/employee-management/employees', {
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      const response = await axios.get(`http://localhost:${backend_port}/employee-management/employees`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -128,7 +154,8 @@ const ManageEmployees = () => {
     try {
       setWaiting(true); // Show spinner
       const token = localStorage.getItem('token'); // Get the token from local storage
-      const response = await axios.get('http://localhost:5000/employee-management/positions', {
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      const response = await axios.get(`http://localhost:${backend_port}/employee-management/positions`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -171,7 +198,8 @@ const ManageEmployees = () => {
     try {
       setWaiting(true); // Show spinner
       const token = localStorage.getItem('token'); // Get the token from local storage
-      const response = await axios.post('http://localhost:5000/employee-management/add-employee', newEmployee, {
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      const response = await axios.post(`http://localhost:${backend_port}/employee-management/add-employee`, newEmployee, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -210,7 +238,8 @@ const ManageEmployees = () => {
     try {
       setWaiting(true); // Show spinner
       const token = localStorage.getItem('token');
-      await axios.put('http://localhost:5000/employee-management/update-employee', updatedEmployeeData, {
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      await axios.put(`http://localhost:${backend_port}/employee-management/update-employee`, updatedEmployeeData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setEditingId(null);
@@ -242,7 +271,8 @@ const ManageEmployees = () => {
       try {
         setWaiting(true); // Show spinner
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/employee-management/remove-employee/${employeeToRemove}`, {
+        const backend_port = process.env.REACT_APP_BACKEND_PORT;
+        await axios.delete(`http://localhost:${backend_port}/employee-management/remove-employee/${employeeToRemove}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -263,6 +293,13 @@ const ManageEmployees = () => {
 
   return (
     <Layout NavigationBar={<TechnicianNaviBar />}>
+      <div style={styles.dashboardbox}>
+          <h2 style={styles.dashboardTitle}>Technician Dashboard</h2>
+        </div>
+        <div></div>
+        <div style={styles.ContentBox}>
+          <h2 style={styles.ContentTitle}>Manage Employees</h2>
+      </div>
       <div style={styles.container}>
         
         {/* <button style={styles.addButton} onClick={handleAddEmployee}>

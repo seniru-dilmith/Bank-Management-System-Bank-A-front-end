@@ -20,8 +20,9 @@ const EmployeeDashboard = () => {
         setWaiting(true);
         const token = localStorage.getItem('token');
         const emp_id = jwtDecode(token).id;
+        const backend_port = process.env.REACT_APP_BACKEND_PORT;
         const account_summaries = await axios.get(
-          `http://localhost:5000/customer-account/account-summaries/${emp_id}`,
+          `http://localhost:${backend_port}/customer-account/account-summaries/${emp_id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -51,8 +52,9 @@ const EmployeeDashboard = () => {
       try {
         setWaiting(true);
         const token = localStorage.getItem('token');
+        const backend_port = process.env.REACT_APP_BACKEND_PORT;
         const response = await axios.get(
-          'http://localhost:5000/transactions/recent-transactions',
+          `http://localhost:${backend_port}/transactions/recent-transactions`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -113,14 +115,32 @@ const EmployeeDashboard = () => {
       fontSize: '2rem',
       marginBottom: '1rem',
     },
+    dashboardbox: {
+      background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+      padding: '10px 20px',
+      borderRadius: '20px',
+      marginBottom: '20px',
+      display: 'inline-block',
+    },
+    dashboardTitle: {
+      fontSize: '1.8rem',
+      color: '#fff',
+      margin: '0',
+    },
   };
+
+
+
 
   return (
     <Layout NavigationBar={<EmployeeNaviBar />}>
+      <div style={styles.dashboardbox}>
+          <h2 style={styles.dashboardTitle}>Employee Dashboard</h2>
+        </div>
       <div style={styles.container}>
         {/* Customer Account Summaries Section */}
         <div style={styles.dashboardBox}>
-          <h2 style={styles.heading}>Customer Account Summaries</h2>
+          <h3 style={styles.heading}>Customer Account Summaries</h3>
           <table style={styles.table}>
             <thead>
               <tr>

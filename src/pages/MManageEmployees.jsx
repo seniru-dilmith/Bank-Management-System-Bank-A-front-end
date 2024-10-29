@@ -11,6 +11,7 @@ const styles = {
     width: '90%',
     margin: '0 auto',
     textAlign: 'center',
+    
   },
   table: {
     width: '100%',
@@ -91,7 +92,33 @@ const styles = {
     backgroundColor: '#dc3545',
     color: 'white',
   },
+  dashboardbox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+  },
+  dashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
+  ContentBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+    textAlign: 'center',
+  },
+  ContentTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
 };
+
 
 const MManageEmployees = () => {
   useAuth(); // Custom hook to check for JWT token
@@ -111,8 +138,9 @@ const MManageEmployees = () => {
   const fetchBranchId = async () => {
     try {
       setWaiting(true); // Show loading spinner
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
       const branchResponse = await axios.get(
-        'http://localhost:5000/branch-manager/get-branch-id',
+        `http://localhost:${backend_port}/branch-manager/get-branch-id`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Add JWT token to request headers
@@ -131,7 +159,8 @@ const MManageEmployees = () => {
   const fetchPositions = async () => {
     try {
       setWaiting(true); // Show loading spinner
-      const response = await axios.get('http://localhost:5000/branch-manager/get-positions', {
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      const response = await axios.get(`http://localhost:${backend_port}/branch-manager/get-positions`, {
         headers: {
           Authorization: `Bearer ${token}`, // Add JWT token to request headers
         },
@@ -149,8 +178,9 @@ const MManageEmployees = () => {
   const fetchEmployees = async (branchId) => {
     try {
       setWaiting(true); // Show loading spinner
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
       const response = await axios.get(
-        `http://localhost:5000/employee/general/branch/${branchId}`,
+        `http://localhost:${backend_port}/employee/general/branch/${branchId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Add JWT token to request headers
@@ -204,8 +234,9 @@ const MManageEmployees = () => {
   const handleSaveNewEmployee = async () => {
     try {
       setWaiting(true); // Show loading spinner
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
       const response = await axios.post(
-        'http://localhost:5000/employee/add',
+        `http://localhost:${backend_port}/employee/add`,
         newEmployee,
         {
           headers: {
@@ -231,8 +262,9 @@ const MManageEmployees = () => {
     const employeeToUpdate = employees.find((employee) => employee.id === id);
     try {
       setWaiting(true); // Show loading spinner
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
       await axios.put(
-        `http://localhost:5000/employee/update/${id}`,
+        `http://localhost:${backend_port}/employee/update/${id}`,
         employeeToUpdate,
         {
           headers: {
@@ -257,8 +289,9 @@ const MManageEmployees = () => {
   const handleRemoveEmployee = async () => {
     try {
       setWaiting(true); // Show loading spinner
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
       await axios.delete(
-        `http://localhost:5000/employee/delete/${employeeToRemove}`,
+        `http://localhost:${backend_port}/employee/delete/${employeeToRemove}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Include token in the request
@@ -288,10 +321,15 @@ const MManageEmployees = () => {
 
   return (
     <Layout NavigationBar={<ManagerNaviBar />}>
+      <div style={styles.dashboardbox}>
+          <h2 style={styles.dashboardTitle}>Branch Manager Dashboard</h2>
+        </div>
+        <div></div>
+        <div style={styles.ContentBox}>
+          <h2 style={styles.ContentTitle}>Manage Employees</h2>
+      </div>
       <div style={styles.container}>
-        <button style={styles.addButton} onClick={handleAddEmployee}>
-          Add New Employee
-        </button>
+       
         <table style={styles.table}>
           <thead>
             <tr>

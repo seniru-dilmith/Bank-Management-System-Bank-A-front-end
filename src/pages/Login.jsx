@@ -19,7 +19,8 @@ const Login = () => {
     e.preventDefault();
     try {
       setWaiting(true);
-      const response = await axios.post('http://localhost:5000/auth/login', {
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      const response = await axios.post(`http://localhost:${backend_port}/auth/login`, {
         username,
         password,
       });

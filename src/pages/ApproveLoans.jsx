@@ -19,7 +19,8 @@ const ApproveLoans = () => {
       try {
         setWaiting(true);
         const token = localStorage.getItem('token'); // Get JWT token from localStorage
-        const response = await axios.get('http://localhost:5000/loan-approval/pending-loans', {
+        const backend_port = process.env.REACT_APP_BACKEND_PORT;
+        const response = await axios.get(`http://localhost:${backend_port}/loan-approval/pending-loans`, {
           headers: {
             'Authorization': `Bearer ${token}`, // Include JWT in Authorization header
           },
@@ -40,7 +41,8 @@ const ApproveLoans = () => {
     try {
       setWaiting(true);
       const token = localStorage.getItem('token');
-      await axios.put('http://localhost:5000/loan-approval/update-loan-status', 
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      await axios.put(`http://localhost:${backend_port}/loan-approval/update-loan-status`, 
         {
           loanId: loanId,
           action: action,
@@ -114,7 +116,9 @@ const ApproveLoans = () => {
         <div style={styles.dashboardBox}>
           <h2 style={styles.dashboardTitle}>Branch Manager Dashboard</h2>
         </div>
-
+        <div style={styles.ContentBox}>
+          <h2 style={styles.ContentTitle}>Approve Loans</h2>
+        </div>
         <table style={styles.table}>
           <thead>
             <tr>
@@ -219,6 +223,20 @@ const styles = {
     fontWeight: 'bold',
     color: '#fff',
   },
+  ContentBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+    textAlign: 'center', // Center text inside the box
+  },
+  ContentTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin:'0',
+  },
 };
+
 
 export default ApproveLoans;

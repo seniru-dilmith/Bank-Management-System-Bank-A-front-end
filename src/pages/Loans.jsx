@@ -1,28 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Import axios for API requests
+import axios from 'axios';
 import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
 import useAuth from '../utils/useAuth';
 import { useSpinner } from '../utils/SpinnerContext';
 
 const LoanDetails = () => {
-  useAuth(); // Redirect to login if token is invalid
-  // State to manage form inputs
+  useAuth();
+
+  // State to manage form inputs with loanType set to "3" by default
   const [formData, setFormData] = useState({
-    loanType: '',
+    loanType: '3', // Default loan type set to "3"
     amount: '',
     duration: '',
   });
 
-  // State for Active Loan table inputs
-  const [activeLoan, setActiveLoan] = useState({
-    loanType: '',
-    amountBorrowed: '',
-    outstandingBalance: '',
-    nextPaymentDate: '',
-  });
+  // State for multiple Active Loan table entries with dummy data
+  const [activeLoans, setActiveLoans] = useState([
+    {
+      loanType: 'Personal Loan',
+      amountBorrowed: '5000',
+      outstandingBalance: '1500',
+      nextPaymentDate: '2024-11-15',
+    },
+    {
+      loanType: 'Home Loan',
+      amountBorrowed: '200000',
+      outstandingBalance: '175000',
+      nextPaymentDate: '2024-12-01',
+    },
+    {
+      loanType: 'Auto Loan',
+      amountBorrowed: '30000',
+      outstandingBalance: '25000',
+      nextPaymentDate: '2024-12-20',
+    },
+  ]);
 
-  // State for messages (success or error)
   const [message, setMessage] = useState(null);
   const { setWaiting } = useSpinner();
 
@@ -35,105 +49,54 @@ const LoanDetails = () => {
     });
   };
 
-  // Handle input change for the Active Loans table
-  const handleLoanInputChange = (e) => {
-    const { name, value } = e.target;
-    setActiveLoan({
-      ...activeLoan,
-      [name]: value,
-    });
-  };
-
   // Handle form submit for loan request
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setWaiting(true); // Set waiting state to show spinner
-      const token = localStorage.getItem('token'); // Get JWT token from localStorage
+      setWaiting(true);
+      const token = localStorage.getItem('token');
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
 
       // Make the POST request to the backend
-      const response = await axios.post('http://localhost:5000/loans/request-loan', formData, {
+      const response = await axios.post(`http://localhost:${backend_port}/loans/request-loan`, formData, {
         headers: {
-          'Authorization': `Bearer ${token}`, // Include JWT in Authorization header
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
 
-      // Handle success response
       setMessage('Loan application submitted successfully!');
+      alert('Loan application submitted successfully!');
       console.log('Loan application response:', response.data);
 
-      // Clear the form
+      // Clear the amount and duration but keep loanType as "3"
       setFormData({
-        loanType: '',
+        loanType: '3',
         amount: '',
         duration: '',
       });
     } catch (error) {
-      // Handle errors
       setMessage('Loan application failed. Please try again.');
+      alert('Loan application failed. Please try again.');
       console.error('Error submitting loan application:', error);
     } finally {
-      setWaiting(false); // Set waiting state to hide spinner
+      setWaiting(false);
     }
   };
 
-  // Fetch active loan details when the component mounts or loanId changes
-  useEffect(() => {
-    const fetchLoanDetails = async (loanId) => {
-      try {
-        setWaiting(true); // Set waiting state to show spinner
-        const token = localStorage.getItem('token'); // Get JWT token from localStorage
-
-        // Make the GET request to the backend
-        const response = await axios.get(`http://localhost:5000/loans/loan-details/${loanId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`, // Include JWT in Authorization header
-          },
-        });
-
-        // Update the active loan state with the fetched data
-        setActiveLoan({
-          loanType: response.data.loanType,
-          amountBorrowed: response.data.amountBorrowed,
-          outstandingBalance: response.data.outstandingBalance,
-          nextPaymentDate: response.data.nextPaymentDate,
-        });
-      } catch (error) {
-        console.error('Error fetching loan details:', error);
-      } finally {
-        setWaiting(false); // Set waiting state to hide spinner
-      }
-    };
-
-    // Assuming we have a loan ID to fetch the loan details, replace `loanId` with the actual ID
-    const loanId = 1; // Replace with the actual loan ID
-    fetchLoanDetails(loanId);
-  }, []); // This will run once when the component mounts
-
   return (
     <Layout NavigationBar={<CustomerNaviBar />}>
+      <div style={styles.CustomerDashboardBox}>
+        <h2 style={styles.CustomerDashboardTitle}>Customer Dashboard</h2>
+      </div>
+      <div></div>
+      <div style={styles.ContentBox}>
+        <h2 style={styles.ContentTitle}>Loans Section</h2>
+      </div>
       <div style={styles.container}>
-        {/* Customer Dashboard Box */}
-        <div style={styles.CustomerDashboardBox}>
-          <h2 style={styles.CustomerDashboardTitle}>Customer Manager Dashboard</h2>
-        </div>
-
-        {/* Loan Application Form */}
         <div style={styles.loanDetailsBox}>
           <h3>Loan Application</h3>
           <form onSubmit={handleSubmit}>
-            <div style={styles.formGroup}>
-              <label>Loan Type:</label>
-              <input
-                type="text"
-                name="loanType"
-                value={formData.loanType}
-                onChange={handleInputChange}
-                style={styles.inputField}
-                required
-              />
-            </div>
             <div style={styles.formGroup}>
               <label>Amount:</label>
               <input
@@ -143,6 +106,7 @@ const LoanDetails = () => {
                 onChange={handleInputChange}
                 style={styles.inputField}
                 required
+                min="0"
               />
             </div>
             <div style={styles.formGroup}>
@@ -154,19 +118,17 @@ const LoanDetails = () => {
                 onChange={handleInputChange}
                 style={styles.inputField}
                 required
+                min="0"
               />
             </div>
 
-            {/* Submit Button */}
             <button type="submit" style={styles.button}>
               Submit Loan Application
             </button>
 
-            {/* Success or error message */}
             {message && <p>{message}</p>}
           </form>
 
-          {/* Active Loans Table */}
           <h3 style={{ ...styles.tableHeader, marginTop: '40px' }}>Active Loans</h3>
           <table style={styles.table}>
             <thead>
@@ -178,51 +140,42 @@ const LoanDetails = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>
-                  <input
-                    type="text"
-                    name="loanType"
-                    value={activeLoan.loanType}
-                    onChange={handleLoanInputChange}
-                    placeholder="Loan Type"
-                    style={styles.tableInputField}
-                    readOnly
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    name="amountBorrowed"
-                    value={activeLoan.amountBorrowed}
-                    onChange={handleLoanInputChange}
-                    placeholder="Amount Borrowed"
-                    style={styles.tableInputField}
-                    readOnly
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    name="outstandingBalance"
-                    value={activeLoan.outstandingBalance}
-                    onChange={handleLoanInputChange}
-                    placeholder="Outstanding Balance"
-                    style={styles.tableInputField}
-                    readOnly
-                  />
-                </td>
-                <td>
-                  <input
-                    type="date"
-                    name="nextPaymentDate"
-                    value={activeLoan.nextPaymentDate}
-                    onChange={handleLoanInputChange}
-                    style={styles.tableInputField}
-                    readOnly
-                  />
-                </td>
-              </tr>
+              {activeLoans.map((loan, index) => (
+                <tr key={index}>
+                  <td>
+                    <input
+                      type="text"
+                      value={loan.loanType}
+                      style={styles.tableInputField}
+                      readOnly
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={loan.amountBorrowed}
+                      style={styles.tableInputField}
+                      readOnly
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={loan.outstandingBalance}
+                      style={styles.tableInputField}
+                      readOnly
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="date"
+                      value={loan.nextPaymentDate}
+                      style={styles.tableInputField}
+                      readOnly
+                    />
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -235,8 +188,9 @@ const styles = {
   container: {
     padding: '40px 20px',
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    flexDirection: 'column', // Changed to column for stacking ContentBox and LoanDetailsBox
+    alignItems: 'center', // Center items horizontally
+    gap: '20px', // Space between Customer Dashboard and Loan Application
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     height: 'auto',
@@ -248,9 +202,7 @@ const styles = {
     padding: '10px 20px',
     borderRadius: '20px',
     marginBottom: '20px',
-    width: '100%',
-    maxWidth: '600px',
-    textAlign: 'left',
+    display: 'inline-block',
   },
   CustomerDashboardTitle: {
     fontSize: '1.8rem',
@@ -262,9 +214,8 @@ const styles = {
     borderRadius: '10px',
     padding: '30px',
     width: '100%',
-    maxWidth: '600px',
+    maxWidth: '600px', // Center box will be wider
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-    marginBottom: '40px',
     textAlign: 'center',
   },
   formGroup: {
@@ -304,8 +255,22 @@ const styles = {
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
-    width: '100%',
+    width: '40%',
     marginTop: '20px',
+    backgroundColor: '#ff7f00',
+  },
+  ContentBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+    textAlign: 'center', // Center text inside the box
+  },
+  ContentTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
   },
 };
 
