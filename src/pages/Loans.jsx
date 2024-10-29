@@ -66,6 +66,7 @@ const LoanDetails = () => {
       });
 
       setMessage('Loan application submitted successfully!');
+      alert('Loan application submitted successfully!');
       console.log('Loan application response:', response.data);
 
       
@@ -76,6 +77,7 @@ const LoanDetails = () => {
       });
     } catch (error) {
       setMessage('Loan application failed. Please try again.');
+      alert('Loan application failed. Please try again.');
       console.error('Error submitting loan application:', error);
     } finally {
       setWaiting(false);
@@ -253,8 +255,9 @@ const styles = {
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
-    width: '100%',
+    width: '40%',
     marginTop: '20px',
+    backgroundColor: '#ff7f00',
   },
   ContentBox: {
     background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
