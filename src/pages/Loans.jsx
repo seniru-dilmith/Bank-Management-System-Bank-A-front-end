@@ -7,6 +7,7 @@ import { useSpinner } from '../utils/SpinnerContext';
 
 const LoanDetails = () => {
   useAuth(); // Redirect to login if token is invalid
+
   // State to manage form inputs
   const [formData, setFormData] = useState({
     loanType: '',
@@ -14,13 +15,27 @@ const LoanDetails = () => {
     duration: '',
   });
 
-  // State for Active Loan table inputs
-  const [activeLoan, setActiveLoan] = useState({
-    loanType: '',
-    amountBorrowed: '',
-    outstandingBalance: '',
-    nextPaymentDate: '',
-  });
+  // State for multiple Active Loan table entries with dummy data
+  const [activeLoans, setActiveLoans] = useState([
+    {
+      loanType: 'Personal Loan',
+      amountBorrowed: '5000',
+      outstandingBalance: '1500',
+      nextPaymentDate: '2024-11-15',
+    },
+    {
+      loanType: 'Home Loan',
+      amountBorrowed: '200000',
+      outstandingBalance: '175000',
+      nextPaymentDate: '2024-12-01',
+    },
+    {
+      loanType: 'Auto Loan',
+      amountBorrowed: '30000',
+      outstandingBalance: '25000',
+      nextPaymentDate: '2024-12-20',
+    },
+  ]);
 
   // State for messages (success or error)
   const [message, setMessage] = useState(null);
@@ -31,15 +46,6 @@ const LoanDetails = () => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
-    });
-  };
-
-  // Handle input change for the Active Loans table
-  const handleLoanInputChange = (e) => {
-    const { name, value } = e.target;
-    setActiveLoan({
-      ...activeLoan,
       [name]: value,
     });
   };
@@ -79,81 +85,74 @@ const LoanDetails = () => {
     }
   };
 
-  // Fetch active loan details when the component mounts or loanId changes
+  // Commented out as we are using dummy data instead of fetching
+  /*
   useEffect(() => {
     const fetchLoanDetails = async (loanId) => {
       try {
-        setWaiting(true); // Set waiting state to show spinner
-        const token = localStorage.getItem('token'); // Get JWT token from localStorage
+        setWaiting(true);
+        const token = localStorage.getItem('token');
         const backend_port = process.env.REACT_APP_BACKEND_PORT;
 
-        // Make the GET request to the backend
         const response = await axios.get(`http://localhost:${backend_port}/loans/loan-details/${loanId}`, {
           headers: {
-            'Authorization': `Bearer ${token}`, // Include JWT in Authorization header
+            'Authorization': `Bearer ${token}`,
           },
         });
 
-        // Update the active loan state with the fetched data
-        setActiveLoan({
-          loanType: response.data.loanType,
-          amountBorrowed: response.data.amountBorrowed,
-          outstandingBalance: response.data.outstandingBalance,
-          nextPaymentDate: response.data.nextPaymentDate,
-        });
+        setActiveLoans(response.data); // Update active loans state with real data if needed
       } catch (error) {
         console.error('Error fetching loan details:', error);
       } finally {
-        setWaiting(false); // Set waiting state to hide spinner
+        setWaiting(false);
       }
     };
 
-    // Assuming we have a loan ID to fetch the loan details, replace `loanId` with the actual ID
-    const loanId = 1; // Replace with the actual loan ID
+    const loanId = 1; // Replace with the actual loan ID if needed
     fetchLoanDetails(loanId);
-  }, []); // This will run once when the component mounts
+  }, []);
+  */
 
   return (
     <Layout NavigationBar={<CustomerNaviBar />}>
-        <div style={styles.CustomerDashboardBox}>
-          <h2 style={styles.CustomerDashboardTitle}>Customer Dashboard</h2>
-        </div>
-        <div></div>
-        <div style={styles.ContentBox}>
-          <h2 style={styles.ContentTitle}>Loans Section</h2>
+      <div style={styles.CustomerDashboardBox}>
+        <h2 style={styles.CustomerDashboardTitle}>Customer Dashboard</h2>
+      </div>
+      <div></div>
+      <div style={styles.ContentBox}>
+        <h2 style={styles.ContentTitle}>Loans Section</h2>
       </div>
       <div style={styles.container}>
         {/* Loan Application Form */}
         <div style={styles.loanDetailsBox}>
           <h3>Loan Application</h3>
           <form onSubmit={handleSubmit}>
-          <div style={styles.formGroup}>
-          <input
-            type="text"
-            name="loanType"
-            value={formData.loanType}
-            onInput={(e) => {
-              const inputValue = e.target.value;
-              const options = ["1.Personal Loan", "2.Home Loan", "3.Auto Loan", "4.Student Loan"];
+            <div style={styles.formGroup}>
+              <input
+                type="text"
+                name="loanType"
+                value={formData.loanType}
+                onInput={(e) => {
+                  const inputValue = e.target.value;
+                  const options = ["1.Personal Loan", "2.Home Loan", "3.Auto Loan", "4.Student Loan"];
 
-              // Only set formData.loanType if input doesn't match a dropdown option
-              if (!options.includes(inputValue)) {
-                handleInputChange(e); // Only call this if it's a custom entry
-              }
-            }}
-            list="loanTypes" // Associates the input with the datalist
-            placeholder="Enter the number manually. Eg : for personal loans please enter 1"
-            style={styles.inputField}
-            required
-          />
-          <datalist id="loanTypes">
-            <option value="1.Personal Loan" />
-            <option value="2.Home Loan" />
-            <option value="3.Auto Loan" />
-            <option value="4.Student Loan" />
-          </datalist>
-          </div>
-          <div style={styles.formGroup}>
+                  if (!options.includes(inputValue)) {
+                    handleInputChange(e); 
+                  }
+                }}
+                list="loanTypes"
+                placeholder="Enter the number manually. Eg : for personal loans please enter 1"
+                style={styles.inputField}
+                required
+              />
+              <datalist id="loanTypes">
+                <option value="1.Personal Loan" />
+                <option value="2.Home Loan" />
+                <option value="3.Auto Loan" />
+                <option value="4.Student Loan" />
+              </datalist>
+            </div>
+            <div style={styles.formGroup}>
               <label>Amount:</label>
               <input
                 type="number"
@@ -162,7 +161,7 @@ const LoanDetails = () => {
                 onChange={handleInputChange}
                 style={styles.inputField}
                 required
-                min="0" // Prevents negative values
+                min="0"
               />
             </div>
             <div style={styles.formGroup}>
@@ -174,7 +173,7 @@ const LoanDetails = () => {
                 onChange={handleInputChange}
                 style={styles.inputField}
                 required
-                min="0" // Prevents negative values
+                min="0"
               />
             </div>
 
@@ -199,51 +198,42 @@ const LoanDetails = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>
-                  <input
-                    type="text"
-                    name="loanType"
-                    value={activeLoan.loanType}
-                    onChange={handleLoanInputChange}
-                    placeholder="Loan Type"
-                    style={styles.tableInputField}
-                    readOnly
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    name="amountBorrowed"
-                    value={activeLoan.amountBorrowed}
-                    onChange={handleLoanInputChange}
-                    placeholder="Amount Borrowed"
-                    style={styles.tableInputField}
-                    readOnly
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    name="outstandingBalance"
-                    value={activeLoan.outstandingBalance}
-                    onChange={handleLoanInputChange}
-                    placeholder="Outstanding Balance"
-                    style={styles.tableInputField}
-                    readOnly
-                  />
-                </td>
-                <td>
-                  <input
-                    type="date"
-                    name="nextPaymentDate"
-                    value={activeLoan.nextPaymentDate}
-                    onChange={handleLoanInputChange}
-                    style={styles.tableInputField}
-                    readOnly
-                  />
-                </td>
-              </tr>
+              {activeLoans.map((loan, index) => (
+                <tr key={index}>
+                  <td>
+                    <input
+                      type="text"
+                      value={loan.loanType}
+                      style={styles.tableInputField}
+                      readOnly
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={loan.amountBorrowed}
+                      style={styles.tableInputField}
+                      readOnly
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={loan.outstandingBalance}
+                      style={styles.tableInputField}
+                      readOnly
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="date"
+                      value={loan.nextPaymentDate}
+                      style={styles.tableInputField}
+                      readOnly
+                    />
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -340,6 +330,5 @@ const styles = {
     margin: '0',
   },
 };
-
 
 export default LoanDetails;
