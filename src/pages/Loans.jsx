@@ -121,24 +121,39 @@ const LoanDetails = () => {
         <div></div>
         <div style={styles.ContentBox}>
           <h2 style={styles.ContentTitle}>Loans Section</h2>
-        </div>
+      </div>
       <div style={styles.container}>
         {/* Loan Application Form */}
         <div style={styles.loanDetailsBox}>
           <h3>Loan Application</h3>
           <form onSubmit={handleSubmit}>
-            <div style={styles.formGroup}>
-              <label>Loan Type:</label>
-              <input
-                type="text"
-                name="loanType"
-                value={formData.loanType}
-                onChange={handleInputChange}
-                style={styles.inputField}
-                required
-              />
-            </div>
-            <div style={styles.formGroup}>
+          <div style={styles.formGroup}>
+          <input
+            type="text"
+            name="loanType"
+            value={formData.loanType}
+            onInput={(e) => {
+              const inputValue = e.target.value;
+              const options = ["1.Personal Loan", "2.Home Loan", "3.Auto Loan", "4.Student Loan"];
+
+              // Only set formData.loanType if input doesn't match a dropdown option
+              if (!options.includes(inputValue)) {
+                handleInputChange(e); // Only call this if it's a custom entry
+              }
+            }}
+            list="loanTypes" // Associates the input with the datalist
+            placeholder="Enter the number manually. Eg : for personal loans please enter 1"
+            style={styles.inputField}
+            required
+          />
+          <datalist id="loanTypes">
+            <option value="1.Personal Loan" />
+            <option value="2.Home Loan" />
+            <option value="3.Auto Loan" />
+            <option value="4.Student Loan" />
+          </datalist>
+          </div>
+          <div style={styles.formGroup}>
               <label>Amount:</label>
               <input
                 type="number"
@@ -147,6 +162,7 @@ const LoanDetails = () => {
                 onChange={handleInputChange}
                 style={styles.inputField}
                 required
+                min="0" // Prevents negative values
               />
             </div>
             <div style={styles.formGroup}>
@@ -158,6 +174,7 @@ const LoanDetails = () => {
                 onChange={handleInputChange}
                 style={styles.inputField}
                 required
+                min="0" // Prevents negative values
               />
             </div>
 
