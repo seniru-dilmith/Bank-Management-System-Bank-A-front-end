@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Import axios for API requests
+import axios from 'axios';
 import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
 import useAuth from '../utils/useAuth';
 import { useSpinner } from '../utils/SpinnerContext';
 
 const LoanDetails = () => {
-  useAuth(); // Redirect to login if token is invalid
+  useAuth();
 
-  // State to manage form inputs
+  // State to manage form inputs with loanType set to "3" by default
   const [formData, setFormData] = useState({
-    loanType: '',
+    loanType: '3', // Default loan type set to "3"
     amount: '',
     duration: '',
   });
@@ -37,7 +37,6 @@ const LoanDetails = () => {
     },
   ]);
 
-  // State for messages (success or error)
   const [message, setMessage] = useState(null);
   const { setWaiting } = useSpinner();
 
@@ -54,64 +53,34 @@ const LoanDetails = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setWaiting(true); // Set waiting state to show spinner
-      const token = localStorage.getItem('token'); // Get JWT token from localStorage
+      setWaiting(true);
+      const token = localStorage.getItem('token');
       const backend_port = process.env.REACT_APP_BACKEND_PORT;
 
       // Make the POST request to the backend
       const response = await axios.post(`http://localhost:${backend_port}/loans/request-loan`, formData, {
         headers: {
-          'Authorization': `Bearer ${token}`, // Include JWT in Authorization header
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
 
-      // Handle success response
       setMessage('Loan application submitted successfully!');
       console.log('Loan application response:', response.data);
 
-      // Clear the form
+      // Clear the amount and duration but keep loanType as "3"
       setFormData({
-        loanType: '',
+        loanType: '3',
         amount: '',
         duration: '',
       });
     } catch (error) {
-      // Handle errors
       setMessage('Loan application failed. Please try again.');
       console.error('Error submitting loan application:', error);
     } finally {
-      setWaiting(false); // Set waiting state to hide spinner
+      setWaiting(false);
     }
   };
-
-  // Commented out as we are using dummy data instead of fetching
-  /*
-  useEffect(() => {
-    const fetchLoanDetails = async (loanId) => {
-      try {
-        setWaiting(true);
-        const token = localStorage.getItem('token');
-        const backend_port = process.env.REACT_APP_BACKEND_PORT;
-
-        const response = await axios.get(`http://localhost:${backend_port}/loans/loan-details/${loanId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        setActiveLoans(response.data); // Update active loans state with real data if needed
-      } catch (error) {
-        console.error('Error fetching loan details:', error);
-      } finally {
-        setWaiting(false);
-      }
-    };
-
-    const loanId = 1; // Replace with the actual loan ID if needed
-    fetchLoanDetails(loanId);
-  }, []);
-  */
 
   return (
     <Layout NavigationBar={<CustomerNaviBar />}>
@@ -123,35 +92,9 @@ const LoanDetails = () => {
         <h2 style={styles.ContentTitle}>Loans Section</h2>
       </div>
       <div style={styles.container}>
-        {/* Loan Application Form */}
         <div style={styles.loanDetailsBox}>
           <h3>Loan Application</h3>
           <form onSubmit={handleSubmit}>
-            <div style={styles.formGroup}>
-              <input
-                type="text"
-                name="loanType"
-                value={formData.loanType}
-                onInput={(e) => {
-                  const inputValue = e.target.value;
-                  const options = ["1.Personal Loan", "2.Home Loan", "3.Auto Loan", "4.Student Loan"];
-
-                  if (!options.includes(inputValue)) {
-                    handleInputChange(e); 
-                  }
-                }}
-                list="loanTypes"
-                placeholder="Enter the number manually. Eg : for personal loans please enter 1"
-                style={styles.inputField}
-                required
-              />
-              <datalist id="loanTypes">
-                <option value="1.Personal Loan" />
-                <option value="2.Home Loan" />
-                <option value="3.Auto Loan" />
-                <option value="4.Student Loan" />
-              </datalist>
-            </div>
             <div style={styles.formGroup}>
               <label>Amount:</label>
               <input
@@ -177,16 +120,13 @@ const LoanDetails = () => {
               />
             </div>
 
-            {/* Submit Button */}
             <button type="submit" style={styles.button}>
               Submit Loan Application
             </button>
 
-            {/* Success or error message */}
             {message && <p>{message}</p>}
           </form>
 
-          {/* Active Loans Table */}
           <h3 style={{ ...styles.tableHeader, marginTop: '40px' }}>Active Loans</h3>
           <table style={styles.table}>
             <thead>
