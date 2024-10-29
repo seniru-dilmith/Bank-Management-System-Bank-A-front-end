@@ -155,8 +155,10 @@ const ManagerDashboard = () => {
 
   return (
     <Layout NavigationBar={<ManagerNaviBar />}>
+      <div style={styles.dashboardbox}>
+          <h2 style={styles.dashboardTitle}>Branch Manager Dashboard</h2>
+      </div>
       <div style={styles.container}>
-        <h2 style={styles.dashboardTitle}>Branch Manager Dashboard</h2>
         <h3 style={styles.reportTitle}>Generate Reports</h3>
         <div style={styles.buttonContainer}>
           <button style={styles.button} onClick={() => setShowModal(true)}>
@@ -207,7 +209,6 @@ const popupStyles = `
   .button-container { text-align: center; margin-top: 15px; }
   .close-btn { padding: 10px 20px; background-color: #dc3545; color: white; }
 `;
-
 // Styles for the component
 const styles = {
   container: {
@@ -221,6 +222,13 @@ const styles = {
     color: '#fff',
   },
   dashboardBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+  },
+  dashboardbox: {
     background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
     padding: '10px 20px',
     borderRadius: '20px',
@@ -300,8 +308,8 @@ const styles = {
   error: {
     color: 'red',
     fontSize: '0.9rem',
-    marginTop: '10px',
-  },
+    marginTop: '10px',
+  },
 };
 
 export default ManagerDashboard;

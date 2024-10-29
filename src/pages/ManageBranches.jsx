@@ -5,6 +5,7 @@ import axios from 'axios';
 import useAuth from '../utils/useAuth';
 import { useSpinner } from '../utils/SpinnerContext';
 
+
 const styles = {
   container: {
     width: '90%',
@@ -90,6 +91,31 @@ const styles = {
     backgroundColor: '#dc3545',
     color: 'white',
   },
+  ContentBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+    textAlign: 'center',
+  },
+  ContentTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
+  dashboardbox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+  },
+  dashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
 };
 
 const ManageBranches = () => {
@@ -99,15 +125,9 @@ const ManageBranches = () => {
   const [newBranch, setNewBranch] = useState(null); // Track new branch row
   const [showModal, setShowModal] = useState(false); // Control modal visibility
   const [branchToRemove, setBranchToRemove] = useState(null); // Track branch to remove
-  const [originalBranchName, setOriginalBranchName] = useState(null); // Store original name
+  const [originalBranchData, setOriginalBranchData] = useState({}); // Store original branch data for each edit
   const { setWaiting } = useSpinner();
 
-const handleEditBranch = (id, name) => {
-  setEditingId(id);
-  setOriginalBranchName(name); // Store the original name
-};
-
-  // Fetch branches from the database
   const fetchBranches = async () => {
     try {
       setWaiting(true);
@@ -124,10 +144,17 @@ const handleEditBranch = (id, name) => {
     }
   };
 
-
   useEffect(() => {
     fetchBranches();
   }, []);
+
+  const handleEditBranch = (id) => {
+    const branchToEdit = branches.find(branch => branch.id === id);
+    if (branchToEdit) {
+      setOriginalBranchData({ ...branchToEdit }); // Store original data
+      setEditingId(id);
+    }
+  };
 
   const handleInputChange = (e, id, field) => {
     setBranches((prev) =>
@@ -135,7 +162,17 @@ const handleEditBranch = (id, name) => {
         branch.id === id ? { ...branch, [field]: e.target.value } : branch
       )
     );
-  };  
+  };
+
+  const handleCancelEdit = () => {
+    setBranches((prevBranches) =>
+      prevBranches.map((branch) =>
+        branch.id === editingId ? { ...originalBranchData } : branch
+      )
+    );
+    setEditingId(null);
+    setOriginalBranchData({});
+  };
 
   const handleAddBranch = () => {
     setNewBranch({ name: '', branch_address: '', contact_number: '' });
@@ -158,25 +195,18 @@ const handleEditBranch = (id, name) => {
 
   const handleUpdateBranch = async (id) => {
     const branchToUpdate = branches.find((branch) => branch.id === id);
-  
-    if (!branchToUpdate || !originalBranchName) {
-      console.error('Original branch name not found.');
-      return;
-    }
-  
     try {
       setWaiting(true);
       await axios.put('http://localhost:5000/branch-management/update-branch', {
-        currentName: originalBranchName, // Original name before editing
+        currentName: originalBranchData.name, // Original name before editing
         newName: branchToUpdate.name, // Updated name
         branch_address: branchToUpdate.branch_address,
         contact_number: branchToUpdate.contact_number,
       }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-  
       setEditingId(null); // Clear editing state
-      setOriginalBranchName(null); // Clear original name after update
+      setOriginalBranchData({});
       fetchBranches(); // Refresh the branch list
     } catch (error) {
       console.error('Error updating branch:', error);
@@ -184,7 +214,11 @@ const handleEditBranch = (id, name) => {
       setWaiting(false);
     }
   };
-  
+
+  const handleCancelNewBranch = () => {
+    setNewBranch(null);
+  };
+
   const confirmRemoveBranch = (id) => {
     setShowModal(true);
     setBranchToRemove(id); // Set the branch to remove when the modal is shown
@@ -208,6 +242,13 @@ const handleEditBranch = (id, name) => {
 
   return (
     <Layout NavigationBar={<TechnicianNaviBar />}>
+      <div style={styles.dashboardbox}>
+        <h2 style={styles.dashboardTitle}>Technician Dashboard</h2>
+      </div>
+      <div></div>
+      <div style={styles.ContentBox}>
+        <h2 style={styles.ContentTitle}>Manage Branches</h2>
+      </div>
       <div style={styles.container}>
         <button style={styles.addButton} onClick={handleAddBranch}>
           Add New Branch
@@ -242,9 +283,9 @@ const handleEditBranch = (id, name) => {
                         onChange={(e) => handleInputChange(e, branch.id, 'branch_address')}
                       />
                     </td>
-                    <td>
+                    <td style={styles.td}>
                       <input
-                        type='text'
+                        type="text"
                         style={styles.input}
                         value={branch.contact_number}
                         onChange={(e) => handleInputChange(e, branch.id, 'contact_number')}
@@ -254,6 +295,9 @@ const handleEditBranch = (id, name) => {
                       <button style={styles.button} onClick={() => handleUpdateBranch(branch.id)}>
                         Save
                       </button>
+                      <button style={styles.button} onClick={handleCancelEdit}>
+                        Cancel
+                      </button>
                     </td>
                   </>
                 ) : (
@@ -262,10 +306,10 @@ const handleEditBranch = (id, name) => {
                     <td style={styles.td}>{branch.branch_address}</td>
                     <td style={styles.td}>{branch.contact_number}</td>
                     <td style={styles.td}>
-                      <button style={styles.button} onClick={ () => handleEditBranch(branch.id, branch.name) }>
+                      <button style={styles.button} onClick={() => handleEditBranch(branch.id)}>
                         Update Branch
                       </button>
-                      <button style={styles.button} onClick={ () => confirmRemoveBranch(branch.id) }>
+                      <button style={styles.button} onClick={() => confirmRemoveBranch(branch.id)}>
                         Remove Branch
                       </button>
                     </td>
@@ -302,6 +346,9 @@ const handleEditBranch = (id, name) => {
                 <td style={styles.td}>
                   <button style={styles.button} onClick={handleSaveNewBranch}>
                     Save
+                  </button>
+                  <button style={styles.button} onClick={handleCancelNewBranch}>
+                    Cancel
                   </button>
                 </td>
               </tr>

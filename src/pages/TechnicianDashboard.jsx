@@ -36,6 +36,18 @@ const TechnicianDashboard = () => {
 };
 
 const styles = {
+  dashboardbox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+  },
+  dashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -82,5 +94,6 @@ const styles = {
     minWidth: '350px',
   },
 };
+
 
 export default TechnicianDashboard;

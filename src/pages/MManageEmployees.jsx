@@ -11,6 +11,7 @@ const styles = {
     width: '90%',
     margin: '0 auto',
     textAlign: 'center',
+    
   },
   table: {
     width: '100%',
@@ -91,7 +92,33 @@ const styles = {
     backgroundColor: '#dc3545',
     color: 'white',
   },
+  dashboardbox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+  },
+  dashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
+  ContentBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+    textAlign: 'center',
+  },
+  ContentTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
 };
+
 
 const MManageEmployees = () => {
   useAuth(); // Custom hook to check for JWT token
@@ -288,10 +315,15 @@ const MManageEmployees = () => {
 
   return (
     <Layout NavigationBar={<ManagerNaviBar />}>
+      <div style={styles.dashboardbox}>
+          <h2 style={styles.dashboardTitle}>Branch Manager Dashboard</h2>
+        </div>
+        <div></div>
+        <div style={styles.ContentBox}>
+          <h2 style={styles.ContentTitle}>Manage Employees</h2>
+      </div>
       <div style={styles.container}>
-        <button style={styles.addButton} onClick={handleAddEmployee}>
-          Add New Employee
-        </button>
+       
         <table style={styles.table}>
           <thead>
             <tr>

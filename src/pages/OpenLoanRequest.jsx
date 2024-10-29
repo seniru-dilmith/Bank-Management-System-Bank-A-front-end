@@ -108,6 +108,13 @@ const OpenLoanRequest = () => {
 
   return (
     <Layout NavigationBar={<EmployeeNaviBar />}>
+      <div style={styles.dashboardbox}>
+          <h2 style={styles.dashboardTitle}>Employee Dashboard</h2>
+        </div>
+        <div></div>
+        <div style={styles.ContentBox}>
+          <h2 style={styles.ContentTitle}>Open Loan Request</h2>
+      </div>
       <div style={styles.pageContainer}>
         <div style={styles.container}>
           <h2 style={styles.header}>Open Loan Request</h2>
@@ -189,6 +196,31 @@ const OpenLoanRequest = () => {
 };
 
 const styles = {
+  ContentBox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+    textAlign: 'center', // Center text inside the box
+  },
+  ContentTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
+  dashboardbox: {
+    background: 'linear-gradient(90deg, #003366 0%, #005b99 100%)',
+    padding: '10px 20px',
+    borderRadius: '20px',
+    marginBottom: '20px',
+    display: 'inline-block',
+  },
+  dashboardTitle: {
+    fontSize: '1.8rem',
+    color: '#fff',
+    margin: '0',
+  },
   pageContainer: {
     display: 'flex',
     justifyContent: 'center',
@@ -234,5 +266,6 @@ const styles = {
     fontSize: '16px',
   },
 };
+
 
 export default OpenLoanRequest;
