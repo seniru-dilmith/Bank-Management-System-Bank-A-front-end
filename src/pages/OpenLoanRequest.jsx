@@ -26,7 +26,7 @@ const OpenLoanRequest = () => {
         setWaiting(true);
         const token = localStorage.getItem('token');
         const backend_port = process.env.REACT_APP_BACKEND_PORT;
-        const response = await fetch('http://localhost:${backend_port}/loans/types', {
+        const response = await fetch(`http://localhost:${backend_port}/loans/types`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -70,7 +70,7 @@ const OpenLoanRequest = () => {
       setWaiting(true);
       const token = localStorage.getItem('token');
       const backend_port = process.env.REACT_APP_BACKEND_PORT;
-      const response = await fetch('http://localhost:${backend_port}/loans/request-loan-emp', {
+      const response = await fetch(`http://localhost:${backend_port}/loans/request-loan-emp`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
