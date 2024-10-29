@@ -15,7 +15,8 @@ const ManagerDashboard = () => {
   const fetchReport = async (reportType, params = {}) => {
     try {
       setWaiting(true);
-      let url = `http://localhost:5000/branch-manager/${reportType}`;
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      let url = `http://localhost:${backend_port}/branch-manager/${reportType}`;
       const queryParams = new URLSearchParams(params).toString();
       if (queryParams) url += `?${queryParams}`;
 

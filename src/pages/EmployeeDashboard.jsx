@@ -20,8 +20,9 @@ const EmployeeDashboard = () => {
         setWaiting(true);
         const token = localStorage.getItem('token');
         const emp_id = jwtDecode(token).id;
+        const backend_port = process.env.REACT_APP_BACKEND_PORT;
         const account_summaries = await axios.get(
-          `http://localhost:5000/customer-account/account-summaries/${emp_id}`,
+          `http://localhost:${backend_port}/customer-account/account-summaries/${emp_id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -51,8 +52,9 @@ const EmployeeDashboard = () => {
       try {
         setWaiting(true);
         const token = localStorage.getItem('token');
+        const backend_port = process.env.REACT_APP_BACKEND_PORT;
         const response = await axios.get(
-          'http://localhost:5000/transactions/recent-transactions',
+          `http://localhost:${backend_port}/transactions/recent-transactions`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -50,9 +50,10 @@ const LoanDetails = () => {
     try {
       setWaiting(true); // Set waiting state to show spinner
       const token = localStorage.getItem('token'); // Get JWT token from localStorage
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
 
       // Make the POST request to the backend
-      const response = await axios.post('http://localhost:5000/loans/request-loan', formData, {
+      const response = await axios.post(`http://localhost:${backend_port}/loans/request-loan`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`, // Include JWT in Authorization header
           'Content-Type': 'application/json',
@@ -84,9 +85,10 @@ const LoanDetails = () => {
       try {
         setWaiting(true); // Set waiting state to show spinner
         const token = localStorage.getItem('token'); // Get JWT token from localStorage
+        const backend_port = process.env.REACT_APP_BACKEND_PORT;
 
         // Make the GET request to the backend
-        const response = await axios.get(`http://localhost:5000/loans/loan-details/${loanId}`, {
+        const response = await axios.get(`http://localhost:${backend_port}/loans/loan-details/${loanId}`, {
           headers: {
             'Authorization': `Bearer ${token}`, // Include JWT in Authorization header
           },

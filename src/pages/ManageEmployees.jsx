@@ -134,8 +134,8 @@ const ManageEmployees = () => {
     try {
       setWaiting(true); // Show spinner
       const token = localStorage.getItem('token'); // Get the token from local storage
-
-      const response = await axios.get('http://localhost:5000/employee-management/employees', {
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      const response = await axios.get(`http://localhost:${backend_port}/employee-management/employees`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -154,7 +154,8 @@ const ManageEmployees = () => {
     try {
       setWaiting(true); // Show spinner
       const token = localStorage.getItem('token'); // Get the token from local storage
-      const response = await axios.get('http://localhost:5000/employee-management/positions', {
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      const response = await axios.get(`http://localhost:${backend_port}/employee-management/positions`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -197,7 +198,8 @@ const ManageEmployees = () => {
     try {
       setWaiting(true); // Show spinner
       const token = localStorage.getItem('token'); // Get the token from local storage
-      const response = await axios.post('http://localhost:5000/employee-management/add-employee', newEmployee, {
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      const response = await axios.post(`http://localhost:${backend_port}/employee-management/add-employee`, newEmployee, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -236,7 +238,8 @@ const ManageEmployees = () => {
     try {
       setWaiting(true); // Show spinner
       const token = localStorage.getItem('token');
-      await axios.put('http://localhost:5000/employee-management/update-employee', updatedEmployeeData, {
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      await axios.put(`http://localhost:${backend_port}/employee-management/update-employee`, updatedEmployeeData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setEditingId(null);
@@ -268,7 +271,8 @@ const ManageEmployees = () => {
       try {
         setWaiting(true); // Show spinner
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/employee-management/remove-employee/${employeeToRemove}`, {
+        const backend_port = process.env.REACT_APP_BACKEND_PORT;
+        await axios.delete(`http://localhost:${backend_port}/employee-management/remove-employee/${employeeToRemove}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

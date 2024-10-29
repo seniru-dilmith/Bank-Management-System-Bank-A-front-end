@@ -39,7 +39,8 @@ const Transactions = () => {
       const token = localStorage.getItem('token'); // Retrieve JWT from localStorage
 
       // Make the POST request to the backend
-      const response = await axios.post('http://localhost:5000/transactions/do-transaction', formData, {
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      const response = await axios.post(`http://localhost:${backend_port}/transactions/do-transaction`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`, // Include JWT in the Authorization header
           'Content-Type': 'application/json',

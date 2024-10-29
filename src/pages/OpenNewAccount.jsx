@@ -26,8 +26,9 @@ const OpenNewAccount = () => {
       try {
         setWaiting(true);
         const token = localStorage.getItem('token');
+        const backend_port = process.env.REACT_APP_BACKEND_PORT;
         const response = await axios.get(
-          'http://localhost:5000/customer-account/account-types',
+          `http://localhost:${backend_port}/customer-account/account-types`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setAccountTypes(response.data);
@@ -48,8 +49,9 @@ const OpenNewAccount = () => {
       try {
         setWaiting(true);
         const token = localStorage.getItem('token');
+        const backend_port = process.env.REACT_APP_BACKEND_PORT;
         const response = await axios.get(
-          'http://localhost:5000/customer-account/customer-details',
+          `http://localhost:${backend_port}/customer-account/customer-details`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setCustomerDetails(response.data);
@@ -75,7 +77,9 @@ const OpenNewAccount = () => {
 
     const customer = customerDetails.find((cust) => cust.nic === selectedNic);
     if (customer) {
-      setSelectedCustomer(customer); // Store selected customer details
+      setSelectedCustomer(customer);
+    } else {
+      setSelectedCustomer(null);
     }
   };
 
@@ -99,8 +103,9 @@ const OpenNewAccount = () => {
         initial_deposit: initialDeposit,
       };
 
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
       const response = await axios.post(
-        'http://localhost:5000/customer-account/open-account',
+        `http://localhost:${backend_port}/customer-account/open-account`,
         requestData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -132,19 +137,14 @@ const OpenNewAccount = () => {
             <form onSubmit={handleSubmit}>
               <div style={styles.formGroup}>
                 <label>NIC</label>
-                <select
+                <input 
+                  type="text"
                   name="nic"
                   value={formData.nic}
                   onChange={handleNicChange}
                   style={styles.inputField}
-                >
-                  <option value="">Select NIC</option>
-                  {customerDetails.map((cust) => (
-                    <option key={cust.id} value={cust.nic}>
-                      {cust.nic}
-                    </option>
-                  ))}
-                </select>
+                  placeholder="Enter NIC number"
+                  />
               </div>
 
               {selectedCustomer && (

@@ -131,7 +131,8 @@ const ManageBranches = () => {
   const fetchBranches = async () => {
     try {
       setWaiting(true);
-      const response = await axios.get('http://localhost:5000/branch-management/branches', {
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      const response = await axios.get(`http://localhost:${backend_port}/branch-management/branches`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -181,7 +182,8 @@ const ManageBranches = () => {
   const handleSaveNewBranch = async () => {
     try {
       setWaiting(true);
-      await axios.post('http://localhost:5000/branch-management/add-branch', newBranch, {
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      await axios.post(`http://localhost:${backend_port}/branch-management/add-branch`, newBranch, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setNewBranch(null);
@@ -197,7 +199,8 @@ const ManageBranches = () => {
     const branchToUpdate = branches.find((branch) => branch.id === id);
     try {
       setWaiting(true);
-      await axios.put('http://localhost:5000/branch-management/update-branch', {
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      await axios.put(`http://localhost:${backend_port}/branch-management/update-branch`, {
         currentName: originalBranchData.name, // Original name before editing
         newName: branchToUpdate.name, // Updated name
         branch_address: branchToUpdate.branch_address,
@@ -227,7 +230,8 @@ const ManageBranches = () => {
   const handleRemoveBranch = async () => {
     try {
       setWaiting(true);
-      await axios.delete(`http://localhost:5000/branch-management/remove-branch/${branchToRemove}`, {
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
+      await axios.delete(`http://localhost:${backend_port}/branch-management/remove-branch/${branchToRemove}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setBranches(branches.filter((branch) => branch.id !== branchToRemove));

@@ -36,8 +36,9 @@ const CustomerDashboard = () => {
       try {
         setWaiting(true);
         const token = localStorage.getItem('token');
+        const backend_port = process.env.REACT_APP_BACKEND_PORT;
         const response = await axios.get(
-          `http://localhost:5000/accounts/account-summary?customerId=${customerId}`, 
+          `http://localhost:${backend_port}/accounts/account-summary?customerId=${customerId}`, 
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -65,8 +66,9 @@ const CustomerDashboard = () => {
     try {
       setWaiting(true);
       const token = localStorage.getItem('token');
+      const backend_port = process.env.REACT_APP_BACKEND_PORT;
       const response = await axios.get(
-        `http://localhost:5000/transactions/recent-by-customer?customerId=${customerId}&accountNumber=${accountNumber}`,
+        `http://localhost:${backend_port}/transactions/recent-by-customer?customerId=${customerId}&accountNumber=${accountNumber}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
