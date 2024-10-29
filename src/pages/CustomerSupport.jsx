@@ -11,7 +11,7 @@ const CustomerSupport = () => {
     width: '100%',
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
     backdropFilter: 'blur(10px)',
-    margin: '40px auto', // Center the box
+    margin: '40px auto',
   };
 
   const headingStyle = {

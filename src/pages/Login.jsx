@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
-import { useAuth } from '../routes/AuthContext'; // Import useAuth for login context
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../routes/AuthContext';
 import HomeNaviBar from '../components/NaviBar/HomeNaviBar';
 import Layout from '../layouts/Layout';
 import { useSpinner } from '../utils/SpinnerContext';
@@ -10,8 +10,8 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login } = useAuth(); // Use the login function from AuthContext
-  const navigate = useNavigate(); // Use navigate to change the route
+  const { login } = useAuth(); 
+  const navigate = useNavigate(); 
   const { setWaiting } = useSpinner();
   
 
@@ -26,9 +26,8 @@ const Login = () => {
       });
 
       const { token, userType } = response.data;
-      login(userType, token); // Log the user in and store credentials
-
-      navigate(`/${userType}`); // Ensure the URL changes correctly
+      login(userType, token); 
+      navigate(`/${userType}`);
     } catch (error) {
       console.error(error);
       setError('Invalid username or password');

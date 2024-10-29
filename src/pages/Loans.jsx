@@ -10,12 +10,12 @@ const LoanDetails = () => {
 
   // State to manage form inputs with loanType set to "3" by default
   const [formData, setFormData] = useState({
-    loanType: '3', // Default loan type set to "3"
+    loanType: '3',
     amount: '',
     duration: '',
   });
 
-  // State for multiple Active Loan table entries with dummy data
+  
   const [activeLoans, setActiveLoans] = useState([
     {
       loanType: 'Personal Loan',
@@ -57,7 +57,7 @@ const LoanDetails = () => {
       const token = localStorage.getItem('token');
       const backend_port = process.env.REACT_APP_BACKEND_PORT;
 
-      // Make the POST request to the backend
+    
       const response = await axios.post(`http://localhost:${backend_port}/loans/request-loan`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -68,7 +68,7 @@ const LoanDetails = () => {
       setMessage('Loan application submitted successfully!');
       console.log('Loan application response:', response.data);
 
-      // Clear the amount and duration but keep loanType as "3"
+      
       setFormData({
         loanType: '3',
         amount: '',
@@ -186,9 +186,9 @@ const styles = {
   container: {
     padding: '40px 20px',
     display: 'flex',
-    flexDirection: 'column', // Changed to column for stacking ContentBox and LoanDetailsBox
-    alignItems: 'center', // Center items horizontally
-    gap: '20px', // Space between Customer Dashboard and Loan Application
+    flexDirection: 'column', 
+    alignItems: 'center', 
+    gap: '20px', 
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     height: 'auto',
@@ -212,7 +212,7 @@ const styles = {
     borderRadius: '10px',
     padding: '30px',
     width: '100%',
-    maxWidth: '600px', // Center box will be wider
+    maxWidth: '600px', 
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
     textAlign: 'center',
   },
@@ -262,7 +262,7 @@ const styles = {
     borderRadius: '20px',
     marginBottom: '20px',
     display: 'inline-block',
-    textAlign: 'center', // Center text inside the box
+    textAlign: 'center', 
   },
   ContentTitle: {
     fontSize: '1.8rem',

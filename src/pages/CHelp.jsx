@@ -4,7 +4,7 @@ import Layout from '../layouts/Layout';
 import useAuth from '../utils/useAuth';
 
 const CHelp = () => {
-  useAuth(); // Redirect to login if token is invalid
+  useAuth(); 
   return (
     <Layout NavigationBar={<CustomerNaviBar/>}>
       <h1>Help customers</h1>

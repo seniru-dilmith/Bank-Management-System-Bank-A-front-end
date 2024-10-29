@@ -10,7 +10,7 @@ const HomePage = () => {
   const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
-    setAnimate(true); // Trigger the animation on component mount
+    setAnimate(true); 
   }, []);
 
   const homePageStyle = {
@@ -94,12 +94,12 @@ const HomePage = () => {
     borderRadius: '15px',
     padding: '20px',
     color: '#333',
-    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.7)', // Added black shadow
+    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.7)', 
     opacity: animate ? 1 : 0,
     transform: animate ? 'translateY(0)' : 'translateY(30px)',
     transition: 'opacity 1s ease-out, transform 1s ease-out',
-    position: 'relative', // Ensure stacking context for the image
-    overflow: 'hidden', // Clip overflow
+    position: 'relative', 
+    overflow: 'hidden', 
   };
 
   const serviceImageStyle = {
@@ -111,7 +111,7 @@ const HomePage = () => {
     top: 0,
     left: 0,
     zIndex: 1,
-    transition: 'opacity 0.3s ease', // Transition for image opacity
+    transition: 'opacity 0.3s ease', 
   };
 
   const serviceTextStyle = {
@@ -120,15 +120,15 @@ const HomePage = () => {
     textAlign: 'center',
     padding: '10px',
     borderRadius: '10px',
-    width: '100%', // Ensure it takes the full width of the card
+    width: '100%', 
   };
 
   const serviceTitleStyle = {
     fontSize: '1.5em',
     fontWeight: 'bold',
     marginBottom: '10px',
-    color: 'white', // Change text color for better contrast
-    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)', // Add text shadow
+    color: 'white', 
+    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)', 
   };
 
   const services = [
@@ -163,7 +163,7 @@ const HomePage = () => {
             We are committed to providing innovative and reliable financial services that meet the diverse needs of our customers. Our goal is to build strong relationships, deliver exceptional value, and empower communities through our comprehensive range of banking solutions.
           </p>
 
-          {/* Additional Features Section */}
+          
           <div style={featuresStyle}>
             <div style={featureItemStyle}>
               <span style={featureIconStyle}>✔️</span> 24/7 Customer Support
@@ -180,25 +180,25 @@ const HomePage = () => {
           </div>
         </div>
         
-        {/* Services Section */}
+       
         <div style={servicesSectionStyle}>
           {services.map((service, index) => (
             <div 
               key={index} 
               style={serviceCardStyle} 
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.05)'; // Scale up on hover
-                e.currentTarget.querySelector('img').style.opacity = '0.8'; // Increase image opacity on hover
+                e.currentTarget.style.transform = 'scale(1.05)'; 
+                e.currentTarget.querySelector('img').style.opacity = '0.8'; 
               }} 
               onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1)'; // Reset scale on leave
-                e.currentTarget.querySelector('img').style.opacity = '0.6'; // Reset image opacity on leave
+                e.currentTarget.style.transform = 'scale(1)'; 
+                e.currentTarget.querySelector('img').style.opacity = '0.6'; 
               }}
             >
               <img src={service.image} alt={service.title} style={serviceImageStyle} />
               <div style={serviceTextStyle}>
                 <h2 style={serviceTitleStyle}>{service.title}</h2>
-                <p style={{ color: 'white' }}>{service.description}</p> {/* Ensure description is also white */}
+                <p style={{ color: 'white' }}>{service.description}</p> 
               </div>
             </div>
           ))}

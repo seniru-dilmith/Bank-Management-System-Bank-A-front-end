@@ -119,10 +119,10 @@ const styles = {
 };
 
 const ManageBranches = () => {
-  useAuth(); // redirect if token is not valid
+  useAuth(); 
   const [branches, setBranches] = useState([]);
   const [editingId, setEditingId] = useState(null); // Track editing row
-  const [newBranch, setNewBranch] = useState(null); // Track new branch row
+  const [newBranch, setNewBranch] = useState(null); 
   const [showModal, setShowModal] = useState(false); // Control modal visibility
   const [branchToRemove, setBranchToRemove] = useState(null); // Track branch to remove
   const [originalBranchData, setOriginalBranchData] = useState({}); // Store original branch data for each edit

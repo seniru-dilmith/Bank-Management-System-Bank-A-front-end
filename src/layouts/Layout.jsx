@@ -2,7 +2,7 @@ import React from "react";
 import './layout.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faTwitter, faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
-import logo from './ABCLogo.png'; // Adjust the path to your logo
+import logo from './ABCLogo.png';
 
 const Layout = ({ children, NavigationBar }) => {
   return (
@@ -20,7 +20,7 @@ const Layout = ({ children, NavigationBar }) => {
         <div className="gradient-box-left"></div>
         <div className="gradient-box-right"></div>
       </div>
-      <div className="content-container">{children}</div> {/* Ensure children are rendered */}
+      <div className="content-container">{children}</div> 
       <footer className="footer">
       <div className="footer-container">
         {/* Logo and description */}
@@ -81,4 +81,4 @@ const Layout = ({ children, NavigationBar }) => {
   );
 };
 
-export default Layout;
+export default Layout;
