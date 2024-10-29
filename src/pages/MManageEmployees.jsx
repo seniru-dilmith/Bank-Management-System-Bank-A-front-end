@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ManagerNaviBar from '../components/NaviBar/ManagerNaviBar';
 import Layout from '../layouts/Layout';
-import axios from 'axios'; // Axios for API requests
+import axios from 'axios'; 
 import useAuth from '../utils/useAuth';
 import { useSpinner } from '../utils/SpinnerContext';
 import { findDOMNode } from 'react-dom';
@@ -198,8 +198,8 @@ const MManageEmployees = () => {
   // Fetch branch ID and then employees
   useEffect(() => {
     const fetchData = async () => {
-      await fetchBranchId(); // Fetch the branch ID first
-      await fetchPositions(); // Fetch the positions
+      await fetchBranchId(); 
+      await fetchPositions(); 
     };
     fetchData();
   }, []);
@@ -207,7 +207,7 @@ const MManageEmployees = () => {
   // Fetch employees whenever branchId changes
   useEffect(() => {
     if (branchId) {
-      fetchEmployees(branchId); // Fetch employees only after branchId is set
+      fetchEmployees(branchId); 
     }
   }, [branchId]);
 
@@ -268,12 +268,12 @@ const MManageEmployees = () => {
         employeeToUpdate,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include token in the request
+            Authorization: `Bearer ${token}`, 
           },
         }
       );
       setEditingId(null);
-      fetchEmployees(branchId); // Refresh the list
+      fetchEmployees(branchId); 
     } catch (error) {
       console.error('Error updating employee:', error);
     } finally {

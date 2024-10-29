@@ -6,7 +6,7 @@ import useAuth from '../utils/useAuth';
 
 const Settings = () => {
   useAuth(); // Redirect to login if token is invalid
-  const { settingType } = useParams(); // Get the type of setting to display
+  const { settingType } = useParams(); 
   const [currentValue, setCurrentValue] = useState('');
   const [newValue, setNewValue] = useState('');
 
@@ -19,7 +19,7 @@ const Settings = () => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setCurrentValue(data.value); // Assuming the API returns the current value in { value: '...' } format
+        setCurrentValue(data.value); 
       } catch (error) {
         console.error('Error fetching current value:', error);
       }
@@ -90,7 +90,7 @@ const Settings = () => {
         <h2 style={styles.heading}>{settingType.replace("-", " ")}</h2>
         <div style={styles.inputGroup}>
           <label style={styles.label}>{currentLabel}</label>
-          <div style={styles.currentValue}>{currentValue}</div> {/* Display current value as text */}
+          <div style={styles.currentValue}>{currentValue}</div> 
         </div>
         <div style={styles.inputGroup}>
           <label style={styles.label}>{newLabel}</label>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Import axios to handle the API request
+import axios from 'axios'; 
 import CustomerNaviBar from '../components/NaviBar/CustomerNaviBar';
 import Layout from '../layouts/Layout';
 import useAuth from '../utils/useAuth';
@@ -7,7 +7,7 @@ import { useSpinner } from '../utils/SpinnerContext';
 
 const Transactions = () => {
   useAuth(); // Redirect to login if token is invalid
-  // State for form fields
+  
   const [formData, setFormData] = useState({
     fromAccount: '',
     beneficiaryAccount: '',
@@ -19,7 +19,7 @@ const Transactions = () => {
 
   const { setWaiting } = useSpinner(); // Spinner context to show spinner while waiting for response
 
-  // State to manage success or error messages
+  
   const [message, setMessage] = useState(null);
 
   // Handle input change
@@ -47,11 +47,11 @@ const Transactions = () => {
         },
       });
 
-      // Handle successful transaction
+    
       setMessage('Transaction successful!');
       console.log('Transaction response:', response.data);
 
-      // Clear the form after submission
+      
       setFormData({
         fromAccount: '',
         beneficiaryAccount: '',
@@ -78,7 +78,7 @@ const Transactions = () => {
         <div style={styles.ContentBox}>
           <h2 style={styles.ContentTitle}>Transaction Section</h2></div>
       <div style={styles.transactionsContainer}>
-        {/* Centered Transactions Box */}
+       
         <div style={styles.transactionsBox}>
           <h3>Transactions</h3>
           <form onSubmit={handleSubmit}>
@@ -151,7 +151,6 @@ const Transactions = () => {
             <button type="submit" style={styles.transferBtn}>Transfer</button>
           </form>
 
-          {/* Display success or error message */}
           {message && <p>{message}</p>}
         </div>
       </div>
@@ -210,7 +209,7 @@ const styles = {
     borderRadius: '20px',
     marginBottom: '20px',
     display: 'inline-block',
-    textAlign: 'center', // Center text inside the box
+    textAlign: 'center', 
   },
   ContentTitle: {
     fontSize: '1.8rem',

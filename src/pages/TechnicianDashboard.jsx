@@ -1,17 +1,16 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for routing
+import { useNavigate } from 'react-router-dom'; 
 import TechnicianNaviBar from '../components/NaviBar/TechnicianNaviBar';
 import Layout from '../layouts/Layout';
 import useAuth from '../utils/useAuth';
 
 const TechnicianDashboard = () => {
   useAuth(); // Redirect to login if token is invalid
-  const navigate = useNavigate(); // Initialize the navigate function
-
+  const navigate = useNavigate(); 
   return (
     <Layout NavigationBar={<TechnicianNaviBar />}>
       <div style={styles.container}>
-        {/* Gradient box for the Technician Dashboard title */}
+       
         <div style={styles.dashboardBox}>
           <h2 style={styles.dashboardTitle}>Technician Dashboard</h2>
         </div>
@@ -19,13 +18,13 @@ const TechnicianDashboard = () => {
         <div style={styles.buttonContainer}>
           <button
             style={styles.button}
-            onClick={() => navigate('/technician/ManageEmployees')} // Navigate to Manage Employees page
+            onClick={() => navigate('/technician/ManageEmployees')} 
           >
             Manage Employees
           </button>
           <button
             style={styles.button}
-            onClick={() => navigate('/technician/ManageBranches')} // Navigate to Manage Branches page
+            onClick={() => navigate('/technician/ManageBranches')} 
           >
             Manage Branch
           </button>
@@ -57,7 +56,7 @@ const styles = {
     padding: '40px',
     boxSizing: 'border-box',
     color: '#fff',
-    backgroundImage: 'url(https://example.com/your-background-image.jpg)', // Replace with actual image URL
+    backgroundImage: 'url(https://example.com/your-background-image.jpg)', 
     backgroundSize: 'cover',
   },
   dashboardBox: {
