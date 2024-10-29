@@ -41,9 +41,9 @@ const CustomerSupport = () => {
           </p>
           <h3 style={{ color: 'white' }}>Contact Us</h3>
           <p style={paragraphStyle}>
-            📞 Phone: 1-800-555-0199<br />
-            📧 Email: support@abcbank.com<br />
-            💬 Live Chat: Available on our website
+            📞 Phone: 0742828231<br />
+            📧 Email: support@abank.com<br />
+            
           </p>
           <h3 style={{ color: 'white' }}>Support Hours</h3>
           <p style={paragraphStyle}>Our customer support is available 24/7 to assist you.</p>
