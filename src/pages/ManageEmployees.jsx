@@ -96,7 +96,7 @@ const styles = {
     borderRadius: '20px',
     marginBottom: '20px',
     display: 'inline-block',
-    textAlign: 'center', // Center text inside the box
+    textAlign: 'center', 
   },
   ContentTitle: {
     fontSize: '1.8rem',
@@ -253,7 +253,7 @@ const ManageEmployees = () => {
 
   const confirmRemoveEmployee = (id) => {
     setShowModal(true);
-    setEmployeeToRemove(id); // Set the employee to remove when the modal is shown
+    setEmployeeToRemove(id); 
   };
 
   const handlePositionChange = (e, id) => {
@@ -302,9 +302,7 @@ const ManageEmployees = () => {
       </div>
       <div style={styles.container}>
         
-        {/* <button style={styles.addButton} onClick={handleAddEmployee}>
-          Add New Employee
-        </button> */}
+       
         <table style={styles.table}>
           <thead>
             <tr>
@@ -375,7 +373,7 @@ const ManageEmployees = () => {
                       style={styles.select}
                       value={positions.find((pos) => pos.id === employee.position_id)?.name || ''}
                       onChange={(e) => handlePositionChange(e, employee.id)}
-                      disabled={employee.id === 1} // Disable if the employee ID is 1
+                      disabled={employee.id === 1} 
                     >
                       {positions.map((position) => (
                         <option key={position.id} value={position.name}>

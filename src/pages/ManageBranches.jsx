@@ -119,13 +119,13 @@ const styles = {
 };
 
 const ManageBranches = () => {
-  useAuth(); // redirect if token is not valid
+  useAuth(); 
   const [branches, setBranches] = useState([]);
-  const [editingId, setEditingId] = useState(null); // Track editing row
-  const [newBranch, setNewBranch] = useState(null); // Track new branch row
-  const [showModal, setShowModal] = useState(false); // Control modal visibility
-  const [branchToRemove, setBranchToRemove] = useState(null); // Track branch to remove
-  const [originalBranchData, setOriginalBranchData] = useState({}); // Store original branch data for each edit
+  const [editingId, setEditingId] = useState(null); 
+  const [newBranch, setNewBranch] = useState(null); 
+  const [showModal, setShowModal] = useState(false); 
+  const [branchToRemove, setBranchToRemove] = useState(null); 
+  const [originalBranchData, setOriginalBranchData] = useState({}); 
   const { setWaiting } = useSpinner();
 
   const fetchBranches = async () => {
@@ -152,8 +152,7 @@ const ManageBranches = () => {
   const handleEditBranch = (id) => {
     const branchToEdit = branches.find(branch => branch.id === id);
     if (branchToEdit) {
-      setOriginalBranchData({ ...branchToEdit }); // Store original data
-      setEditingId(id);
+      setOriginalBranchData({ ...branchToEdit }); 
     }
   };
 
@@ -201,16 +200,16 @@ const ManageBranches = () => {
       setWaiting(true);
       const backend_port = process.env.REACT_APP_BACKEND_PORT;
       await axios.put(`http://localhost:${backend_port}/branch-management/update-branch`, {
-        currentName: originalBranchData.name, // Original name before editing
-        newName: branchToUpdate.name, // Updated name
+        currentName: originalBranchData.name, 
+        newName: branchToUpdate.name, 
         branch_address: branchToUpdate.branch_address,
         contact_number: branchToUpdate.contact_number,
       }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      setEditingId(null); // Clear editing state
+      setEditingId(null); 
       setOriginalBranchData({});
-      fetchBranches(); // Refresh the branch list
+      fetchBranches(); 
     } catch (error) {
       console.error('Error updating branch:', error);
     } finally {
@@ -224,7 +223,7 @@ const ManageBranches = () => {
 
   const confirmRemoveBranch = (id) => {
     setShowModal(true);
-    setBranchToRemove(id); // Set the branch to remove when the modal is shown
+    setBranchToRemove(id); 
   };
 
   const handleRemoveBranch = async () => {

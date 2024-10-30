@@ -7,7 +7,7 @@ import useAuth from "../utils/useAuth";
 import { useSpinner } from '../utils/SpinnerContext';
 
 const CustomerDashboard = () => {
-  useAuth(); // Redirect to login if token is invalid
+  useAuth(); 
   const [accounts, setAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState('');
   const [accountType, setAccountType] = useState('');
@@ -21,17 +21,17 @@ const CustomerDashboard = () => {
     if (token) {
       const decodedToken = jwtDecode(token);
       
-      return decodedToken.id; // Ensure this matches the key in your token payload
+      return decodedToken.id; 
     }
-    return null; // Handle case where token is missing or invalid
+    return null; 
   };
 
-  const customerId = getCustomerIdFromToken(); // Extracted customerId
+  const customerId = getCustomerIdFromToken(); 
 
-  // Fetch all accounts for the customer
+  
   useEffect(() => {
     const fetchAccounts = async () => {
-      if (!customerId) return; // Ensure customerId exists
+      if (!customerId) return; 
 
       try {
         setWaiting(true);
@@ -49,7 +49,7 @@ const CustomerDashboard = () => {
           setSelectedAccount(firstAccount.account_number);
           setAccountType(firstAccount.account_type);
           setCurrentBalance(firstAccount.acc_balance);
-          fetchTransactions(firstAccount.account_number); // Fetch transactions for the first account
+          fetchTransactions(firstAccount.account_number); 
         }
       } catch (error) {
         console.error('Error fetching accounts:', error);
@@ -91,7 +91,7 @@ const CustomerDashboard = () => {
     setSelectedAccount(accountNumber);
     setAccountType(selectedAcc?.account_type || '');
     setCurrentBalance(selectedAcc?.acc_balance || '');
-    fetchTransactions(accountNumber); // Fetch transactions for the selected account
+    fetchTransactions(accountNumber); 
   };
 
   const styles = {
@@ -129,8 +129,8 @@ const CustomerDashboard = () => {
     detailItem: {
       fontSize: '1.2rem',
       marginBottom: '1rem',
-      color: 'black', // Set text color to black
-      textAlign: 'left', // Align text to the left
+      color: 'black', 
+      textAlign: 'left', 
       lineHeight: '1.5rem',
     },
     transactionsContainer: {

@@ -7,7 +7,7 @@ import useAuth from '../utils/useAuth';
 import { useSpinner } from '../utils/SpinnerContext';
 
 const EmployeeDashboard = () => {
-  useAuth(); // Redirect to login if token is invalid
+  useAuth(); 
   const [accountSummaries, setAccountSummaries] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [branchId, setBranchId] = useState('');
@@ -138,7 +138,7 @@ const EmployeeDashboard = () => {
           <h2 style={styles.dashboardTitle}>Employee Dashboard</h2>
         </div>
       <div style={styles.container}>
-        {/* Customer Account Summaries Section */}
+        
         <div style={styles.dashboardBox}>
           <h3 style={styles.heading}>Customer Account Summaries</h3>
           <table style={styles.table}>
@@ -173,7 +173,7 @@ const EmployeeDashboard = () => {
           </table>
         </div>
 
-        {/* Recent Transactions Section */}
+        
         <div style={styles.dashboardBox}>
           <h3 style={styles.heading}>Recent Transactions</h3>
           <table style={styles.table}>

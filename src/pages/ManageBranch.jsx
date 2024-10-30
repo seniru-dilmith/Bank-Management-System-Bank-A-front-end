@@ -6,7 +6,7 @@ import useAuth from '../utils/useAuth';
 import { useSpinner } from '../utils/SpinnerContext';
 
 const ManageBranch = () => {
-  useAuth(); // Redirect to login if token is invalid
+  useAuth(); 
   const [branchInfo, setBranchInfo] = useState({
     id: null,
     name: '',
@@ -20,21 +20,20 @@ const ManageBranch = () => {
     contactNumber: '',
   });
 
-  const [showEditBox, setShowEditBox] = useState(false); // New state for toggling edit box visibility
+  const [showEditBox, setShowEditBox] = useState(false); 
   const { setWaiting } = useSpinner();
 
-  const token = localStorage.getItem('token'); // Get JWT token from localStorage
+  const token = localStorage.getItem('token'); 
 
-  // Fetch branch information for the logged-in manager
   const fetchBranchInfo = async () => {
     try {
-      setWaiting(true); // Set waiting state to show spinner
+      setWaiting(true); 
       const backend_port = process.env.REACT_APP_BACKEND_PORT;
       const response = await axios.get(
         `http://localhost:${backend_port}/branch-manager/get-branch-details`,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Add JWT token to request headers
+            Authorization: `Bearer ${token}`, 
           },
         }
       );
@@ -58,7 +57,7 @@ const ManageBranch = () => {
     } catch (error) {
       console.error('Error fetching branch information:', error);
     } finally {
-      setWaiting(false); // Hide spinner
+      setWaiting(false); 
     }
   };
 
@@ -69,10 +68,10 @@ const ManageBranch = () => {
       return;
     }
 
-    console.log('Branch Info before Update:', branchInfo); // Debug log
+    console.log('Branch Info before Update:', branchInfo); 
 
     try {
-      setWaiting(true); // Set waiting state to show spinner
+      setWaiting(true); 
       await axios.put(
         `http://localhost:5000/branch-manager/update-branch-details/${branchInfo.id}`,
         {
@@ -82,7 +81,7 @@ const ManageBranch = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include token in the request
+            Authorization: `Bearer ${token}`, 
           },
         }
       );
@@ -95,12 +94,12 @@ const ManageBranch = () => {
       }));
 
       alert('Branch details updated successfully!');
-      setShowEditBox(false); // Hide edit box after saving
+      setShowEditBox(false); 
     } catch (error) {
       console.error('Error updating branch details:', error);
       alert('Failed to update branch details. Please try again.');
     } finally {
-      setWaiting(false); // Hide spinner
+      setWaiting(false); 
     }
   };
 
@@ -113,7 +112,7 @@ const ManageBranch = () => {
   };
 
   useEffect(() => {
-    fetchBranchInfo(); // Fetch branch info when the component mounts
+    fetchBranchInfo(); 
   }, []);
 
   return (
@@ -133,13 +132,13 @@ const ManageBranch = () => {
           <p style={styles.detailItem}><strong>Contact Number:</strong> {branchInfo.contactNumber}</p>
           <button
             style={styles.button}
-            onClick={() => setShowEditBox(true)} // Show edit box when clicked
+            onClick={() => setShowEditBox(true)} 
           >
             Change Details
           </button>
         </div>
 
-        {showEditBox && ( // Conditionally render edit box
+        {showEditBox && ( 
           <div style={styles.infoBox}>
             <h3 style={styles.title}>Edit Branch Information</h3>
             <div style={styles.inputGroup}>

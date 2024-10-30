@@ -122,11 +122,11 @@ p {
 
 /* Section Animation */
 section {
-  transition: transform 0.3s ease; /* Smooth transition */
+  transition: transform 0.3s ease; 
 }
 
 section:hover {
-  transform: translateY(-10px); /* Raise the section on hover */
+  transform: translateY(-10px); 
 }
 
 section h2 {
@@ -134,5 +134,5 @@ section h2 {
 }
 
 section:hover h2 {
-  color: #ffcc00; /* Adds a golden glow to headings on hover */
+  color: #ffcc00; 
 }

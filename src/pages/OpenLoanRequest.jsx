@@ -204,7 +204,7 @@ const styles = {
     borderRadius: '20px',
     marginBottom: '20px',
     display: 'inline-block',
-    textAlign: 'center', // Center text inside the box
+    textAlign: 'center', 
   },
   ContentTitle: {
     fontSize: '1.8rem',

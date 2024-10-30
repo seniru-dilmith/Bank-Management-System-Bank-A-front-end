@@ -11,7 +11,7 @@ const CustomerSupport = () => {
     width: '100%',
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
     backdropFilter: 'blur(10px)',
-    margin: '40px auto', // Center the box
+    margin: '40px auto',
   };
 
   const headingStyle = {
@@ -36,7 +36,7 @@ const CustomerSupport = () => {
         <div style={supportBoxStyle}>
           <h2 style={{ color: 'white' }}>How Can We Help You?</h2>
           <p style={paragraphStyle}>
-            At ABC Bank, we are dedicated to providing our customers with the highest level of support. 
+            At A Bank, we are dedicated to providing our customers with the highest level of support. 
             Whether you have questions about your account, need assistance with our services, or wish to provide feedback, our team is here to help.
           </p>
           <h3 style={{ color: 'white' }}>Contact Us</h3>

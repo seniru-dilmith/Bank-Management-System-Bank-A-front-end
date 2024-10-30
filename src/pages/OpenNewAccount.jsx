@@ -16,7 +16,7 @@ const OpenNewAccount = () => {
 
   const [accountTypes, setAccountTypes] = useState([]);
   const [customerDetails, setCustomerDetails] = useState([]);
-  const [selectedCustomer, setSelectedCustomer] = useState(null); // Track selected customer
+  const [selectedCustomer, setSelectedCustomer] = useState(null); 
   const [isLoading, setIsLoading] = useState(true);
   const { setWaiting } = useSpinner();
 
@@ -248,7 +248,7 @@ const styles = {
     borderRadius: '20px',
     marginBottom: '20px',
     display: 'inline-block',
-    textAlign: 'center', // Center text inside the box
+    textAlign: 'center', 
   },
   ContentTitle: {
     fontSize: '1.8rem',

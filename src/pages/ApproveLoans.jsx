@@ -7,25 +7,23 @@ import useAuth from '../utils/useAuth';
 import { useSpinner } from '../utils/SpinnerContext';
 
 const ApproveLoans = () => {
-  useAuth(); // Redirect to login if token is invalid
-  // State to store loan applications
+  useAuth(); 
   const [loans, setLoans] = useState([]);
   const [message, setMessage] = useState(null);
   const { setWaiting } = useSpinner();
 
-  // Fetch pending loans when the component mounts
   useEffect(() => {
     const fetchPendingLoans = async () => {
       try {
         setWaiting(true);
-        const token = localStorage.getItem('token'); // Get JWT token from localStorage
+        const token = localStorage.getItem('token'); 
         const backend_port = process.env.REACT_APP_BACKEND_PORT;
         const response = await axios.get(`http://localhost:${backend_port}/loan-approval/pending-loans`, {
           headers: {
-            'Authorization': `Bearer ${token}`, // Include JWT in Authorization header
+            'Authorization': `Bearer ${token}`, 
           },
         });
-        setLoans(response.data); // Set the loans in state
+        setLoans(response.data); 
       } catch (error) {
         console.error('Error fetching loans:', error);
       } finally {
@@ -112,7 +110,6 @@ const ApproveLoans = () => {
   return (
     <Layout NavigationBar={<ManagerNaviBar />}>
       <div style={styles.container}>
-        {/* Reused Gradient box for the Branch Manager Dashboard title */}
         <div style={styles.dashboardBox}>
           <h2 style={styles.dashboardTitle}>Branch Manager Dashboard</h2>
         </div>
@@ -150,8 +147,6 @@ const ApproveLoans = () => {
             ))}
           </tbody>
         </table>
-
-        {/* Display success or error message */}
         {message && <p style={styles.message}>{message}</p>}
       </div>
     </Layout>
@@ -229,7 +224,7 @@ const styles = {
     borderRadius: '20px',
     marginBottom: '20px',
     display: 'inline-block',
-    textAlign: 'center', // Center text inside the box
+    textAlign: 'center', 
   },
   ContentTitle: {
     fontSize: '1.8rem',
