@@ -49,6 +49,7 @@ const Transactions = () => {
 
     
       setMessage('Transaction successful!');
+      alert('Transaction successful!');
       console.log('Transaction response:', response.data);
 
       
@@ -63,6 +64,7 @@ const Transactions = () => {
     } catch (error) {
       // Handle errors
       setMessage('Transaction failed. Please try again.');
+      alert('Transaction failed. Please try again.');
       console.error('Error making transaction:', error);
     } finally {
       setWaiting(false); // Hide spinner
