@@ -36,7 +36,7 @@ const CustomerSupport = () => {
         <div style={supportBoxStyle}>
           <h2 style={{ color: 'white' }}>How Can We Help You?</h2>
           <p style={paragraphStyle}>
-            At ABC Bank, we are dedicated to providing our customers with the highest level of support. 
+            At A Bank, we are dedicated to providing our customers with the highest level of support. 
             Whether you have questions about your account, need assistance with our services, or wish to provide feedback, our team is here to help.
           </p>
           <h3 style={{ color: 'white' }}>Contact Us</h3>

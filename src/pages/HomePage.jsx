@@ -158,7 +158,7 @@ const HomePage = () => {
     <Layout NavigationBar={<HomeNaviBar />}>
       <div style={homePageStyle}>
         <div style={overlayStyle}>
-          <h1 style={headingStyle}>Welcome to ABC Bank</h1>
+          <h1 style={headingStyle}>Welcome to A Bank</h1>
           <p style={paragraphStyle}>
             We are committed to providing innovative and reliable financial services that meet the diverse needs of our customers. Our goal is to build strong relationships, deliver exceptional value, and empower communities through our comprehensive range of banking solutions.
           </p>
