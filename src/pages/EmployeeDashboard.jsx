@@ -135,7 +135,7 @@ const EmployeeDashboard = () => {
       <div style={styles.container}>
         {/* Customer Account Summaries Section */}
         <div style={styles.dashboardBox}>
-          <h2 style={styles.heading}>Customer Account Summaries</h2>
+          <h3 style={styles.heading}>Customer Account Summaries</h3>
           <table style={styles.table}>
             <thead>
               <tr>
